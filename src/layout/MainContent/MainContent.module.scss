@@ -1,0 +1,34 @@
+.theme-dark {
+   &::placeholder {
+      color: rgba(255, 255, 255, 0.681);
+      font-style: italic;
+   }
+   & .posts {
+      background-color: #18191a !important;
+   }
+}
+.theme-light {
+   background-color: #f0f2f5 !important;
+   &::placeholder {
+      color: rgba(0, 0, 0, 0.623);
+      font-style: italic;
+   }
+   & .posts {
+   }
+}
+.layout-wrap {
+   padding: 20px 0;
+   width: 100%;
+   max-width: 620px;
+   margin: 0 auto;
+}
+.content-header {
+   padding: 20px 30px !important;
+   height: auto !important;
+   border-radius: 8px;
+}
+.posts {
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+}
