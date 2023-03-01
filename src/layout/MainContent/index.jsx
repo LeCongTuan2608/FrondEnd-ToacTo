@@ -14,6 +14,7 @@ import React, { useContext, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './MainContent.module.scss';
 import PostsSkeleton from 'components/PostsSkeleton';
+import Posts from 'components/Posts';
 const cn = classNames.bind(styles);
 
 const { Content, Sider, Header } = Layout;
@@ -34,7 +35,7 @@ const users = [
    getItem('Lê Công Lộc', '5', <FileOutlined />),
 ];
 function MainContent(props) {
-   const [posts, setPosts] = useState(false);
+   const [posts, setPosts] = useState(true);
    const { theme } = useContext(ThemeContext);
    return (
       <Layout
@@ -106,7 +107,10 @@ function MainContent(props) {
                   }}>
                   <div className={cn('posts')}>
                      {posts ? (
-                        ''
+                        <>
+                           <Posts />
+                           <Posts />
+                        </>
                      ) : (
                         <>
                            <PostsSkeleton />
