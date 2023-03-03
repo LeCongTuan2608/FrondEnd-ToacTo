@@ -1,6 +1,9 @@
+@import '../../color/color';
+
 .posts-wrap {
    padding: 10px 0;
    border-radius: 8px;
+   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 .header-posts {
    padding: 5px 20px;
@@ -13,16 +16,13 @@
       & > div:nth-child(3) {
          & > span {
             cursor: pointer;
-            &:hover {
-               background-color: #eeeeee !important;
-            }
          }
       }
    }
 }
 .main-posts {
    padding: 10px 0;
-   & > div {
+   & > div:nth-child(1) {
       & p {
          overflow: hidden;
          display: -webkit-box;
@@ -30,10 +30,11 @@
          -webkit-box-orient: vertical;
          margin: 0;
          overflow-wrap: break-word;
+         text-align: left;
       }
       & > div {
          display: flex;
-         padding: 0 20px;
+         padding: 0 10px;
          & > span {
             font-weight: 500;
             cursor: pointer;
@@ -41,18 +42,6 @@
                text-decoration: underline;
             }
          }
-      }
-   }
-}
-.posts-image {
-   display: grid;
-   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-   gap: 3px;
-   & > div {
-      padding: 0 !important;
-      overflow: hidden;
-      & img {
-         object-fit: cover !important;
       }
    }
 }
@@ -69,13 +58,36 @@
       justify-content: center;
       font-weight: 600;
       font-size: 15px;
-      &:hover {
-         background: #f5f5f5;
-      }
    }
 }
 .is-active {
    & > div:nth-child(1) {
       color: #ff4d4f !important;
+   }
+}
+
+.theme-light {
+   & .button-wrap {
+      &:hover {
+         background: $gray100 !important;
+      }
+   }
+   & .avatar {
+      &:hover {
+         background-color: $gray100 !important;
+      }
+   }
+}
+.theme-dark {
+   & .button-wrap {
+      color: $textWhite;
+      &:hover {
+         background-color: $gray500 !important;
+      }
+   }
+   & .avatar {
+      &:hover {
+         background-color: $gray500 !important;
+      }
    }
 }

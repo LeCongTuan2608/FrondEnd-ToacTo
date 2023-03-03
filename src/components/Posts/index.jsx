@@ -13,6 +13,7 @@ import {
 } from '@ant-design/icons';
 import classNames from 'classnames/bind';
 import styles from './Posts.module.scss';
+import Images from './components/Images';
 const cn = classNames.bind(styles);
 const { Header, Content, Footer } = Layout;
 Posts.propTypes = {};
@@ -21,6 +22,7 @@ function Posts(props) {
    const { theme } = useContext(ThemeContext);
    const [open, setOpen] = useState(false);
    const [like, setLike] = useState(false);
+   const [seeMore, setSeeMore] = useState(false);
    const [text, setText] = useState(501);
    const handleLike = (e) => {
       setLike(!like);
@@ -55,7 +57,7 @@ function Posts(props) {
          style={
             theme === 'light' ? { background: 'white' } : { background: '#242526', color: 'white' }
          }>
-         <div className={cn('header-posts')}>
+         <div className={cn('header-posts', `${theme === 'light' ? 'theme-light' : 'theme-dark'}`)}>
             <Space style={{ width: '100%' }}>
                <Avatar
                   size="large"
@@ -71,10 +73,11 @@ function Posts(props) {
                   onOpenChange={handleOpenChange}
                   open={open}>
                   <Avatar
+                     className={cn('avatar')}
                      size="large"
                      style={{
-                        backgroundColor: 'white',
-                        color: 'black',
+                        backgroundColor: theme === 'light' ? 'white' : '#242526',
+                        color: theme === 'light' ? 'black' : 'white',
                      }}
                      icon={<MoreOutlined />}
                   />
@@ -83,15 +86,15 @@ function Posts(props) {
          </div>
          <Content className={cn('main-posts')}>
             <div style={{ padding: '0 10px', marginBottom: 10 }}>
-               <p>
+               <p style={seeMore ? { display: 'block' } : {}}>
                   <span>
                      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veniam recusandae
                      nobis odio sequi aperiam atque quo dolores voluptate odit illum commodi hic,
                      similique a perferendis aut quis non dolorum. Tempora? Lorem ipsum, dolor sit
                      amet consectetur adipisicing elit. Veniam
-                     rccccccccccccccccccccccccccccccccccecusandae nobis odio sequi aperiam atque quo
-                     dolores voluptate odit illum commodi hic, similique a perferendis aut quis non
-                     dolorum. Tempora? Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                     rccccccccccccccccccccccccccccccccccecusandae nobis odio sequi aperiam atque
+                     quodolores voluptate odit illum commodi hic, similique a perferendis aut quis
+                     non dolorum. Tempora? Lorem ipsum, dolor sit amet consectetur adipisicing elit.
                      Veniam recusandae nobis odio sequi aperiam atque quo dolores voluptate odit
                      illum commodi hic, similique a perferendis aut quis non dolorum. Tempora? Lorem
                      ipsum, dolor sit amet consectetur adipisicing elit. Veniam recusandae nobis
@@ -120,28 +123,39 @@ function Posts(props) {
                </p>
                {text > 500 && (
                   <div>
-                     <span>See more...</span>
+                     <span
+                        onClick={() => {
+                           setSeeMore(!seeMore);
+                        }}>
+                        {!seeMore ? 'See more...' : 'Hidden'}
+                     </span>
                   </div>
                )}
             </div>
-            <div className={cn('posts-image')}>
-               <Image.PreviewGroup>
-                  <Image src="https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp" />
-                  <Image src="https://gw.alipayobjects.com/zos/antfincdn/x43I27A55%26/photo-1438109491414-7198515b166b.webp" />
-                  <Image src="https://gw.alipayobjects.com/zos/antfincdn/cV16ZqzMjW/photo-1473091540282-9b846e7965e3.webp" />
-                  <Image src="https://gw.alipayobjects.com/zos/antfincdn/x43I27A55%26/photo-1438109491414-7198515b166b.webp" />
-               </Image.PreviewGroup>
+            <div>
+               <Images />
             </div>
          </Content>
-         <Divider style={{ margin: 10 }} />
+         <Divider
+            style={{
+               background: theme === 'dark' ? '#4a4d4f' : '#ced0d4',
+               margin: '10px 15px',
+               width: 'unset',
+               minWidth: 'unset',
+            }}
+         />
          <Footer
-            className={cn('footer-posts', like && 'is-active')}
-            style={{ background: 'white' }}>
+            className={cn(
+               'footer-posts',
+               like && 'is-active',
+               `${theme === 'light' ? 'theme-light' : 'theme-dark'}`,
+            )}
+            style={theme === 'light' ? { background: 'white' } : { background: '#242526' }}>
             <Space className={cn('button-wrap')} onClick={handleLike}>
                <HeartOutlined />
                <span>Tym</span>
             </Space>
-            <Space>
+            <Space className={cn('button-wrap')}>
                <CommentOutlined />
                <span>Comment</span>
             </Space>

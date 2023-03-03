@@ -1,3 +1,5 @@
+@import '../../color/color';
+
 .sider-bar {
    width: 250px;
    overflow: auto;
@@ -18,7 +20,7 @@
    &::-webkit-scrollbar-track {
    }
    &::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.1);
+      background: $scrollDarkGray;
       border-radius: 50px;
       display: none;
       z-index: 1;
@@ -53,7 +55,6 @@
 }
 .theme-light {
    &::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.1);
       border-radius: 50px;
       display: none;
    }
@@ -72,10 +73,10 @@
    }
 }
 .theme-dark {
-   color: white;
+   color: $textWhite;
    background-color: #18191a !important;
    &::-webkit-scrollbar-thumb {
-      background: rgba(165, 165, 165, 0.248);
+      background: $scrollLightGray;
       border-radius: 50px;
       display: none;
    }

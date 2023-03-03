@@ -1,0 +1,34 @@
+.images-wrap {
+   display: grid;
+   grid-template-columns: repeat(6, 1fr);
+   grid-template-rows: repeat(6, 1);
+   grid-gap: 2px;
+   & > div {
+      padding: 0 !important;
+      overflow: hidden;
+      cursor: pointer;
+      & img {
+         width: 100%;
+         height: 100% !important;
+         object-fit: cover !important;
+      }
+   }
+   & > div:nth-child(1) {
+      grid-column-start: 1;
+      grid-column-end: 4;
+      grid-row-start: 1;
+      grid-row-end: 7;
+   }
+   & > div:nth-child(2) {
+      grid-column-start: 4;
+      grid-column-end: 7;
+      grid-row-start: 1;
+      grid-row-end: 4;
+   }
+   & > div:nth-child(3) {
+      grid-column-start: 4;
+      grid-column-end: 7;
+      grid-row-start: 4;
+      grid-row-end: 7;
+   }
+}
