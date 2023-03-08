@@ -15,6 +15,7 @@ import classNames from 'classnames/bind';
 import styles from './MainContent.module.scss';
 import PostsSkeleton from 'components/PostsSkeleton';
 import Posts from 'components/Posts';
+import { useMediaQuery } from 'react-responsive';
 const cn = classNames.bind(styles);
 
 const { Content, Sider, Header } = Layout;
@@ -37,91 +38,103 @@ const users = [
 function MainContent(props) {
    const [posts, setPosts] = useState(true);
    const { theme } = useContext(ThemeContext);
+   const isSmallScreen = useMediaQuery({ query: '(min-width: 1261px)' });
+   const isTabletOrMobile = useMediaQuery({ query: '(min-width: 931px)' });
    return (
       <Layout
-         hasSider
-         className={cn('layout-wrap')}
          style={{
             background: theme === 'light' ? '#f0f2f5' : '#18191a',
+            alignItems: 'center',
          }}>
-         <SiderBar
-            styled={{ css: { left: 0 } }}
-            items={[
-               { title: 'Suggest', users },
-               { title: 'Followers', users },
-               { title: 'Following', users },
-            ]}
-         />
          <Layout
+            hasSider
+            className={cn('layout-wrap')}
             style={{
                background: theme === 'light' ? '#f0f2f5' : '#18191a',
-               color: theme === 'light' ? '' : 'white',
             }}>
-            <Header
-               className={cn('content-header')}
+            {isSmallScreen && (
+               <SiderBar
+                  styled={{ css: { left: 0 } }}
+                  items={[
+                     { title: 'Suggest', users },
+                     { title: 'Followers', users },
+                     { title: 'Following', users },
+                  ]}
+               />
+            )}
+            <Layout
                style={{
-                  background: theme === 'light' ? 'white' : '#242526',
+                  background: theme === 'light' ? '#f0f2f5' : '#18191a',
+                  color: theme === 'light' ? '' : 'white',
                }}>
-               <div
+               <Header
+                  className={cn('content-header')}
                   style={{
-                     display: 'flex',
-                     gap: 15,
-                  }}>
-                  <Avatar
-                     style={{
-                        backgroundColor: '#87d068',
-                        width: 35,
-                     }}
-                     icon={<UserOutlined />}
-                  />
-                  <Input
-                     placeholder="What are you thinking...?"
-                     className={cn(theme === 'dark' ? 'theme-dark' : 'theme-light')}
-                     style={theme === 'dark' ? { background: '#3a3b3c', color: '#fff ' } : {}}
-                  />
-               </div>
-               <Space size={[25, 0]} wrap>
-                  <Tag color="magenta">magenta</Tag>
-                  <Tag color="red">red</Tag>
-                  <Tag color="volcano">volcano</Tag>
-                  <Tag color="orange">orange</Tag>
-                  <Tag color="gold">gold</Tag>
-                  <Tag color="lime">lime</Tag>
-                  <Tag color="green">green</Tag>
-                  <Tag color="cyan">cyan</Tag>
-                  <Tag color="blue">blue</Tag>
-                  <Tag color="geekblue">geekblue</Tag>
-                  <Tag color="purple">purple</Tag>
-               </Space>
-            </Header>
-            <Content
-               style={{
-                  margin: '24px 16px 0',
-                  overflow: 'initial',
-               }}>
-               <div
-                  className={cn(theme === 'dark' ? 'theme-dark' : 'theme-light', 'posts')}
-                  style={{
-                     textAlign: 'center',
                      background: theme === 'light' ? 'white' : '#242526',
                   }}>
-                  <div className={cn('posts')}>
-                     {posts ? (
-                        <>
-                           <Posts />
-                           <Posts />
-                        </>
-                     ) : (
-                        <>
-                           <PostsSkeleton />
-                           <PostsSkeleton />
-                        </>
-                     )}
+                  <div
+                     style={{
+                        display: 'flex',
+                        gap: 15,
+                     }}>
+                     <Avatar
+                        style={{
+                           backgroundColor: '#87d068',
+                           width: 35,
+                        }}
+                        icon={<UserOutlined />}
+                     />
+                     <Input
+                        placeholder="What are you thinking...?"
+                        className={cn(theme === 'dark' ? 'theme-dark' : 'theme-light')}
+                        style={theme === 'dark' ? { background: '#3a3b3c', color: '#fff ' } : {}}
+                     />
                   </div>
-               </div>
-            </Content>
+                  <Space size={[25, 0]} wrap>
+                     <Tag color="magenta">magenta</Tag>
+                     <Tag color="red">red</Tag>
+                     <Tag color="volcano">volcano</Tag>
+                     <Tag color="orange">orange</Tag>
+                     <Tag color="gold">gold</Tag>
+                     <Tag color="lime">lime</Tag>
+                     <Tag color="green">green</Tag>
+                     <Tag color="cyan">cyan</Tag>
+                     <Tag color="blue">blue</Tag>
+                     <Tag color="geekblue">geekblue</Tag>
+                     <Tag color="purple">purple</Tag>
+                  </Space>
+               </Header>
+               <Content
+                  style={{
+                     margin: '20px 0',
+                     overflow: 'initial',
+                  }}>
+                  <div
+                     className={cn(theme === 'dark' ? 'theme-dark' : 'theme-light', 'posts')}
+                     style={{
+                        textAlign: 'center',
+                        background: theme === 'light' ? 'white' : '#242526',
+                     }}>
+                     <div className={cn('posts')}>
+                        {posts ? (
+                           <>
+                              <Posts />
+                              <Posts />
+                           </>
+                        ) : (
+                           <>
+                              <PostsSkeleton />
+                              <PostsSkeleton />
+                           </>
+                        )}
+                     </div>
+                  </div>
+               </Content>
+            </Layout>
+            {isTabletOrMobile && (
+               <SiderBar styled={{ css: { right: 0 } }} items={[{ title: 'Friends', users }]} />
+            )}
          </Layout>
-         <SiderBar styled={{ css: { right: 0 } }} items={[{ title: 'Friends', users }]} />
       </Layout>
    );
 }

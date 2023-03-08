@@ -1,0 +1,41 @@
+.login-wrap {
+   width: 100vw;
+   height: 100vh;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+.login-form {
+   width: clamp(150px, 100%, 350px);
+   height: auto;
+   margin: 0 20px;
+   padding: 20px 15px;
+   display: flex;
+   flex-direction: column;
+   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+   border-radius: 8px;
+}
+.input-field {
+   & > div {
+      justify-content: space-around;
+      & button {
+         width: 100%;
+      }
+   }
+}
+.input-link {
+   & a {
+      font-size: 15px;
+      font-weight: 600;
+   }
+}
+@media screen and (max-width: 576px) {
+   .input-field {
+      & > div {
+         & button {
+            width: 70%;
+            font-weight: 600;
+         }
+      }
+   }
+}

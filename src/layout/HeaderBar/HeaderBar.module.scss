@@ -10,3 +10,9 @@
    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
    transition: background 0.3s, width 0.3s cubic-bezier(0.2, 0, 0, 1) 0s;
 }
+@media screen and (max-width: 931px) {
+   .header {
+      padding: 0;
+      padding-inline: 15px !important;
+   }
+}

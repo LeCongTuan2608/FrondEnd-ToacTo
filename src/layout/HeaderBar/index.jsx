@@ -168,6 +168,7 @@ function HeaderBar(props) {
                         style={{
                            backgroundColor: '#f9f0ff',
                            color: '#531dab',
+                           cursor: 'pointer',
                         }}
                         icon={<AliwangwangOutlined />}
                      />
@@ -180,6 +181,7 @@ function HeaderBar(props) {
                      style={{
                         backgroundColor: '#f0f5ff',
                         color: '#1d39c4',
+                        cursor: 'pointer',
                      }}
                      icon={<BellOutlined />}
                   />
@@ -195,6 +197,7 @@ function HeaderBar(props) {
                      style={{
                         backgroundColor: '#fff7e6',
                         color: '#d46b08',
+                        cursor: 'pointer',
                      }}
                      icon={<SettingOutlined />}
                   />
