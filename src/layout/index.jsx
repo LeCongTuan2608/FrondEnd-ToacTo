@@ -9,9 +9,9 @@ MainLayout.propTypes = {};
 
 function MainLayout(props) {
    const { theme } = useContext(ThemeContext);
-   const token = localStorage.getItem('token');
+   const [token, setToken] = useState(localStorage.getItem('token'));
    // if (!token) {
-   //    return <Login />;
+   //    return <Login token={token} setToken={setToken} />;
    // }
    return (
       <div>
