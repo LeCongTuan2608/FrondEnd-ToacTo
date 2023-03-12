@@ -4,6 +4,7 @@ import {
    ExperimentOutlined,
    HomeOutlined,
    LogoutOutlined,
+   MenuOutlined,
    QuestionOutlined,
    SearchOutlined,
    SettingOutlined,
@@ -14,6 +15,8 @@ import { Avatar, Badge, Dropdown, Layout, Menu, Space, Switch } from 'antd';
 import classNames from 'classnames/bind';
 import { ThemeContext } from 'Context/ThemeContext';
 import { useContext, useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
+import { useNavigate } from 'react-router-dom';
 import styles from './HeaderBar.module.scss';
 //
 const cn = classNames.bind(styles);
@@ -48,6 +51,8 @@ const pages = [
 function HeaderBar(props) {
    const [open, setOpen] = useState(false);
    const { theme, setTheme } = useContext(ThemeContext);
+   const navigate = useNavigate();
+   const isMobile = useMediaQuery({ query: '(min-width: 501px)' });
    const changeTheme = (value) => {
       setTheme(theme === 'light' ? 'dark' : 'light');
    };
@@ -125,28 +130,22 @@ function HeaderBar(props) {
    ];
    const handleClickPage = (e) => {
       console.log(e);
+      // navigate(e.key);
    };
    return (
       <Header
          className={cn('header')}
          style={{ background: theme === 'light' ? 'white' : '#242526' }}>
          {/* logo */}
-         <div
-            style={{
-               width: '100%',
-               maxWidth: '250px',
-               height: 31,
-               margin: '16px 24px 16px 0',
-               background: 'rgba(65, 40, 255, 0.2)',
-            }}
-         />
+         {isMobile && (
+            <div className={cn('header-logo')}>
+               <span>
+                  <h2>ToacTo</h2>
+               </span>
+            </div>
+         )}
          {/*  */}
-         <div
-            style={{
-               display: 'flex',
-               justifyContent: 'space-between',
-               width: '100%',
-            }}>
+         <div className={cn('header-nav')}>
             <Menu
                theme={theme}
                mode="horizontal"
@@ -160,48 +159,66 @@ function HeaderBar(props) {
                items={pages}
                onClick={handleClickPage}
             />
-            <Space size={15} wrap style={{ width: 250, justifyContent: 'flex-end' }}>
-               <Dropdown menu={{ items }} trigger={['click']}>
-                  <Badge count={4}>
+            <Space size={15} wrap style={{ justifyContent: 'flex-end' }}>
+               {isMobile ? (
+                  <>
+                     <Dropdown menu={{ items }} trigger={['click']}>
+                        <Badge count={4}>
+                           <Avatar
+                              size="large"
+                              style={{
+                                 backgroundColor: '#f9f0ff',
+                                 color: '#531dab',
+                                 cursor: 'pointer',
+                                 marginBottom: 7,
+                              }}
+                              icon={<AliwangwangOutlined />}
+                           />
+                        </Badge>
+                     </Dropdown>
+                     <Dropdown menu={{ items }} trigger={['click']}>
+                        <Avatar
+                           size="large"
+                           style={{
+                              backgroundColor: '#f0f5ff',
+                              color: '#1d39c4',
+                              cursor: 'pointer',
+                              marginBottom: 7,
+                           }}
+                           icon={<BellOutlined />}
+                        />
+                     </Dropdown>
+                     <Dropdown
+                        menu={{ items, onClick: handleMenuClick }}
+                        trigger={['click']}
+                        onOpenChange={handleOpenChange}
+                        open={open}>
+                        <Avatar
+                           size="large"
+                           style={{
+                              backgroundColor: '#fff7e6',
+                              color: '#d46b08',
+                              cursor: 'pointer',
+                              marginBottom: 7,
+                           }}
+                           icon={<SettingOutlined />}
+                        />
+                     </Dropdown>
+                  </>
+               ) : (
+                  <Dropdown menu={{ items }} trigger={['click']}>
                      <Avatar
                         size="large"
                         style={{
                            backgroundColor: '#f9f0ff',
                            color: '#531dab',
                            cursor: 'pointer',
+                           marginBottom: 7,
                         }}
-                        icon={<AliwangwangOutlined />}
+                        icon={<MenuOutlined />}
                      />
-                  </Badge>
-               </Dropdown>
-
-               <Dropdown menu={{ items }} trigger={['click']}>
-                  <Avatar
-                     size="large"
-                     style={{
-                        backgroundColor: '#f0f5ff',
-                        color: '#1d39c4',
-                        cursor: 'pointer',
-                     }}
-                     icon={<BellOutlined />}
-                  />
-               </Dropdown>
-
-               <Dropdown
-                  menu={{ items, onClick: handleMenuClick }}
-                  trigger={['click']}
-                  onOpenChange={handleOpenChange}
-                  open={open}>
-                  <Avatar
-                     size="large"
-                     style={{
-                        backgroundColor: '#fff7e6',
-                        color: '#d46b08',
-                        cursor: 'pointer',
-                     }}
-                     icon={<SettingOutlined />}
-                  />
-               </Dropdown>
+                  </Dropdown>
+               )}
             </Space>
          </div>
       </Header>

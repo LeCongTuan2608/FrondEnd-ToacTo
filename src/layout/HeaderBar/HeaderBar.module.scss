@@ -10,9 +10,40 @@
    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
    transition: background 0.3s, width 0.3s cubic-bezier(0.2, 0, 0, 1) 0s;
 }
+.header-logo {
+   & h2 {
+      margin: 0;
+      letter-spacing: 3px;
+      color: #531dab;
+   }
+}
+.header-nav {
+   display: flex;
+   justify-content: space-between;
+   width: 100%;
+   & svg {
+      font-size: 20px;
+   }
+   animation: ease-in-out;
+}
 @media screen and (max-width: 931px) {
    .header {
       padding: 0;
       padding-inline: 15px !important;
+   }
+}
+@media screen and (max-width: 756px) {
+   .header {
+      padding: 0;
+      padding-inline: 15px !important;
+   }
+   .header-nav {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      & ul li span {
+         display: none;
+         animation: ease-in-out;
+      }
    }
 }

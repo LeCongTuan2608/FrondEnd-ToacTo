@@ -9,6 +9,7 @@ import {
 import { Button, DatePicker, Divider, Form, Input, Select } from 'antd';
 import classNames from 'classnames/bind';
 import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './Signup.module.scss';
 const { Option } = Select;
 const cn = classNames.bind(styles);
@@ -26,16 +27,20 @@ const validateMessages = {
 function Signup(props) {
    const { token, setToken } = props;
    const [loadings, setLoading] = useState(false);
+   const navigate = useNavigate();
    const onFinish = (values) => {
       console.log('Success:', values);
-      // setLoading(true);
-      // setTimeout(() => {
-      //    localStorage.setItem('token', 'true');
-      //    setToken(true);
-      // }, 2000);
+      setLoading(true);
+      setTimeout(() => {
+         navigate('/login');
+      }, 2000);
    };
    const onFinishFailed = (errorInfo) => {
       console.log('Failed:', errorInfo);
+   };
+   const handleClickBackLogin = (e) => {
+      e.preventDefault();
+      navigate('/login');
    };
 
    return (
@@ -109,7 +114,7 @@ function Signup(props) {
                   </Form.Item>
                   <Form.Item
                      name="confirm"
-                     label="Confirm Password"
+                     label="Confirm password"
                      dependencies={['password']}
                      hasFeedback
                      rules={[
@@ -142,7 +147,7 @@ function Signup(props) {
                            required: true,
                         },
                      ]}>
-                     <Select placeholder="Select gender" value="female" allowClear noStyle>
+                     <Select placeholder="Select gender" value="female" allowClear>
                         <Option value="male">male</Option>
                         <Option value="female">female</Option>
                         <Option value="other">other</Option>
@@ -187,27 +192,36 @@ function Signup(props) {
                      />
                   </Form.Item>
                   <Form.Item
-                     className={cn('input-field')}
-                     style={{ marginBottom: 5, marginTop: 40 }}>
+                     className={cn('input-field', 'center')}
+                     style={{
+                        marginBottom: 5,
+                        marginTop: 40,
+                        '> div': { justifyContent: 'center' },
+                     }}>
                      <Button type="primary" htmlType="submit" loading={loadings}>
                         Signup
                      </Button>
                   </Form.Item>
 
                   <Divider>Or</Divider>
-                  <Form.Item
-                     className={cn('input-field', 'input-link')}
-                     style={{ marginBottom: 10 }}>
-                     <a href="">
+                  <Form.Item className={cn('center', 'input-link')} style={{ marginBottom: 10 }}>
+                     <a
+                        href="#facebook"
+                        onClick={(e) => {
+                           e.preventDefault();
+                        }}>
                         <FacebookOutlined /> Signup with Facebook
                      </a>
                   </Form.Item>
                   <Form.Item
-                     className={cn('input-field')}
+                     className={cn('center')}
                      style={{ marginBottom: 5, fontStyle: 'italic', color: 'rgb(166, 166, 166)' }}>
                      <span>
                         You have an account?
-                        <a href=""> Login</a>
+                        <a href="#login" onClick={handleClickBackLogin}>
+                           {' '}
+                           Login
+                        </a>
                      </span>
                   </Form.Item>
                </Form>

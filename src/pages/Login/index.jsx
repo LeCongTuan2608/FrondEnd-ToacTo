@@ -9,6 +9,7 @@ import {
    QuestionCircleOutlined,
    UserOutlined,
 } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 const cn = classNames.bind(styles);
 
 Login.propTypes = {};
@@ -16,12 +17,14 @@ Login.propTypes = {};
 function Login(props) {
    const { token, setToken } = props;
    const [loadings, setLoading] = useState(false);
+   const navigate = useNavigate();
    const onFinish = (values) => {
       console.log('Success:', values);
       setLoading(true);
       setTimeout(() => {
          localStorage.setItem('token', 'true');
-         setToken(true);
+         // setToken(true);
+         navigate('/');
       }, 2000);
    };
    const onFinishFailed = (errorInfo) => {
@@ -29,7 +32,7 @@ function Login(props) {
    };
    const handleClickSignup = (e) => {
       e.preventDefault();
-      console.log('hello');
+      navigate('/signup');
    };
    return (
       <div className={cn('login-wrap')}>
@@ -113,7 +116,7 @@ function Login(props) {
                         </a>
                      </span>
                   </Form.Item>
-                  <Divider>Or</Divider>
+                  <Divider style={{ margin: 0 }}>Or</Divider>
 
                   <Form.Item
                      className={cn('input-field', 'input-link')}
