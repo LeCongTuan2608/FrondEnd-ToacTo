@@ -25,7 +25,6 @@ const validateMessages = {
    },
 };
 function Signup(props) {
-   const { token, setToken } = props;
    const [loadings, setLoading] = useState(false);
    const navigate = useNavigate();
    const onFinish = (values) => {

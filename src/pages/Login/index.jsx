@@ -15,7 +15,6 @@ const cn = classNames.bind(styles);
 Login.propTypes = {};
 
 function Login(props) {
-   const { token, setToken } = props;
    const [loadings, setLoading] = useState(false);
    const navigate = useNavigate();
    const onFinish = (values) => {
@@ -23,7 +22,6 @@ function Login(props) {
       setLoading(true);
       setTimeout(() => {
          localStorage.setItem('token', 'true');
-         // setToken(true);
          navigate('/');
       }, 2000);
    };

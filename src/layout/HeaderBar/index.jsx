@@ -16,7 +16,7 @@ import classNames from 'classnames/bind';
 import { ThemeContext } from 'Context/ThemeContext';
 import { useContext, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './HeaderBar.module.scss';
 //
 const cn = classNames.bind(styles);
@@ -53,16 +53,36 @@ function HeaderBar(props) {
    const { theme, setTheme } = useContext(ThemeContext);
    const navigate = useNavigate();
    const isMobile = useMediaQuery({ query: '(min-width: 501px)' });
+   const location = useLocation();
    const changeTheme = (value) => {
       setTheme(theme === 'light' ? 'dark' : 'light');
    };
    const handleMenuClick = (e) => {
-      if (e.key === '4') {
+      if (e.key === '4' || e.key === '3') {
          setOpen(false);
       }
    };
    const handleOpenChange = (flag) => {
       setOpen(flag);
+   };
+
+   const handleClickPage = (e) => {
+      switch (e.key) {
+         case 'home':
+            navigate('/');
+            break;
+         case 'search':
+            navigate('/search');
+            break;
+         case 'video':
+            navigate('/video');
+            break;
+         case 'profile':
+            navigate('/profile');
+            break;
+         default:
+            break;
+      }
    };
    const items = [
       {
@@ -99,7 +119,11 @@ function HeaderBar(props) {
       {
          key: '2',
          label: (
-            <div style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 0' }}>
+            <div
+               onClick={() => {
+                  navigate('/help-support');
+               }}
+               style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 0' }}>
                <QuestionOutlined />
                Help & support
             </div>
@@ -108,7 +132,11 @@ function HeaderBar(props) {
       {
          key: '3',
          label: (
-            <div style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 0' }}>
+            <div
+               onClick={() => {
+                  navigate('/setting');
+               }}
+               style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 0' }}>
                <SettingOutlined />
                Setting
             </div>
@@ -128,10 +156,6 @@ function HeaderBar(props) {
          ),
       },
    ];
-   const handleClickPage = (e) => {
-      console.log(e);
-      // navigate(e.key);
-   };
    return (
       <Header
          className={cn('header')}
@@ -155,7 +179,7 @@ function HeaderBar(props) {
                   gap: 10,
                   background: theme === 'light' ? 'white' : '#242526',
                }}
-               defaultSelectedKeys={['home']}
+               selectedKeys={[location.pathname.slice(1) || 'home']}
                items={pages}
                onClick={handleClickPage}
             />

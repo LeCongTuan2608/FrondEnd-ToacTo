@@ -120,6 +120,8 @@ function MainContent(props) {
                            <>
                               <Posts />
                               <Posts />
+                              <Posts />
+                              <Posts />
                            </>
                         ) : (
                            <>
