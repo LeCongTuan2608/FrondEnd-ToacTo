@@ -1,0 +1,27 @@
+@import '../../color/color';
+
+.theme-light {
+   background-color: $bgLight !important;
+}
+.user-wrap {
+   max-width: 1200px;
+   margin: 0 auto;
+}
+.user-image-cover {
+   padding-top: 35%;
+   background-color: #8eab9d;
+   border-bottom-left-radius: 20px;
+   border-bottom-right-radius: 20px;
+}
+// posts
+.container-contents {
+   max-width: 700px;
+   margin: 0 auto;
+}
+.contents-posts {
+   & > div {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+   }
+}

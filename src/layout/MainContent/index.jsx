@@ -39,7 +39,7 @@ function MainContent(props) {
    const [posts, setPosts] = useState(true);
    const { theme } = useContext(ThemeContext);
    const isSmallScreen = useMediaQuery({ query: '(min-width: 1261px)' });
-   const isTabletOrMobile = useMediaQuery({ query: '(min-width: 931px)' });
+   const isTabletOrMobile = useMediaQuery({ query: '(min-width: 932px)' });
    return (
       <Layout
          style={{

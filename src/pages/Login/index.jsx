@@ -10,13 +10,21 @@ import {
    UserOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import * as yup from 'yup';
+
 const cn = classNames.bind(styles);
 
 Login.propTypes = {};
 
+const loginSchema = yup.object().shape({
+   email: yup.string().email('Invalid email').required('Please input your email!'),
+   password: yup.string().required('Please input your password!'),
+});
+
 function Login(props) {
    const [loadings, setLoading] = useState(false);
    const navigate = useNavigate();
+   const [form] = Form.useForm();
    const onFinish = (values) => {
       console.log('Success:', values);
       setLoading(true);
@@ -32,6 +40,13 @@ function Login(props) {
       e.preventDefault();
       navigate('/signup');
    };
+   //
+   // validate form
+   const yupSync = {
+      async validator({ field }, value) {
+         await loginSchema.validateSyncAt(field, { [field]: value });
+      },
+   };
    return (
       <div className={cn('login-wrap')}>
          <div className={cn('login-form')}>
@@ -45,6 +60,7 @@ function Login(props) {
             <div className={cn('form-main')}>
                <Form
                   name="basic"
+                  form={form}
                   wrapperCol={{
                      span: 16,
                   }}
@@ -64,13 +80,7 @@ function Login(props) {
                      labelCol={{
                         span: 5,
                      }}
-                     rules={[
-                        {
-                           required: true,
-                           type: 'email',
-                           message: 'Please input your email!',
-                        },
-                     ]}>
+                     rules={[yupSync]}>
                      <Input
                         prefix={<UserOutlined className="site-form-item-icon" />}
                         placeholder="Email"
@@ -84,12 +94,7 @@ function Login(props) {
                      labelCol={{
                         span: 5,
                      }}
-                     rules={[
-                        {
-                           required: true,
-                           message: 'Please input your password!',
-                        },
-                     ]}>
+                     rules={[yupSync]}>
                      <Input.Password
                         prefix={<LockOutlined className="site-form-item-icon" />}
                         placeholder="Password"

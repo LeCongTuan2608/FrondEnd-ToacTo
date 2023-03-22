@@ -11,22 +11,33 @@ import classNames from 'classnames/bind';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Signup.module.scss';
+import * as yup from 'yup';
 const { Option } = Select;
 const cn = classNames.bind(styles);
 Signup.propTypes = {};
-const validateMessages = {
-   required: '${label} is required!',
-   types: {
-      email: '${label} is not a valid email!',
-      number: '${label} is not a valid number!',
-   },
-   number: {
-      range: '${label} must be between ${min} and ${max}',
-   },
-};
+
+const signupSchema = yup.object().shape({
+   fullName: yup
+      .string()
+      .min(5, 'Too short!')
+      .max(50, 'Too long!')
+      .required('Please input your full name!'),
+   email: yup.string().email('Invalid email').required('Please input your email!'),
+   password: yup
+      .string()
+      .min(5, 'Too short!')
+      .max(100, 'Too long!')
+      .required('Please input your password!'),
+   confirm: yup.string().required('Please input your confirm password!'),
+   gender: yup.string().oneOf(['male', 'female', 'other']).required('Please select your gender!'),
+   birthDay: yup.date().required('Please select your email!'),
+   phone: yup.string().required('Please input your phone!'),
+});
 function Signup(props) {
    const [loadings, setLoading] = useState(false);
    const navigate = useNavigate();
+   const [form] = Form.useForm();
+
    const onFinish = (values) => {
       console.log('Success:', values);
       setLoading(true);
@@ -41,7 +52,13 @@ function Signup(props) {
       e.preventDefault();
       navigate('/login');
    };
-
+   //
+   // validate form
+   const yupSync = {
+      async validator({ field }, value) {
+         await signupSchema.validateSyncAt(field, { [field]: value });
+      },
+   };
    return (
       <div className={cn('login-wrap')}>
          <div className={cn('login-form')}>
@@ -54,7 +71,8 @@ function Signup(props) {
             </div>
             <div className={cn('form-main')}>
                <Form
-                  name="basic"
+                  name="formSignup"
+                  form={form}
                   wrapperCol={{
                      span: 18,
                   }}
@@ -66,29 +84,19 @@ function Signup(props) {
                   }}
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
-                  autoComplete="off"
-                  validateMessages={validateMessages}>
+                  autoComplete="off">
                   <Form.Item
                      className={cn('input-field')}
                      label="Full Name"
                      name="fullName"
-                     rules={[
-                        {
-                           required: true,
-                        },
-                     ]}>
+                     rules={[yupSync]}>
                      <Input placeholder="Full name" />
                   </Form.Item>
                   <Form.Item
                      className={cn('input-field')}
                      label="Email"
                      name="email"
-                     rules={[
-                        {
-                           required: true,
-                           type: 'email',
-                        },
-                     ]}>
+                     rules={[yupSync]}>
                      <Input
                         prefix={<UserOutlined className="site-form-item-icon" />}
                         placeholder="Email"
@@ -99,13 +107,7 @@ function Signup(props) {
                      className={cn('input-field')}
                      label="Password"
                      name="password"
-                     rules={[
-                        {
-                           required: true,
-                           min: 6,
-                           max: 50,
-                        },
-                     ]}>
+                     rules={[yupSync]}>
                      <Input.Password
                         prefix={<LockOutlined className="site-form-item-icon" />}
                         placeholder="Password"
@@ -117,10 +119,7 @@ function Signup(props) {
                      dependencies={['password']}
                      hasFeedback
                      rules={[
-                        {
-                           required: true,
-                           message: 'Please confirm your password!',
-                        },
+                        yupSync,
                         ({ getFieldValue }) => ({
                            validator(_, value) {
                               if (!value || getFieldValue('password') === value) {
@@ -141,11 +140,7 @@ function Signup(props) {
                      className={cn('input-field')}
                      name="gender"
                      label="Gender"
-                     rules={[
-                        {
-                           required: true,
-                        },
-                     ]}>
+                     rules={[yupSync]}>
                      <Select placeholder="Select gender" value="female" allowClear>
                         <Option value="male">male</Option>
                         <Option value="female">female</Option>
@@ -156,22 +151,14 @@ function Signup(props) {
                      className={cn('input-field')}
                      label="Birth day"
                      name="birthDay"
-                     rules={[
-                        {
-                           required: true,
-                        },
-                     ]}>
+                     rules={[yupSync]}>
                      <DatePicker style={{ width: '100%' }} />
                   </Form.Item>
                   <Form.Item
                      className={cn('input-field')}
                      label="Phone"
                      name="phone"
-                     rules={[
-                        {
-                           required: true,
-                        },
-                     ]}>
+                     rules={[yupSync]}>
                      <Input
                         prefix={<PhoneOutlined className="site-form-item-icon" />}
                         placeholder="Confirm password"
