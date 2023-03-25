@@ -29,5 +29,27 @@ const pages = [
       key: 'profile',
       label: 'Profile',
       icon: <UserOutlined />,
+      children: [
+         {
+            path: '',
+            key: 'posts',
+            label: 'Posts',
+         },
+         {
+            path: 'info',
+            key: 'info',
+            label: 'Infomation',
+         },
+         {
+            path: 'images',
+            key: 'images',
+            label: 'Images',
+         },
+         {
+            path: 'videos',
+            key: 'videos',
+            label: 'Video',
+         },
+      ],
    },
 ];
