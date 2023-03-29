@@ -9,7 +9,7 @@ import {
    QuestionCircleOutlined,
    UserOutlined,
 } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 
 const cn = classNames.bind(styles);
@@ -23,6 +23,7 @@ const loginSchema = yup.object().shape({
 
 function Login(props) {
    const [loadings, setLoading] = useState(false);
+   const [token, setToken] = useState(localStorage.getItem('token'));
    const navigate = useNavigate();
    const [form] = Form.useForm();
    const onFinish = (values) => {
@@ -47,6 +48,9 @@ function Login(props) {
          await loginSchema.validateSyncAt(field, { [field]: value });
       },
    };
+   if (token) {
+      return <Navigate to="/" replace />;
+   }
    return (
       <div className={cn('login-wrap')}>
          <div className={cn('login-form')}>

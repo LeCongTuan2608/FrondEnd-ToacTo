@@ -60,7 +60,9 @@ function Profile(props) {
                   <div>
                      <div className={cn('user-info')}>
                         <div className={cn('avatar')}>
-                           <img src={img_avatar} alt="" />
+                           <div>
+                              <img src={img_avatar} alt="" />
+                           </div>
                         </div>
                         <div className={cn('name')}>
                            <h1>Tuấn Lê</h1>
@@ -107,7 +109,14 @@ function Profile(props) {
                </div>
                <div className={cn('container-nav')}>
                   <div>
-                     <Menu onClick={onClick} selectedKeys={path} mode="horizontal" items={items} />
+                     <Menu
+                        onClick={onClick}
+                        selectedKeys={path}
+                        mode="horizontal"
+                        items={items}
+                        className={cn(theme === 'light' ? 'theme-light' : 'theme-dark')}
+                        style={{ fontWeight: 500 }}
+                     />
                   </div>
                </div>
             </div>

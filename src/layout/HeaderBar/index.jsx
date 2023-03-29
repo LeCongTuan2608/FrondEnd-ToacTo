@@ -18,6 +18,7 @@ import { useContext, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './HeaderBar.module.scss';
+import Switches from './Switches';
 //
 const cn = classNames.bind(styles);
 const { Header, Sider } = Layout;
@@ -54,9 +55,7 @@ function HeaderBar(props) {
    const navigate = useNavigate();
    const isMobile = useMediaQuery({ query: '(min-width: 501px)' });
    const location = useLocation();
-   const changeTheme = (value) => {
-      setTheme(theme === 'light' ? 'dark' : 'light');
-   };
+
    const handleMenuClick = (e) => {
       if (e.key === '4' || e.key === '3') {
          setOpen(false);
@@ -89,13 +88,13 @@ function HeaderBar(props) {
          key: '1',
          label: (
             <div
-               onClick={changeTheme}
                style={{
                   display: 'flex',
                   padding: '5px 0',
                   width: 250,
                   justifyContent: 'space-between',
                   alignItems: 'center',
+                  position: 'relative',
                }}>
                <div
                   style={{
@@ -107,12 +106,13 @@ function HeaderBar(props) {
                   <ExperimentOutlined />
                   Theme
                </div>
-               <Switch
+               <Switches />
+               {/* <Switch
                   style={{ width: 100 }}
                   checked={theme === 'dark'}
                   checkedChildren="Dark"
                   unCheckedChildren="Light"
-               />
+               /> */}
             </div>
          ),
       },
@@ -149,7 +149,12 @@ function HeaderBar(props) {
          key: '4',
          danger: true,
          label: (
-            <div style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 0' }}>
+            <div
+               onClick={() => {
+                  localStorage.removeItem('token');
+                  navigate('/login');
+               }}
+               style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 0' }}>
                <LogoutOutlined />
                Logout
             </div>

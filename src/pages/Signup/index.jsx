@@ -9,7 +9,7 @@ import {
 import { Button, DatePicker, Divider, Form, Input, Select } from 'antd';
 import classNames from 'classnames/bind';
 import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import styles from './Signup.module.scss';
 import * as yup from 'yup';
 const { Option } = Select;
@@ -35,6 +35,7 @@ const signupSchema = yup.object().shape({
 });
 function Signup(props) {
    const [loadings, setLoading] = useState(false);
+   const [token, setToken] = useState(localStorage.getItem('token'));
    const navigate = useNavigate();
    const [form] = Form.useForm();
 
@@ -59,6 +60,9 @@ function Signup(props) {
          await signupSchema.validateSyncAt(field, { [field]: value });
       },
    };
+   if (token) {
+      return <Navigate to="/" replace />;
+   }
    return (
       <div className={cn('login-wrap')}>
          <div className={cn('login-form')}>
