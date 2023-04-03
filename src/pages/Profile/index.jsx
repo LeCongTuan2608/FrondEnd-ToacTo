@@ -47,7 +47,7 @@ function Profile(props) {
       location.pathname.substring(location.pathname.lastIndexOf('/') + 1) === 'profile'
          ? 'posts'
          : location.pathname.substring(location.pathname.lastIndexOf('/') + 1);
-
+   console.log('tao moi thay doi theme ne');
    const onClick = (e) => {
       console.log('click ', e);
    };

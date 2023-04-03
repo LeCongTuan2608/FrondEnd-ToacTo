@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { BrowserRouter, Route, Router, Routes } from 'react-router-dom';
 import Login from 'pages/Login';
 import Signup from 'pages/Signup';
-import MainContent from 'layout/MainContent';
+import Home from 'pages/Home';
 import Setting from 'pages/Setting';
 import Search from 'pages/Search';
 import Video from 'pages/Video';
@@ -23,7 +23,7 @@ function App() {
          <BrowserRouter>
             <Routes>
                <Route element={<MainLayout />}>
-                  <Route path="/" element={<MainContent />} />
+                  <Route path="/" element={<Home />} />
                   <Route path="/search" element={<Search />} />
                   <Route path="/video" element={<Video />} />
                   <Route path="/profile" element={<Profile />}>

@@ -1,11 +1,11 @@
+import { ThemeContext } from 'Context/ThemeContext';
 import { Layout } from 'antd';
 import classNames from 'classnames/bind';
-import { ThemeContext } from 'Context/ThemeContext';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
+import styles from './SiderBar.module.scss';
 import AvatarCustom from './components/AvatarCustom';
 import ButtonCustom from './components/ButtonCustom';
 import ModalCustom from './components/ModalCustom';
-import styles from './SiderBar.module.scss';
 const { Sider } = Layout;
 const cn = classNames.bind(styles);
 SiderBar.propTypes = {};

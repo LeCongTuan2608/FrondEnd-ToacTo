@@ -4,7 +4,6 @@ import Login from 'pages/Login';
 import { useContext, useEffect, useState } from 'react';
 import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import HeaderBar from './HeaderBar';
-import MainContent from './MainContent';
 
 MainLayout.propTypes = {};
 
@@ -19,7 +18,9 @@ function MainLayout(props) {
       <div>
          <Layout style={theme === 'dark' ? { background: '#18191a' } : { background: '#f0f2f5' }}>
             <HeaderBar />
-            <Outlet />
+            <main>
+               <Outlet />
+            </main>
          </Layout>
       </div>
    );

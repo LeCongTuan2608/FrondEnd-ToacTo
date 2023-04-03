@@ -1,25 +1,23 @@
 import {
    DesktopOutlined,
    FileOutlined,
-   MenuFoldOutlined,
-   MenuUnfoldOutlined,
    PieChartOutlined,
    TeamOutlined,
    UserOutlined,
 } from '@ant-design/icons';
-import { Avatar, Input, Layout, Space, Tag, theme } from 'antd';
 import { ThemeContext } from 'Context/ThemeContext';
-import SiderBar from 'layout/SiderBar';
-import React, { useContext, useState } from 'react';
+import { Avatar, Input, Layout, Space, Tag } from 'antd';
 import classNames from 'classnames/bind';
-import styles from './MainContent.module.scss';
-import PostsSkeleton from 'components/PostsSkeleton';
 import Posts from 'components/Posts';
+import PostsSkeleton from 'components/PostsSkeleton';
+import { useContext, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import styles from './Home.module.scss';
+import SiderBar from './SiderBar';
 const cn = classNames.bind(styles);
 
-const { Content, Sider, Header } = Layout;
-MainContent.propTypes = {};
+const { Content, Header } = Layout;
+Home.propTypes = {};
 function getItem(label, key, icon, children) {
    return {
       key,
@@ -29,13 +27,14 @@ function getItem(label, key, icon, children) {
    };
 }
 const users = [
-   getItem('Lê Công Tuấn', '1', <PieChartOutlined />),
+   { key: '1', icon: <PieChartOutlined />, children: undefined, label: 'Lê Công Tuấn' },
+   // getItem('Lê Công Tuấn', '1', <PieChartOutlined />),
    getItem('Lê Công Duy', '2', <DesktopOutlined />),
    getItem('Lê Công Lai', '3', <UserOutlined />),
    getItem('Ngô Thị Thúy', '4', <TeamOutlined />),
    getItem('Lê Công Lộc', '5', <FileOutlined />),
 ];
-function MainContent(props) {
+function Home(props) {
    const [posts, setPosts] = useState(true);
    const { theme } = useContext(ThemeContext);
    const isSmallScreen = useMediaQuery({ query: '(min-width: 1261px)' });
@@ -141,4 +140,4 @@ function MainContent(props) {
    );
 }
 
-export default MainContent;
+export default Home;
