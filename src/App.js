@@ -1,21 +1,19 @@
-import './App.css';
 import MainLayout from 'layout';
-import { useEffect } from 'react';
-import { BrowserRouter, Route, Router, Routes } from 'react-router-dom';
-import Login from 'pages/Login';
-import Signup from 'pages/Signup';
-import Home from 'pages/Home';
-import Setting from 'pages/Setting';
-import Search from 'pages/Search';
-import Video from 'pages/Video';
-import Profile from 'pages/Profile';
 import HelpSupport from 'pages/HelpSupport';
+import Home from 'pages/Home';
+import Login from 'pages/Login';
 import PageNotFound from 'pages/PageNotFound';
-import ErrorBoundary from 'antd/es/alert/ErrorBoundary';
-import ListPosts from 'pages/Profile/ListPosts';
-import Info from 'pages/Profile/Info';
+import Profile from 'pages/Profile';
 import Images from 'pages/Profile/Images';
+import Info from 'pages/Profile/Info';
+import ListPosts from 'pages/Profile/ListPosts';
 import Videos from 'pages/Profile/Videos';
+import Search from 'pages/Search';
+import Setting from 'pages/Setting';
+import Signup from 'pages/Signup';
+import Video from 'pages/Video';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import './App.css';
 
 function App() {
    return (

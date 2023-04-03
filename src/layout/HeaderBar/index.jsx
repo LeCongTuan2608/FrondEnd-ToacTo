@@ -167,7 +167,11 @@ function HeaderBar(props) {
          style={{ background: theme === 'light' ? 'white' : '#242526' }}>
          {/* logo */}
          {isMobile && (
-            <div className={cn('header-logo')}>
+            <div
+               className={cn('header-logo')}
+               onClick={() => {
+                  navigate('/');
+               }}>
                <span>
                   <h2>ToacTo</h2>
                </span>
