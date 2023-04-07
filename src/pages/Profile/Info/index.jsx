@@ -5,7 +5,7 @@ Info.propTypes = {};
 
 function Info(props) {
    return (
-      <div>
+      <div style={{ paddingBottom: 300 }}>
          <h1> Hello info</h1>
       </div>
    );

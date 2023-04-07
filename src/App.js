@@ -14,14 +14,31 @@ import Signup from 'pages/Signup';
 import Video from 'pages/Video';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
-
+import { MainRoutes } from 'routes';
 function App() {
    return (
       <div className="App">
          <BrowserRouter>
             <Routes>
                <Route element={<MainLayout />}>
-                  <Route path="/" element={<Home />} />
+                  {MainRoutes.map((item) => {
+                     if (item.children)
+                        return (
+                           <Route path={item.path} element={item.element} key={item.key}>
+                              {item.children.map((childItem) => {
+                                 return (
+                                    <Route
+                                       path={childItem.path}
+                                       element={childItem.element}
+                                       key={childItem.key}
+                                    />
+                                 );
+                              })}
+                           </Route>
+                        );
+                     return <Route path={item.path} element={item.element} key={item.key} />;
+                  })}
+                  {/* <Route path="/" element={<Home />} />
                   <Route path="/search" element={<Search />} />
                   <Route path="/video" element={<Video />} />
                   <Route path="/profile" element={<Profile />}>
@@ -31,7 +48,7 @@ function App() {
                      <Route path="videos" element={<Videos />} />
                   </Route>
                   <Route path="/help-support" element={<HelpSupport />} />
-                  <Route path="/setting" element={<Setting />} />
+                  <Route path="/setting" element={<Setting />} /> */}
                </Route>
                <Route path="/login" element={<Login />} />
                <Route path="/signup" element={<Signup />} />

@@ -106,14 +106,8 @@
    width: 100%;
    padding: 15px 0;
 }
-.contents-posts {
-   max-width: 700px;
+.contents-components {
    margin: 0 auto;
-   & > div {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-   }
 }
 @media screen and (max-width: 857px) {
    .user-info {

@@ -121,6 +121,7 @@ function Home(props) {
                               <Posts />
                               <Posts />
                               <Posts />
+                              <PostsSkeleton />
                            </>
                         ) : (
                            <>

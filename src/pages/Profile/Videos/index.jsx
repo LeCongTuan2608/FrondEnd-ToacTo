@@ -5,7 +5,7 @@ Videos.propTypes = {};
 
 function Videos(props) {
    return (
-      <div>
+      <div style={{ paddingBottom: 300 }}>
          <h1>Hello videos</h1>
       </div>
    );

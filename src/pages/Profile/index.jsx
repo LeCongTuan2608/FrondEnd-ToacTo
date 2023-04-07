@@ -18,7 +18,7 @@ import ListPosts from './ListPosts';
 import styles from './Profile.module.scss';
 const cn = classNames.bind(styles);
 Profile.propTypes = {};
-const items = [
+const components = [
    {
       label: <Link to={'/profile'}>Posts</Link>,
       key: 'posts',
@@ -47,7 +47,6 @@ function Profile(props) {
       location.pathname.substring(location.pathname.lastIndexOf('/') + 1) === 'profile'
          ? 'posts'
          : location.pathname.substring(location.pathname.lastIndexOf('/') + 1);
-   console.log('tao moi thay doi theme ne');
    const onClick = (e) => {
       console.log('click ', e);
    };
@@ -113,7 +112,7 @@ function Profile(props) {
                         onClick={onClick}
                         selectedKeys={path}
                         mode="horizontal"
-                        items={items}
+                        items={components}
                         className={cn(theme === 'light' ? 'theme-light' : 'theme-dark')}
                         style={{ fontWeight: 500 }}
                      />
@@ -122,7 +121,7 @@ function Profile(props) {
             </div>
 
             <div className={cn('container-contents')}>
-               <div className={cn('contents-posts')}>
+               <div className={cn('contents-components')}>
                   <div>
                      <Outlet />
                   </div>
