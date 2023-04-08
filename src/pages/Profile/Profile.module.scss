@@ -128,6 +128,26 @@
       text-align: center;
    }
 }
+.move-up {
+   position: fixed;
+   width: 40px;
+   height: 40px;
+   border-radius: 100rem;
+   bottom: 40px;
+   right: 30px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+   cursor: pointer;
+   & span {
+      & svg {
+         width: 20px;
+         height: 20px;
+      }
+   }
+}
+
 @media screen and (max-width: 765px) {
    .container-nav {
       & div {

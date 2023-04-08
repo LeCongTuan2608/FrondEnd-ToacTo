@@ -1,5 +1,6 @@
 import {
    AntDesignOutlined,
+   ArrowUpOutlined,
    EditOutlined,
    FileImageOutlined,
    PlusOutlined,
@@ -11,7 +12,7 @@ import { Avatar, Button, Divider, Layout, Menu, Tooltip } from 'antd';
 import classNames from 'classnames/bind';
 import Posts from 'components/Posts';
 import { ThemeContext } from 'Context/ThemeContext';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import img_avatar from '../../images/avatar.png';
 import ListPosts from './ListPosts';
@@ -36,19 +37,41 @@ const components = [
    },
    {
       label: <Link to={'/profile/videos'}>Video</Link>,
-      key: 'video',
+      key: 'videos',
       icon: <VideoCameraOutlined />,
    },
 ];
 function Profile(props) {
    const { theme } = useContext(ThemeContext);
    const location = useLocation();
+   const [showScrollButton, setShowScrollButton] = useState(false);
+
+   useEffect(() => {
+      const handleScroll = () => {
+         if (window.pageYOffset > 400) {
+            setShowScrollButton(true);
+         } else {
+            setShowScrollButton(false);
+         }
+      };
+      window.addEventListener('scroll', handleScroll);
+      return () => {
+         window.removeEventListener('scroll', handleScroll);
+      };
+   }, []);
+
    const path =
       location.pathname.substring(location.pathname.lastIndexOf('/') + 1) === 'profile'
          ? 'posts'
          : location.pathname.substring(location.pathname.lastIndexOf('/') + 1);
    const onClick = (e) => {
       console.log('click ', e);
+   };
+   const handleMoveUp = () => {
+      window.scrollTo({
+         top: 0,
+         behavior: 'smooth',
+      });
    };
    return (
       <Layout className={cn('wrapper')} style={{ background: theme === 'dark' && '#18191a' }}>
@@ -122,8 +145,13 @@ function Profile(props) {
 
             <div className={cn('container-contents')}>
                <div className={cn('contents-components')}>
-                  <div>
+                  <div style={{ position: 'relative' }}>
                      <Outlet />
+                     {showScrollButton && (
+                        <div className={cn('move-up')} onClick={handleMoveUp}>
+                           <ArrowUpOutlined />
+                        </div>
+                     )}
                   </div>
                </div>
             </div>

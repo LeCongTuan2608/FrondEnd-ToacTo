@@ -1,0 +1,9 @@
+.videos-wrap {
+   max-width: 1000px;
+   margin: 0 auto;
+}
+.list-videos {
+   display: grid;
+   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+   gap: 7px;
+}
