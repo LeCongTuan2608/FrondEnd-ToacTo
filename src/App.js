@@ -8,7 +8,7 @@ import Images from 'pages/Profile/Images';
 import Info from 'pages/Profile/Info';
 import ListPosts from 'pages/Profile/ListPosts';
 import Videos from 'pages/Profile/Videos';
-import Search from 'pages/Search';
+import Search from 'pages/SearchPage';
 import Setting from 'pages/Setting';
 import Signup from 'pages/Signup';
 import Video from 'pages/Video';

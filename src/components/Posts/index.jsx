@@ -1,17 +1,15 @@
-import React, { useContext, useState } from 'react';
-import PropTypes from 'prop-types';
-import { ThemeContext } from 'Context/ThemeContext';
-import { Avatar, Col, Divider, Dropdown, Image, Layout, Row, Space } from 'antd';
 import {
    CommentOutlined,
+   ExclamationCircleOutlined,
    HeartOutlined,
-   LogoutOutlined,
    MoreOutlined,
-   QuestionOutlined,
-   SettingOutlined,
+   StopOutlined,
    UserOutlined,
 } from '@ant-design/icons';
+import { ThemeContext } from 'Context/ThemeContext';
+import { Avatar, Divider, Dropdown, Layout, Space } from 'antd';
 import classNames from 'classnames/bind';
+import { useContext, useState } from 'react';
 import styles from './Posts.module.scss';
 import Images from './components/Images';
 const cn = classNames.bind(styles);
@@ -35,7 +33,7 @@ function Posts(props) {
          key: '1',
          label: (
             <div style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}>
-               <QuestionOutlined />
+               <ExclamationCircleOutlined />
                Report
             </div>
          ),
@@ -45,7 +43,7 @@ function Posts(props) {
          // danger: true,
          label: (
             <div style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}>
-               <LogoutOutlined />
+               <StopOutlined />
                Block
             </div>
          ),

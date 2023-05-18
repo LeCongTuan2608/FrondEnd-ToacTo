@@ -19,6 +19,9 @@ import { useMediaQuery } from 'react-responsive';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './HeaderBar.module.scss';
 import Switches from './Switches';
+import Message from 'components/Message';
+import BoxMessage from './BoxMessage';
+import BoxNotification from './BoxNotification';
 //
 const cn = classNames.bind(styles);
 const { Header, Sider } = Layout;
@@ -57,7 +60,7 @@ function HeaderBar(props) {
    const location = useLocation();
 
    const handleMenuClick = (e) => {
-      if (e.key === '4' || e.key === '3') {
+      if (e.key !== '1') {
          setOpen(false);
       }
    };
@@ -161,6 +164,7 @@ function HeaderBar(props) {
          ),
       },
    ];
+
    return (
       <Header
          className={cn('header')}
@@ -195,32 +199,8 @@ function HeaderBar(props) {
             <Space size={15} wrap style={{ justifyContent: 'flex-end' }}>
                {isMobile ? (
                   <>
-                     <Dropdown menu={{ items }} trigger={['click']}>
-                        <Badge count={4}>
-                           <Avatar
-                              size="large"
-                              style={{
-                                 backgroundColor: '#f9f0ff',
-                                 color: '#531dab',
-                                 cursor: 'pointer',
-                                 marginBottom: 7,
-                              }}
-                              icon={<AliwangwangOutlined />}
-                           />
-                        </Badge>
-                     </Dropdown>
-                     <Dropdown menu={{ items }} trigger={['click']}>
-                        <Avatar
-                           size="large"
-                           style={{
-                              backgroundColor: '#f0f5ff',
-                              color: '#1d39c4',
-                              cursor: 'pointer',
-                              marginBottom: 7,
-                           }}
-                           icon={<BellOutlined />}
-                        />
-                     </Dropdown>
+                     <BoxMessage />
+                     <BoxNotification />
                      <Dropdown
                         menu={{ items, onClick: handleMenuClick }}
                         trigger={['click']}

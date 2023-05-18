@@ -25,12 +25,36 @@ const images = [
 ];
 function Images(props) {
    const [visible, setVisible] = useState(false);
+   const [current, setCurrent] = useState(0);
    return (
       <div className={cn('images-wrap')}>
          {images.map((image, key) => {
             if (key === 3) return;
+            if (key === images.length - 2) {
+               return (
+                  <div style={{ position: 'relative' }}>
+                     <Image preview={false} key={key} src={image.url} height={'100%'} />
+                     <div
+                        onClick={() => {
+                           setVisible(true);
+                           setCurrent(key);
+                        }}
+                        className={cn('image-overlay')}>
+                        +{images.length - 3}
+                     </div>
+                  </div>
+               );
+            }
             return (
-               <Image preview={false} key={key} src={image.url} onClick={() => setVisible(true)} />
+               <Image
+                  preview={false}
+                  key={key}
+                  src={image.url}
+                  onClick={() => {
+                     setVisible(true);
+                     setCurrent(key);
+                  }}
+               />
             );
          })}
          <div
@@ -41,10 +65,11 @@ function Images(props) {
                preview={{
                   visible,
                   onVisibleChange: (vis) => setVisible(vis),
+                  current: current,
                }}>
-               <Image src="https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp" />
-               <Image src="https://gw.alipayobjects.com/zos/antfincdn/cV16ZqzMjW/photo-1473091540282-9b846e7965e3.webp" />
-               <Image src="https://gw.alipayobjects.com/zos/antfincdn/x43I27A55%26/photo-1438109491414-7198515b166b.webp" />
+               {images.map((image, key) => {
+                  return <Image src={image.url} key={key} />;
+               })}
             </Image.PreviewGroup>
          </div>
       </div>

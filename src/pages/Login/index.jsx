@@ -31,6 +31,7 @@ function Login(props) {
       setLoading(true);
       setTimeout(() => {
          localStorage.setItem('token', 'true');
+         localStorage.setItem('userName', 'Le Cong Tuan');
          navigate('/');
       }, 2000);
    };

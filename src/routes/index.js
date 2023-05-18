@@ -11,9 +11,9 @@ import Images from 'pages/Profile/Images';
 import Info from 'pages/Profile/Info';
 import ListPosts from 'pages/Profile/ListPosts';
 import Videos from 'pages/Profile/Videos';
-import Search from 'pages/Search';
 import Video from 'pages/Video';
 import Setting from 'pages/Setting';
+import SearchPage from 'pages/SearchPage';
 
 export const MainRoutes = [
    {
@@ -28,7 +28,7 @@ export const MainRoutes = [
       key: 'search',
       label: 'Search',
       icon: <SearchOutlined />,
-      element: <Search />,
+      element: <SearchPage />,
    },
    {
       path: '/video',

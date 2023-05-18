@@ -32,3 +32,16 @@
       grid-row-end: 7;
    }
 }
+.image-overlay {
+   position: absolute;
+   background: #0000005d;
+   top: 0;
+   bottom: 0;
+   left: 0;
+   right: 0;
+   color: white;
+   font-size: 3em;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}

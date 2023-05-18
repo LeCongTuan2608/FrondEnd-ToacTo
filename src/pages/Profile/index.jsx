@@ -8,14 +8,12 @@ import {
    UserOutlined,
    VideoCameraOutlined,
 } from '@ant-design/icons';
+import { ThemeContext } from 'Context/ThemeContext';
 import { Avatar, Button, Divider, Layout, Menu, Tooltip } from 'antd';
 import classNames from 'classnames/bind';
-import Posts from 'components/Posts';
-import { ThemeContext } from 'Context/ThemeContext';
 import { useContext, useEffect, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import img_avatar from '../../images/avatar.png';
-import ListPosts from './ListPosts';
 import styles from './Profile.module.scss';
 const cn = classNames.bind(styles);
 Profile.propTypes = {};

@@ -15,10 +15,11 @@ function MainLayout(props) {
       return <Navigate to="/login" replace />;
    }
    return (
-      <div>
-         <Layout style={theme === 'dark' ? { background: '#18191a' } : { background: '#f0f2f5' }}>
+      <div style={{ height: 'auto' }}>
+         <Layout
+            style={{ background: theme === 'dark' ? '#18191a' : '#f0f2f5', height: 'inherit' }}>
             <HeaderBar />
-            <main>
+            <main style={{ height: 'inherit' }}>
                <Outlet />
             </main>
          </Layout>
