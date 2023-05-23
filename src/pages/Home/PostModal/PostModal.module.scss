@@ -1,5 +1,19 @@
+.cus-modal {
+   & > div:nth-child(2) {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+   }
+}
+.modal-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   gap: 10px;
+}
 .content-wrap {
    position: relative;
+   padding-top: 15px;
    & span {
       position: absolute;
       font-size: 18px;
@@ -10,7 +24,7 @@
    min-height: 200px;
    outline: none;
    font-size: 18px;
-   margin: 20px 0;
+
    max-height: 400px;
    overflow-y: scroll;
    &::-webkit-scrollbar {
@@ -36,5 +50,20 @@
    &::-webkit-scrollbar-thumb {
       background-image: linear-gradient(-45deg, #d66efd, #6a5af9);
       border-radius: 50px;
+   }
+}
+@media screen and (max-width: 500px) {
+   .cus-modal {
+      & > div:nth-child(2) {
+         border-radius: unset !important;
+         padding: 10px 20px;
+         & > button {
+            width: 30px;
+            height: 30px;
+            & svg {
+               font-size: 28px;
+            }
+         }
+      }
    }
 }

@@ -34,6 +34,12 @@
       }
    }
 }
+@media screen and (max-height: 916px) {
+   .login-wrap {
+      height: auto;
+      padding: 20px 0;
+   }
+}
 @media screen and (max-width: 576px) {
    .input-field {
       & > div {

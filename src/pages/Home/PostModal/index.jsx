@@ -4,6 +4,7 @@ import img_avt from '../../../images/avatar.png';
 import { useContext, useEffect, useState, useRef } from 'react';
 import classNames from 'classnames/bind';
 import styles from './PostModal.module.scss';
+import { useMediaQuery } from 'react-responsive';
 const cn = classNames.bind(styles);
 PostModal.propTypes = {};
 const options = [
@@ -33,6 +34,7 @@ function PostModal(props) {
    const [loadings, setLoadings] = useState(false);
    const [audience, setAudience] = useState('public');
    const content = useRef();
+   const isMobileScreen = useMediaQuery({ query: '(max-width: 500px)' });
    //============= Upload ========================
    const [previewOpen, setPreviewOpen] = useState(false);
    const [previewImage, setPreviewImage] = useState('');
@@ -90,19 +92,28 @@ function PostModal(props) {
    };
    return (
       <Modal
+         className={cn('cus-modal')}
          title={<p style={{ textAlign: 'center', margin: 0, fontSize: 23 }}>Create new post</p>}
+         width={isMobileScreen ? '100%' : 520}
+         style={
+            isMobileScreen && {
+               maxWidth: 'unset',
+               height: '100%',
+            }
+         }
+         bodyStyle={{
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            marginTop: 20,
+         }}
          centered
          footer
          open={modalOpen}
          onOk={() => setModalOpen(false)}
          onCancel={() => setModalOpen(false)}>
-         <div
-            style={{
-               display: 'flex',
-               justifyContent: 'space-between',
-               alignItems: 'center',
-               gap: 10,
-            }}>
+         <div className={cn('modal-header')}>
             <Avatar
                size={64}
                icon={<UserOutlined />}
@@ -123,7 +134,7 @@ function PostModal(props) {
                />
             </div>
          </div>
-         <div className={cn('content-wrap')}>
+         <div className={cn('content-wrap')} style={isMobileScreen ? { flex: 1 } : null}>
             {(!content.current || content.current.innerText === '') && (
                <span>What are you thinking about?</span>
             )}
@@ -134,7 +145,7 @@ function PostModal(props) {
                className={cn('content-edit')}></div>
          </div>
          <Divider />
-         <div className={cn('box-upload')}>
+         <div className={cn('box-upload')} style={isMobileScreen ? { maxHeight: 250 } : null}>
             <Upload
                accept="file"
                listType="picture-card"
