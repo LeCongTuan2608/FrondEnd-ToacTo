@@ -44,9 +44,9 @@ function Login(props) {
          setLoading(false);
          navigate('/');
       } catch (error) {
-         console.log('error:', error);
-         setErrorMes(error.response.data.mes);
          setLoading(false);
+         console.log('error:', error);
+         setErrorMes(error.response.data.mes || 'An error occurred while logging in :(');
       }
    };
    const onFinishFailed = (errorInfo) => {
