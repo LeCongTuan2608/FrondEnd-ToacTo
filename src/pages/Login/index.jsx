@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Checkbox, Divider, Form, Input, Layout } from 'antd';
 import classNames from 'classnames/bind';
@@ -11,6 +11,7 @@ import {
 } from '@ant-design/icons';
 import { Navigate, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
+import User from 'API/User';
 
 const cn = classNames.bind(styles);
 
@@ -18,22 +19,35 @@ Login.propTypes = {};
 
 const loginSchema = yup.object().shape({
    email: yup.string().email('Invalid email').required('Please input your email!'),
-   password: yup.string().required('Please input your password!'),
+   pwd: yup.string().required('Please input your password!'),
 });
 
 function Login(props) {
    const [loadings, setLoading] = useState(false);
    const [token, setToken] = useState(localStorage.getItem('token'));
+   const [errorMes, setErrorMes] = useState('');
    const navigate = useNavigate();
    const [form] = Form.useForm();
-   const onFinish = (values) => {
-      console.log('Success:', values);
-      setLoading(true);
-      setTimeout(() => {
-         localStorage.setItem('token', 'true');
-         localStorage.setItem('userName', 'Le Cong Tuan');
+
+   const onFinish = async (values) => {
+      try {
+         errorMes && setErrorMes('');
+         setLoading(true);
+         const user = await User.login(values);
+         const response = user.data;
+         localStorage.setItem('token', response.token);
+         localStorage.setItem('refresh_token', response.refreshToken);
+         localStorage.setItem('user_name', response.user_name);
+         localStorage.setItem('email', response.email);
+         localStorage.setItem('full_name', response.full_name);
+         localStorage.setItem('role_id', response.role_id);
+         setLoading(false);
          navigate('/');
-      }, 2000);
+      } catch (error) {
+         console.log('error:', error);
+         setErrorMes(error.response.data.mes);
+         setLoading(false);
+      }
    };
    const onFinishFailed = (errorInfo) => {
       console.log('Failed:', errorInfo);
@@ -95,7 +109,7 @@ function Login(props) {
                   <Form.Item
                      className={cn('input-field')}
                      label="Password"
-                     name="password"
+                     name="pwd"
                      labelCol={{
                         span: 5,
                      }}
@@ -105,7 +119,11 @@ function Login(props) {
                         placeholder="Password"
                      />
                   </Form.Item>
-
+                  {errorMes !== '' && (
+                     <div style={{ color: 'red' }}>
+                        <span>{errorMes}</span>
+                     </div>
+                  )}
                   <Form.Item
                      className={cn('input-field')}
                      style={{ marginBottom: 5, marginTop: 40 }}>
@@ -119,7 +137,6 @@ function Login(props) {
                      <span>
                         You don't have an account?
                         <a href="" onClick={handleClickSignup}>
-                           {' '}
                            Register
                         </a>
                      </span>

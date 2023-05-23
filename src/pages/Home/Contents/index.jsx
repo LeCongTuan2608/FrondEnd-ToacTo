@@ -86,6 +86,7 @@ function Contents(props) {
                         <Posts />
                         <Posts />
                         <PostsSkeleton />
+                        <PostsSkeleton />
                      </>
                   ) : (
                      <>

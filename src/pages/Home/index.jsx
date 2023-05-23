@@ -37,7 +37,7 @@ const users = [
 ];
 function Home(props) {
    const { theme } = useContext(ThemeContext);
-   const isSmallScreen = useMediaQuery({ query: '(min-width: 1261px)' });
+   const isSmallScreen = useMediaQuery({ query: '(min-width: 1262px)' });
    const isTabletOrMobile = useMediaQuery({ query: '(min-width: 932px)' });
 
    return (

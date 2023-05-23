@@ -21,7 +21,7 @@ const dataRadio = [
    { value: 'video', text: 'Video' },
 ];
 function SearchPage(props) {
-   const [search, setSreach] = useState([1, 2, 3, 4]);
+   const [search, setSreach] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
    const [select, setSelect] = useState(dataRadio[0].value);
    const onSearch = (value) => console.log(value);
    const onChange = (e) => {
@@ -29,7 +29,11 @@ function SearchPage(props) {
       setSelect(e.target.value);
    };
    return (
-      <Layout style={{ background: 'unset', width: '100%' }}>
+      <Layout
+         style={{
+            background: 'unset',
+            height: search.length <= 8 ? 'calc(100vh - 64px)' : 'inherit',
+         }}>
          <div className={cn('search-wrap')}>
             <div className={cn('container')}>
                <div>

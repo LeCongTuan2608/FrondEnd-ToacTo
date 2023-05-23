@@ -38,6 +38,7 @@ function PostModal(props) {
    const [previewImage, setPreviewImage] = useState('');
    const [previewTitle, setPreviewTitle] = useState('');
    const [fileList, setFileList] = useState([]);
+
    const handleCancel = () => setPreviewOpen(false);
    const handlePreview = async (file) => {
       if (!file.url && !file.preview) {
@@ -124,7 +125,7 @@ function PostModal(props) {
          </div>
          <div className={cn('content-wrap')}>
             {(!content.current || content.current.innerText === '') && (
-               <span>What are you thinking?</span>
+               <span>What are you thinking about?</span>
             )}
             <div
                onInput={handleInputContent}

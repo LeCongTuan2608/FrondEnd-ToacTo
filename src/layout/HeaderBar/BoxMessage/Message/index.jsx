@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import img_avatar from '../../images/avatar.png';
+import img_avatar from '../../../../images/avatar.png';
 import { CheckOutlined, DeleteOutlined, MoreOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Tooltip } from 'antd';
 import classNames from 'classnames/bind';
 import styles from './Message.module.scss';
 import { useContext, useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { addChatBox } from 'store/slices/chatBoxSlice';
 const cn = classNames.bind(styles);
 
 Message.propTypes = {};
@@ -17,18 +19,15 @@ Message.defaultProps = {
    },
 };
 function Message(props) {
-   const { user, setOpen } = props;
+   const { user, setOpen, onRemove } = props;
    const [checked, setChecked] = useState(user.checked);
-   const [openDropDown, setOpenDropDown] = useState(false);
+   const dispatch = useDispatch();
    const handleOpenChat = () => {
-      console.log('tao moi mo chat ne');
+      dispatch(addChatBox(user));
       setOpen(false);
    };
 
-   const handleOpenChange = (flag) => {
-      setOpenDropDown(flag);
-   };
-   const handleUnread = () => {
+   const handleCheckMessage = () => {
       setChecked(!checked);
    };
    const items = [
@@ -37,7 +36,7 @@ function Message(props) {
          label: (
             <div
                style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}
-               onClick={handleUnread}>
+               onClick={handleCheckMessage}>
                <CheckOutlined />
                {checked ? 'Mark as read' : 'Mark as unread'}
             </div>
@@ -47,7 +46,9 @@ function Message(props) {
          key: '2',
          danger: true,
          label: (
-            <div style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}>
+            <div
+               onClick={() => onRemove(user.id)}
+               style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}>
                <DeleteOutlined />
                Delete
             </div>

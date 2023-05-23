@@ -19,7 +19,7 @@ import { useMediaQuery } from 'react-responsive';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './HeaderBar.module.scss';
 import Switches from './Switches';
-import Message from 'components/Message';
+import Message from 'layout/HeaderBar/BoxMessage/Message';
 import BoxMessage from './BoxMessage';
 import BoxNotification from './BoxNotification';
 //
@@ -86,6 +86,7 @@ function HeaderBar(props) {
             break;
       }
    };
+   // dropdown setting
    const items = [
       {
          key: '1',
@@ -154,7 +155,7 @@ function HeaderBar(props) {
          label: (
             <div
                onClick={() => {
-                  localStorage.removeItem('token');
+                  localStorage.clear();
                   navigate('/login');
                }}
                style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 0' }}>

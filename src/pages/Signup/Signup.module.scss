@@ -1,9 +1,9 @@
 .login-wrap {
-   height: auto;
+   height: inherit;
    display: flex;
    align-items: center;
    justify-content: center;
-   padding: 20px 0;
+   background: white;
 }
 .login-form {
    width: clamp(150px, 100%, 500px);

@@ -12,7 +12,7 @@ function VideoModal(props) {
    const videoElement = useRef(null);
    const showModal = (e) => {
       setIsModalOpen(true);
-      //   videoElement.current.play();
+      videoElement.current && videoElement.current.play();
    };
    const handleCancel = () => {
       setIsModalOpen(false);
@@ -20,6 +20,7 @@ function VideoModal(props) {
    const handleCloseModal = () => {
       videoElement.current.pause();
    };
+
    return (
       <div className={cn('video-item')}>
          <video
@@ -40,6 +41,7 @@ function VideoModal(props) {
                borderRadius: 7,
             }}>
             <video
+               autoPlay
                src={item.url}
                controls
                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
