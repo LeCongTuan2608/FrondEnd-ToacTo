@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Avatar, Badge, Button, Dropdown, Modal, Space, Tooltip } from 'antd';
 import { AliwangwangOutlined, MessageOutlined } from '@ant-design/icons';
 import { useContext, useState, useEffect, useCallback } from 'react';
-import Message from 'layout/HeaderBar/BoxMessage/Message';
+import Message from 'components/Message';
 import classNames from 'classnames/bind';
 import styles from './BoxMessage.module.scss';
 const cn = classNames.bind(styles);

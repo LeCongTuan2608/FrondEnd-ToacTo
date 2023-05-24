@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import img_avatar from '../../../../images/avatar.png';
+import img_avatar from '../../images/avatar.png';
 import { CheckOutlined, DeleteOutlined, MoreOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Tooltip } from 'antd';
 import classNames from 'classnames/bind';

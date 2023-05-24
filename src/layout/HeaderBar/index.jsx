@@ -19,7 +19,7 @@ import { useMediaQuery } from 'react-responsive';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './HeaderBar.module.scss';
 import Switches from './Switches';
-import Message from 'layout/HeaderBar/BoxMessage/Message';
+import Message from 'components/Message';
 import BoxMessage from './BoxMessage';
 import BoxNotification from './BoxNotification';
 //
@@ -197,7 +197,7 @@ function HeaderBar(props) {
                items={pages}
                onClick={handleClickPage}
             />
-            <Space size={15} wrap style={{ justifyContent: 'flex-end' }}>
+            <Space size={15} style={{ justifyContent: 'flex-end' }}>
                {isMobile ? (
                   <>
                      <BoxMessage />
@@ -213,7 +213,6 @@ function HeaderBar(props) {
                               backgroundColor: '#fff7e6',
                               color: '#d46b08',
                               cursor: 'pointer',
-                              marginBottom: 7,
                            }}
                            icon={<SettingOutlined />}
                         />

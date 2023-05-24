@@ -8,7 +8,7 @@ import { UserOutlined } from '@ant-design/icons';
 import Posts from 'components/Posts';
 import PostsSkeleton from 'components/PostsSkeleton';
 import img_avt from '../../../images/avatar.png';
-import PostModal from '../PostModal';
+import PostModal from '../../../components/PostModal';
 const cn = classNames.bind(styles);
 
 Contents.propTypes = {};

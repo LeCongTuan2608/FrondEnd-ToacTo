@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './ChatBox.module.scss';
@@ -6,7 +6,8 @@ import { useDispatch } from 'react-redux';
 import { removeChatBox } from 'store/slices/chatBoxSlice';
 import { CloseOutlined, SendOutlined } from '@ant-design/icons';
 import { Button, Input, Tooltip } from 'antd';
-import img_avatar from '../../../../images/avatar.png';
+import img_avatar from '../../images/avatar.png';
+import InputMes from './InputMes';
 const cn = classNames.bind(styles);
 ChatBox.propTypes = {};
 const messages = [
@@ -14,98 +15,112 @@ const messages = [
       id: 1,
       content: 'hello ae',
       date: '22/05/2023',
-      sender: 'Cong Duy',
-      receiver: 'Cong Tuan',
+      sender: '@congtuy',
+      receiver: '@CongTuan',
    },
    {
       id: 2,
       content: 'chao',
       date: '22/05/2023',
-      sender: 'Cong Tuan',
-      receiver: 'Cong Duy',
+      sender: '@congtuan',
+      receiver: '@CongDuy',
    },
    {
       id: 3,
       content: 'gi day',
       date: '22/05/2023',
-      sender: 'Cong Tuan',
-      receiver: 'Cong Duy',
+      sender: '@congtuan',
+      receiver: '@CongDuy',
    },
    {
       id: 4,
       content: 'dang lam gi z',
       date: '22/05/2023',
-      sender: 'Cong Tuan',
-      receiver: 'Cong Duy',
+      sender: '@congtuan',
+      receiver: '@CongDuy',
    },
    {
       id: 5,
       content: 'dang lam viec',
       date: '22/05/2023',
-      sender: 'Cong Duy',
-      receiver: 'Cong Tuan',
+      sender: '@congtuy',
+      receiver: '@CongTuan',
    },
    {
       id: 6,
       content: 'um',
       date: '22/05/2023',
-      sender: 'Cong Tuan',
-      receiver: 'Cong Duy',
+      sender: '@congtuan',
+      receiver: '@CongDuy',
    },
    {
       id: 7,
       content: 'um',
       date: '22/05/2023',
-      sender: 'Cong Tuan',
-      receiver: 'Cong Duy',
+      sender: '@congtuan',
+      receiver: '@CongDuy',
    },
    {
       id: 8,
       content: 'um',
       date: '22/05/2023',
-      sender: 'Cong Tuan',
-      receiver: 'Cong Duy',
+      sender: '@congtuan',
+      receiver: '@CongDuy',
    },
    {
       id: 9,
       content: 'um',
       date: '22/05/2023',
-      sender: 'Cong Tuan',
-      receiver: 'Cong Duy',
+      sender: '@congtuan',
+      receiver: '@CongDuy',
    },
    {
       id: 10,
       content: 'um',
       date: '22/05/2023',
-      sender: 'Cong Tuan',
-      receiver: 'Cong Duy',
+      sender: '@congtuan',
+      receiver: '@CongDuy',
    },
    {
       id: 11,
       content: 'um',
       date: '22/05/2023',
-      sender: 'Cong Tuan',
-      receiver: 'Cong Duy',
+      sender: '@congtuan',
+      receiver: '@CongDuy',
    },
    {
       id: 12,
-      content: 'um',
+      content: 'umkjsldjhdjdjdjdjdjdjdjdjdjdjdjdjdjdjdjdjdjdjdjdjdj',
       date: '22/05/2023',
-      sender: 'Cong Tuan',
-      receiver: 'Cong Duy',
+      sender: '@congtuan',
+      receiver: '@CongDuy',
    },
 ];
+const currentDate = new Date(); // Lấy ngày hiện tại
 function ChatBox(props) {
    const { chatBox } = props;
    const dispatch = useDispatch();
-   const [userName] = useState(localStorage.getItem('userName'));
-   const containerDiv = useRef();
+   const [userName] = useState(localStorage.getItem('user_name'));
+   const [message, setMessage] = useState(messages);
+   const containerDiv = useRef(null);
    useEffect(() => {
       containerDiv.current && (containerDiv.current.scrollTop = containerDiv.current.scrollHeight);
-   }, []);
+   }, [message]);
    const onClose = () => {
       dispatch(removeChatBox(chatBox.id));
    };
+
+   const onSubmit = (value) => {
+      const newMessage = {
+         id: message.length + 1,
+         content: value,
+         date: currentDate.toDateString(),
+         sender: userName,
+         receiver: chatBox.userName,
+      };
+      setMessage([...message, newMessage]);
+   };
+
    return (
       <div className={cn('wrapper')}>
          <div className={cn('chat-box')}>
@@ -122,7 +137,7 @@ function ChatBox(props) {
             </div>
             <div className={cn('chat-messages')}>
                <ul ref={containerDiv}>
-                  {messages.map((mes, index) => {
+                  {message.map((mes, index) => {
                      if (mes.sender === userName) {
                         return (
                            <li key={mes.id} className={cn('message', 'mine')}>
@@ -143,10 +158,7 @@ function ChatBox(props) {
                </ul>
             </div>
             <div className={cn('chat-input')}>
-               <Input type="text" placeholder="input with clear icon" allowClear />
-               <Tooltip title="send">
-                  <Button shape="circle" icon={<SendOutlined />} />
-               </Tooltip>
+               <InputMes onSubmit={onSubmit} />
             </div>
          </div>
       </div>

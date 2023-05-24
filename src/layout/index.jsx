@@ -6,7 +6,7 @@ import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import HeaderBar from './HeaderBar';
 import classNames from 'classnames/bind';
 import styles from './MainLayout.module.scss';
-import ChatBox from './HeaderBar/BoxMessage/ChatBox';
+import ChatBox from '../components/ChatBox';
 import { useSelector } from 'react-redux/es/exports';
 const cn = classNames.bind(styles);
 

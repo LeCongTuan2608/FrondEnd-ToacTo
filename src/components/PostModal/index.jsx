@@ -1,6 +1,6 @@
 import { PlusOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Divider, Modal, Select, Space, Upload } from 'antd';
-import img_avt from '../../../images/avatar.png';
+import img_avt from '../../images/avatar.png';
 import { useContext, useEffect, useState, useRef } from 'react';
 import classNames from 'classnames/bind';
 import styles from './PostModal.module.scss';
