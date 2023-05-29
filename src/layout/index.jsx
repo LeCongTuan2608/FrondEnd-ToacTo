@@ -8,6 +8,7 @@ import classNames from 'classnames/bind';
 import styles from './MainLayout.module.scss';
 import ChatBox from '../components/ChatBox';
 import { useSelector } from 'react-redux/es/exports';
+import socket from '../socket/index';
 const cn = classNames.bind(styles);
 
 MainLayout.propTypes = {};
@@ -17,10 +18,21 @@ function MainLayout(props) {
    const navigate = useNavigate();
    const getChatBox = useSelector((state) => state?.chatBox?.chatBoxes);
    const [token, setToken] = useState(localStorage.getItem('token'));
+   useEffect(() => {
+      if (token) {
+         socket.connect();
+         socket.emit('setup', localStorage.getItem('user_name'));
+      }
+      return () => {
+         socket.disconnect();
+         // socket.disconnect();
+      };
+   }, [token]);
+
    if (!token) {
       return <Navigate to="/login" replace />;
    }
-   // console.log(getChatBox);
+   console.log(getChatBox);
    return (
       <div style={{ height: 'auto', position: 'relative' }}>
          <Layout

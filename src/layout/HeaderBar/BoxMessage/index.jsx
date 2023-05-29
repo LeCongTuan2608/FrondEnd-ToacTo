@@ -6,98 +6,55 @@ import { useContext, useState, useEffect, useCallback } from 'react';
 import Message from 'components/Message';
 import classNames from 'classnames/bind';
 import styles from './BoxMessage.module.scss';
+import Conversation from 'API/Conversation';
+import socket from '../../../socket/index';
 const cn = classNames.bind(styles);
 BoxMessage.propTypes = {};
-const data = [
-   {
-      id: 1,
-      userName: 'Cong Tuan',
-      message: 'Hello',
-      checked: false,
-   },
-   {
-      id: 2,
-      userName: 'Cong Duy',
-      message: 'Hello 1',
-      checked: false,
-   },
-   {
-      id: 3,
-      userName: 'Cong Lai',
-      message: 'Hello 2',
-      checked: true,
-   },
-   {
-      id: 4,
-      userName: 'Thuy Ngo',
-      message: 'Alo? may an gi chua 3',
-      checked: true,
-   },
-   {
-      id: 5,
-      userName: 'Cong Loc',
-      message: 'Alo? may an gi chua 4',
-      checked: true,
-   },
-   {
-      id: 6,
-      userName: 'Cong Tuan',
-      message: 'Alo? may an gi chua 5',
-      checked: true,
-   },
-   {
-      id: 7,
-      userName: 'Cong Tuan',
-      message: 'Alo? may an gi chua6',
-      checked: true,
-   },
-   {
-      id: 8,
-      userName: 'Cong Tuan',
-      message: 'Alo? may an gi chua 7',
-      checked: true,
-   },
-   {
-      id: 9,
-      userName: 'Cong Tuan',
-      message: 'Alo? may an gi chua 8',
-      checked: true,
-   },
-   {
-      id: 10,
-      userName: 'Cong Tuan',
-      message: 'Alo? may an gi chua 9',
-      checked: true,
-   },
-   {
-      id: 11,
-      userName: 'Cong Tuan',
-      message: 'Alo? may an gi chua',
-      checked: true,
-   },
-   {
-      id: 12,
-      userName: 'Cong Tuan',
-      message: 'Alo? may an gi chua',
-      checked: true,
-   },
-   {
-      id: 13,
-      userName: 'Cong Tuan',
-      message: 'Alo? may an gi chua',
-      checked: true,
-   },
-   {
-      id: 14,
-      userName: 'Cong Tuan',
-      message: 'Alo? may an gi chuaAlo? may an gi chuaAlo? may an gi chuaAlo? may an gi chua',
-      checked: true,
-   },
-];
+// const messages = [
+//    {
+//       user_1: '@abcxyz',
+//       user_2: '@congtuan',
+//       last_message: 'hello',
+//       checked: false,
+//       conversation_id: 1,
+//       user_1_info: {
+//          full_name: 'Tuan Tet',
+//          user_name: '@abcxyz',
+//       },
+//       user_2_info: {
+//          full_name: 'Le cong tuan',
+//          user_name: '@congtuan',
+//       },
+//    },
+// ];
+
 function BoxMessage(props) {
    const { children } = props;
    const [open, setOpen] = useState(false);
-   const [items, setItems] = useState(data);
+   const [conversation, setConversation] = useState([]);
+   const [newMes, setNewMes] = useState({});
+   useEffect(() => {
+      const getConversation = async () => {
+         try {
+            const jwt = {
+               type: 'Bearer',
+               token: localStorage.getItem('token'),
+            };
+            const response = await Conversation.getAllConversation(jwt);
+            const data = response.data.conversation;
+            setConversation(data);
+         } catch (error) {
+            console.log('error:', error);
+         }
+      };
+      getConversation();
+   }, [newMes]);
+   // khi nhận được tin nhắn mới từ server refresh lại hàm getConversation để nhận tin nhắn mới
+   useEffect(() => {
+      socket.on('getMessage', (data) => {
+         setNewMes(data);
+      });
+   }, []);
    const handleCloseModal = (e) => {
       e.stopPropagation();
    };
@@ -107,7 +64,7 @@ function BoxMessage(props) {
       }
    };
    const handleRemoveMessage = (id) => {
-      setItems((preItems) => preItems.filter((val) => val.id !== id));
+      setConversation((preItems) => preItems.filter((val) => val.id !== id));
    };
    return (
       <div className={cn('wrapper')}>
@@ -123,11 +80,11 @@ function BoxMessage(props) {
                         <h2>Chat</h2>
                      </div>
                      <div className={cn('wrap-message')}>
-                        {items.map((item, index) => {
+                        {conversation.map((item, index) => {
                            return (
                               <Message
                                  setOpen={setOpen}
-                                 key={item.id}
+                                 key={item.conversation_id}
                                  user={item}
                                  onRemove={handleRemoveMessage}
                               />

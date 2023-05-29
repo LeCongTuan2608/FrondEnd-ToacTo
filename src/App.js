@@ -15,10 +15,12 @@ import Video from 'pages/Video';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import { MainRoutes } from 'routes';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { ThemeContext } from 'Context/ThemeContext';
+
 function App() {
    const { theme } = useContext(ThemeContext);
+
    return (
       <div className="App" style={{ background: theme === 'light' ? null : 'rgb(24, 25, 26)' }}>
          <BrowserRouter>

@@ -8,6 +8,7 @@ import styles from './Message.module.scss';
 import { useContext, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { addChatBox } from 'store/slices/chatBoxSlice';
+import Conversation from 'API/Conversation';
 const cn = classNames.bind(styles);
 
 Message.propTypes = {};
@@ -18,15 +19,25 @@ Message.defaultProps = {
       checked: false,
    },
 };
+
 function Message(props) {
    const { user, setOpen, onRemove } = props;
-   const [checked, setChecked] = useState(user.checked);
+   const userName = localStorage.getItem('user_name');
+   const [checked, setChecked] = useState(user.sender === userName ? true : user.checked);
    const dispatch = useDispatch();
-   const handleOpenChat = () => {
-      dispatch(addChatBox(user));
-      setOpen(false);
+   const jwt = {
+      type: 'Bearer',
+      token: localStorage.getItem('token'),
    };
-
+   const handleOpenChat = async () => {
+      try {
+         dispatch(addChatBox(user));
+         setOpen(false);
+         await Conversation.checkedConversation(user.conversation_id, jwt);
+      } catch (error) {
+         console.log('error:', error);
+      }
+   };
    const handleCheckMessage = () => {
       setChecked(!checked);
    };
@@ -68,7 +79,9 @@ function Message(props) {
                         style={{
                            fontWeight: checked ? 450 : 500,
                         }}>
-                        {user?.userName}
+                        {user?.user_1 === userName
+                           ? user?.user_2_info.full_name
+                           : user?.user_1_info.full_name}
                      </span>
                      <div>
                         <p
@@ -76,8 +89,8 @@ function Message(props) {
                               fontWeight: checked ? 450 : 500,
                               color: checked ? null : 'rgb(0 96 230)',
                            }}>
-                           <span>You: </span>
-                           {user?.message}
+                           {user.sender === userName && <span>You: </span>}
+                           {user?.last_message}
                         </p>
                         <span style={{ padding: '0 10px' }}>15m</span>
                      </div>

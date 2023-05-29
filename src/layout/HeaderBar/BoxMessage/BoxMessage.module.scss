@@ -6,7 +6,7 @@
 
 .box-wrap {
    & .container {
-      position: fixed;
+      position: absolute;
       z-index: 4;
       right: 7%;
       background: white;
@@ -15,6 +15,7 @@
       border-radius: 7px;
       box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
       min-width: 375px;
+      top: 100%;
       &::-webkit-scrollbar {
          width: 5px;
       }

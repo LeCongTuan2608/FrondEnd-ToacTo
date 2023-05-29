@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const url = 'https://web-social-2c4s.onrender.com/';
+// const url = 'https://web-social-2c4s.onrender.com/';
+const url = 'http://localhost:4000/';
 const axiosClient = axios.create({
    baseURL: url,
    headers: {
