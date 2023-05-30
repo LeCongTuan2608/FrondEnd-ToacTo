@@ -10,36 +10,51 @@ import { Avatar, Input, Layout, Modal, Space, Tag } from 'antd';
 import classNames from 'classnames/bind';
 import Posts from 'components/Posts';
 import PostsSkeleton from 'components/PostsSkeleton';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import styles from './Home.module.scss';
 import SiderBar from './SiderBar';
 import Contents from './Contents';
+import User from 'API/User';
+import { UserOtherContext } from 'Context/UserOtherContext';
 const cn = classNames.bind(styles);
 
 const { Content, Header } = Layout;
 Home.propTypes = {};
-function getItem(label, key, icon, children) {
-   return {
-      key,
-      icon,
-      children,
-      label,
-   };
-}
-const users = [
-   { key: '1', icon: <PieChartOutlined />, children: undefined, label: 'Lê Công Tuấn' },
-   // getItem('Lê Công Tuấn', '1', <PieChartOutlined />),
-   getItem('Lê Công Duy', '2', <DesktopOutlined />),
-   getItem('Lê Công Lai', '3', <UserOutlined />),
-   getItem('Ngô Thị Thúy', '4', <TeamOutlined />),
-   getItem('Lê Công Lộc', '5', <FileOutlined />),
-];
+// function getItem(label, key, icon, children) {
+//    return {
+//       key,
+//       icon,
+//       children,
+//       label,
+//    };
+// }
+
 function Home(props) {
    const { theme } = useContext(ThemeContext);
+   const { suggest } = useContext(UserOtherContext);
    const isSmallScreen = useMediaQuery({ query: '(min-width: 1262px)' });
    const isTabletOrMobile = useMediaQuery({ query: '(min-width: 932px)' });
-
+   const jwt = {
+      type: localStorage.getItem('type'),
+      token: localStorage.getItem('token'),
+   };
+   // useEffect(() => {
+   //    const getSuggest = async () => {
+   //       try {
+   //          const response = await User.getSuggest(jwt);
+   //          console.log(response);
+   //       } catch (error) {
+   //          console.log('error:', error);
+   //       }
+   //    };
+   //    getSuggest();
+   // }, []);
+   // getItem('Lê Công Duy', '2', <DesktopOutlined />),
+   const suggestList = suggest?.map((item) => {
+      // return getItem(item.full_name, item.user_name);
+      return item;
+   });
    return (
       <Layout
          style={{
@@ -56,15 +71,18 @@ function Home(props) {
                <SiderBar
                   styled={{ css: { left: 0 } }}
                   items={[
-                     { title: 'Suggest', users },
-                     { title: 'Followers', users },
-                     { title: 'Following', users },
+                     { title: 'Suggest', users: [...suggestList] },
+                     { title: 'Followers', users: [...suggestList] },
+                     { title: 'Following', users: [...suggestList] },
                   ]}
                />
             )}
             <Contents />
             {isTabletOrMobile && (
-               <SiderBar styled={{ css: { right: 0 } }} items={[{ title: 'Friends', users }]} />
+               <SiderBar
+                  styled={{ css: { right: 0 } }}
+                  items={[{ title: 'Friends', users: [...suggestList] }]}
+               />
             )}
          </Layout>
       </Layout>

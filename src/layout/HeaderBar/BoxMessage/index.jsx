@@ -8,6 +8,7 @@ import classNames from 'classnames/bind';
 import styles from './BoxMessage.module.scss';
 import Conversation from 'API/Conversation';
 import socket from '../../../socket/index';
+
 const cn = classNames.bind(styles);
 BoxMessage.propTypes = {};
 // const messages = [
@@ -33,15 +34,20 @@ function BoxMessage(props) {
    const [open, setOpen] = useState(false);
    const [conversation, setConversation] = useState([]);
    const [newMes, setNewMes] = useState({});
+   const [mesNotSeen, setMesNotSeen] = useState(0);
+   const jwt = {
+      type: localStorage.getItem('type'),
+      token: localStorage.getItem('token'),
+   };
+   const user_name = localStorage.getItem('user_name');
    useEffect(() => {
       const getConversation = async () => {
          try {
-            const jwt = {
-               type: 'Bearer',
-               token: localStorage.getItem('token'),
-            };
             const response = await Conversation.getAllConversation(jwt);
             const data = response.data.conversation;
+            console.log('data:', data);
+            const count = data.filter((mes) => !mes.checked && mes.sender !== user_name);
+            setMesNotSeen(count.length);
             setConversation(data);
          } catch (error) {
             console.log('error:', error);
@@ -64,12 +70,14 @@ function BoxMessage(props) {
       }
    };
    const handleRemoveMessage = (id) => {
-      setConversation((preItems) => preItems.filter((val) => val.id !== id));
+      setConversation((preItems) => preItems.filter((val) => val.conversation_id !== id));
    };
    return (
       <div className={cn('wrapper')}>
          <Tooltip onClick={() => setOpen(!open)}>
-            <Button shape="circle" icon={<MessageOutlined />} size="large" />
+            <Badge count={mesNotSeen} size="small">
+               <Button shape="circle" icon={<MessageOutlined />} size="large" />
+            </Badge>
          </Tooltip>
          {open && (
             <>

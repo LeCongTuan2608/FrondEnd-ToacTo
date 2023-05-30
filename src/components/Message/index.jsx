@@ -26,12 +26,20 @@ function Message(props) {
    const [checked, setChecked] = useState(user.sender === userName ? true : user.checked);
    const dispatch = useDispatch();
    const jwt = {
-      type: 'Bearer',
+      type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
    };
    const handleOpenChat = async () => {
       try {
-         dispatch(addChatBox(user));
+         const newUser = {
+            checked: user.checked,
+            conversation_id: user.conversation_id,
+            updatedAt: user.updatedAt,
+            sender: user.sender,
+            last_message: user.last_message,
+            user_info: user.user_1 === userName ? user.user_2_info : user.user_1_info,
+         };
+         dispatch(addChatBox(newUser));
          setOpen(false);
          await Conversation.checkedConversation(user.conversation_id, jwt);
       } catch (error) {
@@ -58,7 +66,7 @@ function Message(props) {
          danger: true,
          label: (
             <div
-               onClick={() => onRemove(user.id)}
+               onClick={() => onRemove(user.conversation_id)}
                style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}>
                <DeleteOutlined />
                Delete

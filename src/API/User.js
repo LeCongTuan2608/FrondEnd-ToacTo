@@ -27,5 +27,10 @@ const User = {
       const url = 'auth/logout';
       return axiosClient.post(url, data);
    },
+   // ========================== suggest ================================
+   getSuggest(jwt) {
+      const url = 'users/suggest';
+      return axiosClient.get(url, config(jwt.type, jwt.token));
+   },
 };
 export default User;

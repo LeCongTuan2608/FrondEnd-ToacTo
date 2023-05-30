@@ -6,14 +6,17 @@ import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from 'Context/ThemeContext';
 import { Provider } from 'react-redux';
 import store from './store/index';
+import { UserOtherProvider } from 'Context/UserOtherContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
    // <React.StrictMode>
    <Provider store={store}>
-      <ThemeProvider>
-         <App />
-      </ThemeProvider>
+      <UserOtherProvider>
+         <ThemeProvider>
+            <App />
+         </ThemeProvider>
+      </UserOtherProvider>
    </Provider>,
    // </React.StrictMode>
 );

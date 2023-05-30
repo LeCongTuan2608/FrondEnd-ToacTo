@@ -20,7 +20,7 @@ function ChatBox(props) {
    const [userName] = useState(localStorage.getItem('user_name'));
    const [message, setMessage] = useState([]);
    const jwt = {
-      type: 'Bearer',
+      type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
    };
    const containerDiv = useRef(null);
@@ -41,11 +41,13 @@ function ChatBox(props) {
    }, [message]);
    useEffect(() => {
       socket.on('getMessage', (data) => {
-         if (data.receiver === userName) setMessage((prev) => [...prev, data]);
+         if (data.receiver === userName && data.sender === chatBox.user_info.user_name) {
+            setMessage((prev) => [...prev, data]);
+         }
       });
    }, []);
    const onClose = () => {
-      dispatch(removeChatBox(chatBox.id));
+      dispatch(removeChatBox(chatBox.user_info.user_name));
    };
 
    const onSubmit = async (value) => {
@@ -54,14 +56,11 @@ function ChatBox(props) {
             content: value,
             date: currentDate.toDateString(),
             sender: userName,
-            receiver:
-               chatBox?.user_1 === userName
-                  ? chatBox?.user_2_info.user_name
-                  : chatBox?.user_1_info.user_name,
-            conversation_id: chatBox.conversation_id,
+            receiver: chatBox?.user_info.user_name,
+            conversation_id: chatBox?.conversation_id || null,
          };
          const res = await Messages.createMessages(newMessage, jwt);
-         setMessage([...message, res.data.message]);
+         setMessage((pre) => [...pre, res.data.message]);
          socket.emit('sendMessage', res.data.message);
       } catch (error) {
          console.log('error:', error);
@@ -76,11 +75,7 @@ function ChatBox(props) {
                   <img src={img_avatar} alt="" />
                </div>
                <div className={cn('user-name')}>
-                  <h3>
-                     {chatBox?.user_1 === userName
-                        ? chatBox?.user_2_info.full_name
-                        : chatBox?.user_1_info.full_name}
-                  </h3>
+                  <h3>{chatBox?.user_info.full_name}</h3>
                </div>
                <div onClick={onClose} className={cn('btn-close')}>
                   <CloseOutlined style={{ fontSize: 20 }} />
