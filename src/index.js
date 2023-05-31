@@ -7,15 +7,18 @@ import { ThemeProvider } from 'Context/ThemeContext';
 import { Provider } from 'react-redux';
 import store from './store/index';
 import { UserOtherProvider } from 'Context/UserOtherContext';
+import { ConversationProvider } from 'Context/ConversationContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
    // <React.StrictMode>
    <Provider store={store}>
       <UserOtherProvider>
-         <ThemeProvider>
-            <App />
-         </ThemeProvider>
+         <ConversationProvider>
+            <ThemeProvider>
+               <App />
+            </ThemeProvider>
+         </ConversationProvider>
       </UserOtherProvider>
    </Provider>,
    // </React.StrictMode>

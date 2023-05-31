@@ -9,6 +9,7 @@ import ModalCustom from './components/ModalCustom';
 import { useDispatch } from 'react-redux';
 import { addChatBox } from 'store/slices/chatBoxSlice';
 import Conversation from 'API/Conversation';
+import { ConversationContext } from 'Context/ConversationContext';
 const { Sider } = Layout;
 const cn = classNames.bind(styles);
 SiderBar.propTypes = {};
@@ -16,6 +17,8 @@ function SiderBar(props) {
    const { styled, items } = props;
    const dispatch = useDispatch();
    const { theme } = useContext(ThemeContext);
+   const { mesNotSeen, setMesNotSeen, conversation, setConversation } =
+      useContext(ConversationContext);
    const jwt = {
       type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
@@ -24,11 +27,18 @@ function SiderBar(props) {
       try {
          const response = await Conversation.getConversation(value.user_name, jwt);
          const conversation = response.data.conversation;
-         const box = {
-            ...conversation,
-            user_info: { ...value },
-         };
-         dispatch(addChatBox(box));
+         dispatch(addChatBox(conversation));
+         if (!conversation.checked) {
+            setMesNotSeen(mesNotSeen - 1);
+            setConversation((pre) =>
+               pre.map((obj) => {
+                  if (obj.conversation_id === conversation.conversation_id)
+                     return { ...obj, checked: 1 };
+                  return obj;
+               }),
+            );
+            await Conversation.checkedConversation(conversation.conversation_id, jwt);
+         }
       } catch (error) {
          console.log('error:', error);
       }

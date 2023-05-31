@@ -9,6 +9,7 @@ import { useContext, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { addChatBox } from 'store/slices/chatBoxSlice';
 import Conversation from 'API/Conversation';
+import { ConversationContext } from 'Context/ConversationContext';
 const cn = classNames.bind(styles);
 
 Message.propTypes = {};
@@ -25,23 +26,26 @@ function Message(props) {
    const userName = localStorage.getItem('user_name');
    const [checked, setChecked] = useState(user.sender === userName ? true : user.checked);
    const dispatch = useDispatch();
+   const { mesNotSeen, setMesNotSeen, conversation, setConversation } =
+      useContext(ConversationContext);
    const jwt = {
       type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
    };
    const handleOpenChat = async () => {
       try {
-         const newUser = {
-            checked: user.checked,
-            conversation_id: user.conversation_id,
-            updatedAt: user.updatedAt,
-            sender: user.sender,
-            last_message: user.last_message,
-            user_info: user.user_1 === userName ? user.user_2_info : user.user_1_info,
-         };
-         dispatch(addChatBox(newUser));
+         dispatch(addChatBox(user));
          setOpen(false);
-         await Conversation.checkedConversation(user.conversation_id, jwt);
+         if (!checked) {
+            setMesNotSeen(mesNotSeen - 1);
+            setConversation((pre) =>
+               pre.map((obj) => {
+                  if (obj.conversation_id === user.conversation_id) return { ...obj, checked: 1 };
+                  return obj;
+               }),
+            );
+            await Conversation.checkedConversation(user.conversation_id, jwt);
+         }
       } catch (error) {
          console.log('error:', error);
       }
@@ -87,9 +91,7 @@ function Message(props) {
                         style={{
                            fontWeight: checked ? 450 : 500,
                         }}>
-                        {user?.user_1 === userName
-                           ? user?.user_2_info.full_name
-                           : user?.user_1_info.full_name}
+                        {user?.full_name}
                      </span>
                      <div>
                         <p

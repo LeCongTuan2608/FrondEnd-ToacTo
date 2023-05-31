@@ -25,7 +25,6 @@ function MainLayout(props) {
       }
       return () => {
          socket.disconnect();
-         // socket.disconnect();
       };
    }, [token]);
 
@@ -44,7 +43,7 @@ function MainLayout(props) {
             <div className={cn('container-chat-box')}>
                {getChatBox.length > 0 &&
                   getChatBox.map((box, index) => {
-                     return <ChatBox key={box.user_info.user_name} chatBox={box} />;
+                     return <ChatBox key={box.user_name} chatBox={box} />;
                   })}
             </div>
          </Layout>

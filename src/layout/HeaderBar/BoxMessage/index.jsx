@@ -8,59 +8,23 @@ import classNames from 'classnames/bind';
 import styles from './BoxMessage.module.scss';
 import Conversation from 'API/Conversation';
 import socket from '../../../socket/index';
+import { ConversationContext } from 'Context/ConversationContext';
 
 const cn = classNames.bind(styles);
 BoxMessage.propTypes = {};
-// const messages = [
-//    {
-//       user_1: '@abcxyz',
-//       user_2: '@congtuan',
-//       last_message: 'hello',
-//       checked: false,
-//       conversation_id: 1,
-//       user_1_info: {
-//          full_name: 'Tuan Tet',
-//          user_name: '@abcxyz',
-//       },
-//       user_2_info: {
-//          full_name: 'Le cong tuan',
-//          user_name: '@congtuan',
-//       },
-//    },
-// ];
 
 function BoxMessage(props) {
    const { children } = props;
    const [open, setOpen] = useState(false);
-   const [conversation, setConversation] = useState([]);
-   const [newMes, setNewMes] = useState({});
-   const [mesNotSeen, setMesNotSeen] = useState(0);
-   const jwt = {
-      type: localStorage.getItem('type'),
-      token: localStorage.getItem('token'),
-   };
-   const user_name = localStorage.getItem('user_name');
-   useEffect(() => {
-      const getConversation = async () => {
-         try {
-            const response = await Conversation.getAllConversation(jwt);
-            const data = response.data.conversation;
-            console.log('data:', data);
-            const count = data.filter((mes) => !mes.checked && mes.sender !== user_name);
-            setMesNotSeen(count.length);
-            setConversation(data);
-         } catch (error) {
-            console.log('error:', error);
-         }
-      };
-      getConversation();
-   }, [newMes]);
-   // khi nhận được tin nhắn mới từ server refresh lại hàm getConversation để nhận tin nhắn mới
+   const [userName] = useState(localStorage.getItem('user_name'));
+   const { conversation, setConversation, mesNotSeen, setRefresh, setMesNotSeen } =
+      useContext(ConversationContext);
    useEffect(() => {
       socket.on('getMessage', (data) => {
-         setNewMes(data);
+         if (data.receiver === userName) setRefresh((pre) => !pre);
       });
    }, []);
+
    const handleCloseModal = (e) => {
       e.stopPropagation();
    };
@@ -74,7 +38,10 @@ function BoxMessage(props) {
    };
    return (
       <div className={cn('wrapper')}>
-         <Tooltip onClick={() => setOpen(!open)}>
+         <Tooltip
+            onClick={() => {
+               setOpen(!open);
+            }}>
             <Badge count={mesNotSeen} size="small">
                <Button shape="circle" icon={<MessageOutlined />} size="large" />
             </Badge>
