@@ -4,8 +4,8 @@ import classNames from 'classnames/bind';
 import styles from './ChatBox.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { addChatBox, removeChatBox } from 'store/slices/chatBoxSlice';
-import { CloseOutlined, SendOutlined } from '@ant-design/icons';
-import { Button, Input, Tooltip } from 'antd';
+import { CloseOutlined, DownOutlined, MoreOutlined, SendOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Input, Space, Tooltip, message } from 'antd';
 import img_avatar from '../../images/avatar.png';
 import InputMes from './InputMes';
 import socket from '../../socket/index';
@@ -20,9 +20,33 @@ function ChatBox(props) {
    const dispatch = useDispatch();
    const { mesNotSeen, setMesNotSeen, setRefresh } = useContext(ConversationContext);
    const [userName] = useState(localStorage.getItem('user_name'));
-   const [newId, setNewId] = useState(chatBox.conversation_id);
+   const [newId, setNewId] = useState(chatBox.id);
    const data = useSelector((state) => state.chatBoxes);
-   const [message, setMessage] = useState([]);
+   const [userInfo, setUserInfo] = useState(
+      chatBox.group
+         ? {
+              group_name:
+                 chatBox.group_name ||
+                 chatBox.Users.filter((item) => item.user_name !== userName)
+                    .map((item) => item.full_name)
+                    .join(', '),
+              avatar: chatBox.group_name,
+              group: chatBox.group,
+           }
+         : chatBox.Users.filter((item) => item.user_name !== userName)[0],
+   );
+   const [messages, setMessages] = useState([]);
+   // console.log('message:', message);
+
+   // alert notifine
+   const [messageApi, contextHolder] = message.useMessage();
+   const errorNotifine = () => {
+      messageApi.open({
+         type: 'error',
+         content: 'An error occurred while deleting the message!!',
+      });
+   };
+   //============================
    const jwt = {
       type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
@@ -33,7 +57,7 @@ function ChatBox(props) {
          try {
             const response = await Messages.getAllMessages(newId, jwt);
             const data = response.data.messages;
-            setMessage(data);
+            setMessages(data);
          } catch (error) {
             console.log('error:', error);
          }
@@ -42,17 +66,31 @@ function ChatBox(props) {
    }, [newId]);
    useEffect(() => {
       containerDiv.current && (containerDiv.current.scrollTop = containerDiv.current.scrollHeight);
-   }, [message]);
+   }, [messages]);
    useEffect(() => {
       socket.on('getMessage', (data) => {
-         if (data.receiver === userName && data.sender === chatBox.user_name) {
-            setMessage((prev) => [...prev, data]);
+         if (data.conversation_id === newId && data.sender !== userName) {
+            setMessages((prev) => [...prev, data]);
             !newId && setNewId(data.conversation_id);
+         }
+      });
+      socket.on('getIdRemoveMes', (data) => {
+         if (data.conversation_id === newId && data.sender !== userName) {
+            if (data.member_remove_message.includes('all')) {
+               setMessages((pre) =>
+                  pre.map((mes) => {
+                     if (mes.id === data.id) {
+                        return data;
+                     }
+                     return mes;
+                  }),
+               );
+            }
          }
       });
    }, []);
    const onClose = () => {
-      dispatch(removeChatBox(chatBox.user_name));
+      dispatch(removeChatBox(chatBox.id));
    };
 
    const onSubmit = async (value) => {
@@ -62,42 +100,87 @@ function ChatBox(props) {
             date: currentDate.toDateString(),
             sender: userName,
             receiver: chatBox?.user_name,
-            conversation_id: newId || null,
+            id: newId || null,
          };
          const res = await Messages.createMessages(newMessage, jwt);
-         setMessage((pre) => [...pre, res.data.message]);
+         setMessages((pre) => [...pre, res.data.message]);
+         setRefresh((pre) => !pre);
          !newId && setNewId(res.data.message.conversation_id);
          socket.emit('sendMessage', res.data.message);
       } catch (error) {
          console.log('error:', error);
       }
    };
-
+   const handleRemoveMes = async (value) => {
+      try {
+         const response = await Messages.removeMessages(value.id, jwt);
+         const result = response.data.message;
+         if (result.member_remove_message.includes(userName)) {
+            setMessages((pre) => pre.filter((mes) => mes.id !== result.id));
+         } else if (result.member_remove_message.includes('all')) {
+            setMessages((pre) =>
+               pre.map((mes) => {
+                  if (mes.id === result.id) {
+                     return result;
+                  }
+                  return mes;
+               }),
+            );
+         }
+         if (value.sender === userName) socket.emit('sendIdRemoveMes', result);
+      } catch (error) {
+         console.log('error:', error);
+         errorNotifine();
+      }
+   };
    return (
       <div className={cn('wrapper')}>
          <div className={cn('chat-box')}>
             <div className={cn('chat-header')}>
                <div className={cn('avatar')}>
-                  <img src={img_avatar} alt="" />
+                  <img src={userInfo.avatar || img_avatar} alt="" />
                </div>
                <div className={cn('user-name')}>
-                  <h3>{chatBox?.full_name}</h3>
+                  <h3>{userInfo.full_name || userInfo.group_name || 'undefined'}</h3>
                </div>
                <div onClick={onClose} className={cn('btn-close')}>
                   <CloseOutlined style={{ fontSize: 20 }} />
                </div>
             </div>
             <div className={cn('chat-messages')}>
+               {contextHolder}
                <ul ref={containerDiv}>
-                  {message.map((mes, index) => {
-                     if (mes.sender === userName) {
+                  {messages.map((mes, index) => {
+                     if (mes?.sender === userName) {
                         return (
                            <li key={mes.id} className={cn('message', 'mine')}>
-                              <p>
-                                 {mes.content !== ''
-                                    ? mes.content
-                                    : 'This message has been deleted!'}
-                              </p>
+                              <div className={cn('option')}>
+                                 <Dropdown
+                                    placement="bottomRight"
+                                    menu={{
+                                       items: [
+                                          {
+                                             label: (
+                                                <div onClick={() => handleRemoveMes(mes)}>
+                                                   <span>Remove message!</span>
+                                                </div>
+                                             ),
+                                             key: '0',
+                                             danger: true,
+                                          },
+                                       ],
+                                    }}
+                                    trigger={['click']}>
+                                    <Space>
+                                       <MoreOutlined />
+                                    </Space>
+                                 </Dropdown>
+                              </div>
+                              {mes?.member_remove_message?.includes('all') ? (
+                                 <p className={cn('is-removed')}>This message has been deleted!</p>
+                              ) : (
+                                 <p>{mes.content}</p>
+                              )}
                            </li>
                         );
                      } else {
@@ -106,7 +189,34 @@ function ChatBox(props) {
                               <div className={cn('avatar')} style={{ width: 35, height: 35 }}>
                                  <img src={img_avatar} alt="" />
                               </div>
-                              <p>{mes.content}</p>
+                              {mes?.member_remove_message?.includes('all') ? (
+                                 <p className={cn('is-removed')}>This message has been deleted!</p>
+                              ) : (
+                                 <p>{mes.content}</p>
+                              )}
+
+                              <div className={cn('option')}>
+                                 <Dropdown
+                                    placement="bottomLeft"
+                                    menu={{
+                                       items: [
+                                          {
+                                             label: (
+                                                <div onClick={() => handleRemoveMes(mes)}>
+                                                   <span>Remove message!</span>
+                                                </div>
+                                             ),
+                                             key: '0',
+                                             danger: true,
+                                          },
+                                       ],
+                                    }}
+                                    trigger={['click']}>
+                                    <Space>
+                                       <MoreOutlined />
+                                    </Space>
+                                 </Dropdown>
+                              </div>
                            </li>
                         );
                      }

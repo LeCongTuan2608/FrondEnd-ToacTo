@@ -22,9 +22,11 @@ Message.defaultProps = {
 };
 
 function Message(props) {
-   const { user, setOpen, onRemove } = props;
+   const { conversationItem, setOpen, onRemove } = props;
    const userName = localStorage.getItem('user_name');
-   const [checked, setChecked] = useState(user.sender === userName ? true : user.checked);
+   const [checked, setChecked] = useState(
+      conversationItem.checked && conversationItem.checked.includes(userName),
+   );
    const dispatch = useDispatch();
    const { mesNotSeen, setMesNotSeen, conversation, setConversation } =
       useContext(ConversationContext);
@@ -34,17 +36,18 @@ function Message(props) {
    };
    const handleOpenChat = async () => {
       try {
-         dispatch(addChatBox(user));
+         dispatch(addChatBox(conversationItem));
          setOpen(false);
          if (!checked) {
             setMesNotSeen(mesNotSeen - 1);
             setConversation((pre) =>
                pre.map((obj) => {
-                  if (obj.conversation_id === user.conversation_id) return { ...obj, checked: 1 };
+                  if (obj.id === conversationItem.id && obj.checked)
+                     return { ...obj, checked: [...obj.checked, userName] };
                   return obj;
                }),
             );
-            await Conversation.checkedConversation(user.conversation_id, jwt);
+            await Conversation.checkedConversation(conversationItem.id, jwt);
          }
       } catch (error) {
          console.log('error:', error);
@@ -70,7 +73,7 @@ function Message(props) {
          danger: true,
          label: (
             <div
-               onClick={() => onRemove(user.conversation_id)}
+               onClick={() => onRemove(conversationItem.id)}
                style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}>
                <DeleteOutlined />
                Delete
@@ -83,7 +86,7 @@ function Message(props) {
          <div onClick={handleOpenChat}>
             <div className={cn('message-wrap')}>
                <div className={cn('item-first')}>
-                  <img src={img_avatar} alt="" />
+                  <img src={conversationItem.avatar || img_avatar} alt="" />
                </div>
                <div className={cn('item-middle')}>
                   <div className={cn('middle-child')}>
@@ -91,7 +94,12 @@ function Message(props) {
                         style={{
                            fontWeight: checked ? 450 : 500,
                         }}>
-                        {user?.full_name}
+                        {(conversationItem.group && conversationItem.group_name) ||
+                           conversationItem.Users.filter(
+                              (user) => !user.user_name.includes(userName),
+                           )
+                              .map((user) => user.full_name)
+                              .join(', ')}
                      </span>
                      <div>
                         <p
@@ -99,8 +107,8 @@ function Message(props) {
                               fontWeight: checked ? 450 : 500,
                               color: checked ? null : 'rgb(0 96 230)',
                            }}>
-                           {user.sender === userName && <span>You: </span>}
-                           {user?.last_message}
+                           {conversationItem.last_message.sender === userName && <span>You: </span>}
+                           {conversationItem?.last_message.content}
                         </p>
                         <span style={{ padding: '0 10px' }}>15m</span>
                      </div>

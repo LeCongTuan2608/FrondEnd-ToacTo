@@ -21,7 +21,8 @@ function BoxMessage(props) {
       useContext(ConversationContext);
    useEffect(() => {
       socket.on('getMessage', (data) => {
-         if (data.receiver === userName) setRefresh((pre) => !pre);
+         if (conversation.map((conv) => conv.id).includes(data.conversation_id))
+            setRefresh((pre) => !pre);
       });
    }, []);
 
@@ -34,13 +35,14 @@ function BoxMessage(props) {
       }
    };
    const handleRemoveMessage = (id) => {
-      setConversation((preItems) => preItems.filter((val) => val.conversation_id !== id));
+      setConversation((preItems) => preItems.filter((val) => val.id !== id));
    };
    return (
       <div className={cn('wrapper')}>
          <Tooltip
             onClick={() => {
                setOpen(!open);
+               !open && setRefresh((pre) => !pre);
             }}>
             <Badge count={mesNotSeen} size="small">
                <Button shape="circle" icon={<MessageOutlined />} size="large" />
@@ -59,8 +61,8 @@ function BoxMessage(props) {
                            return (
                               <Message
                                  setOpen={setOpen}
-                                 key={item.conversation_id}
-                                 user={item}
+                                 key={item.id}
+                                 conversationItem={item}
                                  onRemove={handleRemoveMessage}
                               />
                            );

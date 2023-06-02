@@ -9,6 +9,9 @@ function InputMes(props) {
    const { onSubmit } = props;
    const [inputMes, setInputMes] = useState('');
    const inputRef = useRef(null);
+   useEffect(() => {
+      inputRef.current && inputRef.current.focus();
+   }, []);
    const onInput = (e) => {
       setInputMes(e.target.value);
    };
@@ -16,6 +19,7 @@ function InputMes(props) {
       if (inputMes.trim()) {
          onSubmit(inputMes);
          setInputMes('');
+         inputRef.current.focus();
       }
    };
 
@@ -28,6 +32,7 @@ function InputMes(props) {
             value={inputMes}
             onInput={onInput}
             onPressEnter={handleSubmit}
+            ref={inputRef}
          />
          <Tooltip title="send" onClick={handleSubmit}>
             <Button shape="circle" icon={<SendOutlined />} />

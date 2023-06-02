@@ -12,5 +12,9 @@ const Messages = {
       const url = `message`;
       return axiosClient.post(url, data, config(jwt.type, jwt.token));
    },
+   removeMessages(mesID, jwt) {
+      const url = `message/${mesID}`;
+      return axiosClient.patch(url, {}, config(jwt.type, jwt.token));
+   },
 };
 export default Messages;

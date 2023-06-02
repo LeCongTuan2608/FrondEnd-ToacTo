@@ -17,8 +17,8 @@ function SiderBar(props) {
    const { styled, items } = props;
    const dispatch = useDispatch();
    const { theme } = useContext(ThemeContext);
-   const { mesNotSeen, setMesNotSeen, conversation, setConversation } =
-      useContext(ConversationContext);
+   const { setMesNotSeen, conversation, setConversation } = useContext(ConversationContext);
+   const userName = localStorage.getItem('user_name');
    const jwt = {
       type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
@@ -26,18 +26,25 @@ function SiderBar(props) {
    const handleOpenChat = async (value) => {
       try {
          const response = await Conversation.getConversation(value.user_name, jwt);
-         const conversation = response.data.conversation;
-         dispatch(addChatBox(conversation));
-         if (!conversation.checked) {
-            setMesNotSeen(mesNotSeen - 1);
+         const result = response.data.conversation;
+         const newChatBox = !result && {
+            ...value,
+            group: false,
+            member: [userName, value.user_name],
+         };
+         dispatch(addChatBox(result || newChatBox));
+         if (result && result?.checked.includes(userName)) {
+            setMesNotSeen((pre) => {
+               return pre <= 0 ? pre : pre - 1;
+            });
             setConversation((pre) =>
                pre.map((obj) => {
-                  if (obj.conversation_id === conversation.conversation_id)
-                     return { ...obj, checked: 1 };
+                  if (obj.id === conversation.id && obj.checked)
+                     return { ...obj, checked: [...obj.checked, userName] };
                   return obj;
                }),
             );
-            await Conversation.checkedConversation(conversation.conversation_id, jwt);
+            await Conversation.checkedConversation(result.id, jwt);
          }
       } catch (error) {
          console.log('error:', error);

@@ -17,8 +17,8 @@ export const ConversationProvider = ({ children }) => {
       const getConversation = async () => {
          try {
             const response = await Conversation.getAllConversation(jwt);
-            const data = response.data.conversation;
-            const count = data.filter((mes) => !mes.checked && mes.sender !== user_name);
+            const data = response.data?.conversation;
+            const count = data && data.filter((conv) => !conv?.checked?.includes(user_name));
             setMesNotSeen(count.length);
             setConversation(data);
          } catch (error) {

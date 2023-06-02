@@ -17,5 +17,9 @@ const Conversation = {
       const url = `conversation/by-user-name/${user_name}`;
       return axiosClient.get(url, config(jwt.type, jwt.token));
    },
+   deleteConversation(conversationId, jwt) {
+      const url = `conversation/${conversationId}`;
+      return axiosClient.delete(url, config(jwt.type, jwt.token));
+   },
 };
 export default Conversation;

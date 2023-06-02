@@ -9,11 +9,11 @@ const chatBoxSlice = createSlice({
    initialState,
    reducers: {
       addChatBox: (state, action) => {
-         !state.chatBoxes.map((box) => box.user_name).includes(action.payload.user_name) &&
+         !state.chatBoxes.map((box) => box.id).includes(action.payload.id) &&
             (state.chatBoxes = [action.payload, ...state.chatBoxes]);
       },
       removeChatBox: (state, action) => {
-         state.chatBoxes = state.chatBoxes.filter((item) => item.user_name !== action.payload);
+         state.chatBoxes = state.chatBoxes.filter((item) => item.id !== action.payload);
       },
    },
 });
