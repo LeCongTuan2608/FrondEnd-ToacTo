@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { addChatBox } from 'store/slices/chatBoxSlice';
 import Conversation from 'API/Conversation';
 import { ConversationContext } from 'Context/ConversationContext';
+import formatTime from 'utils';
 const cn = classNames.bind(styles);
 
 Message.propTypes = {};
@@ -108,9 +109,15 @@ function Message(props) {
                               color: checked ? null : 'rgb(0 96 230)',
                            }}>
                            {conversationItem.last_message.sender === userName && <span>You: </span>}
-                           {conversationItem?.last_message.content}
+                           {!conversationItem.last_message?.isRemove
+                              ? conversationItem?.last_message.content
+                              : conversationItem.last_message.sender === userName
+                              ? 'You have remove message!'
+                              : `${conversationItem.last_message.sender} have remove message!`}
                         </p>
-                        <span style={{ padding: '0 10px' }}>15m</span>
+                        <span style={{ padding: '0 10px' }}>
+                           {formatTime(conversationItem.updatedAt)}
+                        </span>
                      </div>
                   </div>
                   <div className={cn('item-end')}>{!checked && <div></div>}</div>

@@ -9,11 +9,23 @@ const chatBoxSlice = createSlice({
    initialState,
    reducers: {
       addChatBox: (state, action) => {
-         !state.chatBoxes.map((box) => box.id).includes(action.payload.id) &&
-            (state.chatBoxes = [action.payload, ...state.chatBoxes]);
+         if (
+            !state.chatBoxes.map((box) => box.id).includes(action.payload.id) ||
+            state.chatBoxes.filter((u) => u.member.join() === action.payload.member.join())
+               .length === 0
+         ) {
+            state.chatBoxes = [action.payload, ...state.chatBoxes];
+         }
       },
       removeChatBox: (state, action) => {
-         state.chatBoxes = state.chatBoxes.filter((item) => item.id !== action.payload);
+         if (
+            state.chatBoxes.map((box) => box.id)?.includes(action.payload) ||
+            state.chatBoxes.filter((u) => u.member.join() === action.payload.join()).length !== 0
+         ) {
+            state.chatBoxes = state.chatBoxes.filter((item) => {
+               return !(item.id === action.payload || item.member.join() === action.payload.join());
+            });
+         }
       },
    },
 });

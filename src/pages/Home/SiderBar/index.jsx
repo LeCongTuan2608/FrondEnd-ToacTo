@@ -27,13 +27,16 @@ function SiderBar(props) {
       try {
          const response = await Conversation.getConversation(value.user_name, jwt);
          const result = response.data.conversation;
+
          const newChatBox = !result && {
-            ...value,
+            Users: [
+               { avatar: value.avatar, full_name: value.full_name, user_name: value.user_name },
+            ],
             group: false,
             member: [userName, value.user_name],
          };
          dispatch(addChatBox(result || newChatBox));
-         if (result && result?.checked.includes(userName)) {
+         if (result && !result?.checked.includes(userName)) {
             setMesNotSeen((pre) => {
                return pre <= 0 ? pre : pre - 1;
             });

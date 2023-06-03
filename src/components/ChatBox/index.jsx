@@ -8,7 +8,7 @@ import { CloseOutlined, DownOutlined, MoreOutlined, SendOutlined } from '@ant-de
 import { Button, Dropdown, Input, Space, Tooltip, message } from 'antd';
 import img_avatar from '../../images/avatar.png';
 import InputMes from './InputMes';
-import socket from '../../socket/index';
+import socket from '../../socket';
 import Messages from 'API/Messages';
 import { ConversationContext } from 'Context/ConversationContext';
 const cn = classNames.bind(styles);
@@ -23,7 +23,7 @@ function ChatBox(props) {
    const [newId, setNewId] = useState(chatBox.id);
    const data = useSelector((state) => state.chatBoxes);
    const [userInfo, setUserInfo] = useState(
-      chatBox.group
+      chatBox?.group
          ? {
               group_name:
                  chatBox.group_name ||
@@ -86,11 +86,12 @@ function ChatBox(props) {
                   }),
                );
             }
+            setMesNotSeen((pre) => (pre <= 0 ? 0 : pre - 1));
          }
       });
    }, []);
    const onClose = () => {
-      dispatch(removeChatBox(chatBox.id));
+      dispatch(removeChatBox(chatBox.id || chatBox.member));
    };
 
    const onSubmit = async (value) => {
@@ -99,14 +100,15 @@ function ChatBox(props) {
             content: value,
             date: currentDate.toDateString(),
             sender: userName,
-            receiver: chatBox?.user_name,
+            receiver: chatBox.member.filter((memb) => memb !== userName),
             id: newId || null,
          };
          const res = await Messages.createMessages(newMessage, jwt);
+
          setMessages((pre) => [...pre, res.data.message]);
          setRefresh((pre) => !pre);
          !newId && setNewId(res.data.message.conversation_id);
-         socket.emit('sendMessage', res.data.message);
+         socket.emit('sendMessage', { ...res.data.message, receiver: newMessage.receiver });
       } catch (error) {
          console.log('error:', error);
       }

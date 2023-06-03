@@ -8,7 +8,7 @@ import classNames from 'classnames/bind';
 import styles from './MainLayout.module.scss';
 import ChatBox from '../components/ChatBox';
 import { useSelector } from 'react-redux/es/exports';
-import socket from '../socket/index';
+import socket from '../socket';
 const cn = classNames.bind(styles);
 
 MainLayout.propTypes = {};
@@ -43,7 +43,7 @@ function MainLayout(props) {
             <div className={cn('container-chat-box')}>
                {getChatBox.length > 0 &&
                   getChatBox.map((box, index) => {
-                     return <ChatBox key={box.id} chatBox={box} />;
+                     return <ChatBox key={box?.id || box.member.join()} chatBox={box} />;
                   })}
             </div>
          </Layout>

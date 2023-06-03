@@ -7,7 +7,7 @@ import Message from 'components/Message';
 import classNames from 'classnames/bind';
 import styles from './BoxMessage.module.scss';
 import Conversation from 'API/Conversation';
-import socket from '../../../socket/index';
+import socket from '../../../socket';
 import { ConversationContext } from 'Context/ConversationContext';
 
 const cn = classNames.bind(styles);
@@ -21,8 +21,16 @@ function BoxMessage(props) {
       useContext(ConversationContext);
    useEffect(() => {
       socket.on('getMessage', (data) => {
-         if (conversation.map((conv) => conv.id).includes(data.conversation_id))
+         if (
+            conversation.map((conv) => conv.id).includes(data.conversation_id) ||
+            data.receiver.includes(userName)
+         )
             setRefresh((pre) => !pre);
+      });
+      socket.on('getIdRemoveMes', (data) => {
+         if (conversation.map((conv) => conv.id).includes(data.conversation_id)) {
+            setRefresh((pre) => !pre);
+         }
       });
    }, []);
 
