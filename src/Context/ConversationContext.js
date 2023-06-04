@@ -27,6 +27,11 @@ export const ConversationProvider = ({ children }) => {
       };
       getConversation();
    }, [refresh]);
+   useEffect(() => {
+      const count =
+         conversation && conversation.filter((conv) => !conv?.checked?.includes(user_name));
+      setMesNotSeen(count.length);
+   }, [conversation]);
    return (
       <ConversationContext.Provider
          value={{ conversation, setConversation, mesNotSeen, setMesNotSeen, setRefresh }}>

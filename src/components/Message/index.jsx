@@ -10,7 +10,8 @@ import { useDispatch } from 'react-redux';
 import { addChatBox } from 'store/slices/chatBoxSlice';
 import Conversation from 'API/Conversation';
 import { ConversationContext } from 'Context/ConversationContext';
-import formatTime from 'utils';
+import { formatTime } from 'utils';
+import socket from 'socket';
 const cn = classNames.bind(styles);
 
 Message.propTypes = {};
@@ -28,6 +29,7 @@ function Message(props) {
    const [checked, setChecked] = useState(
       conversationItem.checked && conversationItem.checked.includes(userName),
    );
+   const [isRemove, setIsRemove] = useState(conversationItem.last_message?.isRemove || false);
    const dispatch = useDispatch();
    const { mesNotSeen, setMesNotSeen, conversation, setConversation } =
       useContext(ConversationContext);
@@ -35,6 +37,23 @@ function Message(props) {
       type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
    };
+   useEffect(() => {
+      socket.on('getMessage', (data) => {
+         if (data.conversation_id === conversationItem.id && data.sender !== userName) {
+            setChecked(false);
+            setIsRemove(false);
+         }
+      });
+      socket.on('getIdRemoveMes', (data) => {
+         if (data.conversation_id === conversationItem.id && data.sender !== userName) {
+            if (data.member_remove_message.includes('all')) {
+               setChecked(true);
+               setIsRemove(true);
+               setMesNotSeen((pre) => (pre <= 0 ? 0 : pre - 1));
+            }
+         }
+      });
+   }, []);
    const handleOpenChat = async () => {
       try {
          dispatch(addChatBox(conversationItem));
@@ -109,7 +128,7 @@ function Message(props) {
                               color: checked ? null : 'rgb(0 96 230)',
                            }}>
                            {conversationItem.last_message.sender === userName && <span>You: </span>}
-                           {!conversationItem.last_message?.isRemove
+                           {!isRemove
                               ? conversationItem?.last_message.content
                               : conversationItem.last_message.sender === userName
                               ? 'You have remove message!'

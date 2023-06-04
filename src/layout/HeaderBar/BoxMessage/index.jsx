@@ -19,6 +19,10 @@ function BoxMessage(props) {
    const [userName] = useState(localStorage.getItem('user_name'));
    const { conversation, setConversation, mesNotSeen, setRefresh, setMesNotSeen } =
       useContext(ConversationContext);
+   const jwt = {
+      type: localStorage.getItem('type'),
+      token: localStorage.getItem('token'),
+   };
    useEffect(() => {
       socket.on('getMessage', (data) => {
          if (
@@ -42,8 +46,14 @@ function BoxMessage(props) {
          setOpen(false);
       }
    };
-   const handleRemoveMessage = (id) => {
-      setConversation((preItems) => preItems.filter((val) => val.id !== id));
+   const handleRemoveMessage = async (id) => {
+      try {
+         const response = await Conversation.removeConversation(id, jwt);
+         const result = response.data.result;
+         setConversation((preItems) => preItems.filter((val) => val.id !== result.id));
+      } catch (error) {
+         console.log('error:', error);
+      }
    };
    return (
       <div className={cn('wrapper')}>
