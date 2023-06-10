@@ -7,8 +7,9 @@ import HeaderBar from './HeaderBar';
 import classNames from 'classnames/bind';
 import styles from './MainLayout.module.scss';
 import ChatBox from '../components/ChatBox';
-import { useSelector } from 'react-redux/es/exports';
+import { useDispatch, useSelector } from 'react-redux/es/exports';
 import socket from '../socket';
+import chatBoxSlice, { addChatBox } from 'store/slices/chatBoxSlice';
 const cn = classNames.bind(styles);
 
 MainLayout.propTypes = {};
@@ -18,6 +19,8 @@ function MainLayout(props) {
    const navigate = useNavigate();
    const getChatBox = useSelector((state) => state?.chatBox?.chatBoxes);
    const [token, setToken] = useState(localStorage.getItem('token'));
+   const userName = localStorage.getItem('user_name');
+   const dispatch = useDispatch();
    useEffect(() => {
       if (token) {
          socket.connect();
@@ -27,6 +30,13 @@ function MainLayout(props) {
          socket.disconnect();
       };
    }, [token]);
+   useEffect(() => {
+      socket.on('getConversation', (data) => {
+         if (data.member.includes(userName) && data.last_message.sender !== userName) {
+            dispatch(addChatBox(data));
+         }
+      });
+   }, []);
 
    if (!token) {
       return <Navigate to="/login" replace />;

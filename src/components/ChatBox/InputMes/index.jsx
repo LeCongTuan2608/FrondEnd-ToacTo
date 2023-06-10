@@ -4,40 +4,10 @@ import { Button, Dropdown, Input, Menu, Space, Tooltip } from 'antd';
 import { DownOutlined, SendOutlined, SmileOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
 import styles from './InputMes.module.scss';
-
+import { Icons } from 'Icons';
 const cn = classNames.bind(styles);
 InputMes.propTypes = {};
 
-const icons = [
-   '🙂',
-   '😀',
-   '😄',
-   '😆',
-   '😅',
-   '😂',
-   '🤣',
-   '😊',
-   '😉',
-   '😌',
-   '😏',
-   '😍',
-   '😘',
-   '😗',
-   '😙',
-   '😚',
-   '🤔',
-   '🙄',
-   '😠',
-   '😡',
-   '💩',
-   '😳',
-   '😝',
-   '😓',
-   '😢',
-   '😢',
-   '😭',
-   '😰',
-];
 function InputMes(props) {
    const { onSubmit } = props;
    const [inputMes, setInputMes] = useState('');
@@ -101,8 +71,8 @@ function InputMes(props) {
                <div>
                   <div className={cn('container')} onClick={handleSelectIcon}>
                      <ul>
-                        {icons.map((icon) => {
-                           return <li>{icon}</li>;
+                        {Icons.map((icon) => {
+                           return <li key={icon.id}>{icon.label}</li>;
                         })}
                      </ul>
                   </div>

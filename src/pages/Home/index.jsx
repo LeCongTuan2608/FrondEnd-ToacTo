@@ -32,7 +32,7 @@ Home.propTypes = {};
 
 function Home(props) {
    const { theme } = useContext(ThemeContext);
-   const { suggest } = useContext(UserOtherContext);
+   const { suggest, follower, following, friends } = useContext(UserOtherContext);
    const isSmallScreen = useMediaQuery({ query: '(min-width: 1262px)' });
    const isTabletOrMobile = useMediaQuery({ query: '(min-width: 932px)' });
    const jwt = {
@@ -71,9 +71,9 @@ function Home(props) {
                <SiderBar
                   styled={{ css: { left: 0 } }}
                   items={[
-                     { title: 'Suggest', users: [...suggestList] },
-                     { title: 'Followers', users: [...suggestList] },
-                     { title: 'Following', users: [...suggestList] },
+                     { title: 'Suggest', users: suggest },
+                     { title: 'Followers', users: follower },
+                     { title: 'Following', users: following },
                   ]}
                />
             )}
@@ -81,7 +81,7 @@ function Home(props) {
             {isTabletOrMobile && (
                <SiderBar
                   styled={{ css: { right: 0 } }}
-                  items={[{ title: 'Friends', users: [...suggestList] }]}
+                  items={[{ title: 'Friends', users: [...friends] }]}
                />
             )}
          </Layout>

@@ -24,7 +24,7 @@ const loginSchema = yup.object().shape({
 });
 
 function Login(props) {
-   const { refresh, setRefresh } = useContext(UserOtherContext);
+   const { setLimitSuggest, setNewUser } = useContext(UserOtherContext);
    const [loadings, setLoading] = useState(false);
    const [token, setToken] = useState(localStorage.getItem('token'));
    const [errorMes, setErrorMes] = useState('');
@@ -44,7 +44,7 @@ function Login(props) {
          localStorage.setItem('email', response.email);
          localStorage.setItem('full_name', response.full_name);
          localStorage.setItem('role_id', response.role_id);
-         setRefresh(!refresh);
+         setNewUser((pre) => !pre);
          setLoading(false);
          navigate('/');
       } catch (error) {

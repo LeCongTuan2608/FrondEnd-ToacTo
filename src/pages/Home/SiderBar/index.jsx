@@ -6,7 +6,7 @@ import styles from './SiderBar.module.scss';
 import AvatarCustom from './components/AvatarCustom';
 import ButtonCustom from './components/ButtonCustom';
 import ModalCustom from './components/ModalCustom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addChatBox } from 'store/slices/chatBoxSlice';
 import Conversation from 'API/Conversation';
 import { ConversationContext } from 'Context/ConversationContext';
@@ -15,16 +15,19 @@ const cn = classNames.bind(styles);
 SiderBar.propTypes = {};
 function SiderBar(props) {
    const { styled, items } = props;
+
    const dispatch = useDispatch();
    const { theme } = useContext(ThemeContext);
    const { setMesNotSeen, conversation, setConversation } = useContext(ConversationContext);
    const userName = localStorage.getItem('user_name');
+   const getChatBox = useSelector((state) => state?.chatBox?.chatBoxes);
    const jwt = {
       type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
    };
-   const handleOpenChat = async (value) => {
+   const handleOpenChat = async (value, e) => {
       try {
+         e.stopPropagation();
          const response = await Conversation.getConversation(value.user_name, jwt);
          const result = response.data.conversation;
 
@@ -61,23 +64,29 @@ function SiderBar(props) {
          className={cn('sider-bar', `${theme === 'dark' ? 'theme-dark' : 'theme-light'}`)}>
          {items?.map((item, i) => {
             return (
-               <div key={i}>
+               <div key={item.title}>
                   <div>
                      <h3>{item.title}</h3>
                   </div>
                   <div className={cn('items')}>
-                     {item?.users.map((user, index) => {
-                        return (
-                           <div
-                              key={index}
-                              className={cn('item')}
-                              onClick={() => handleOpenChat(user)}>
-                              <AvatarCustom />
-                              <span className={cn('full-name')}>{user.full_name}</span>
-                              <ButtonCustom title={item.title} user={user} />
-                           </div>
-                        );
-                     })}
+                     {item?.users && item.users.length > 0 ? (
+                        item?.users.map((user, index) => {
+                           return (
+                              <div
+                                 key={user.id || user.user_name}
+                                 className={cn('item')}
+                                 onClick={(e) => handleOpenChat(user, e)}>
+                                 <AvatarCustom />
+                                 <span className={cn('full-name')}>{user.full_name}</span>
+                                 <ButtonCustom title={item.title} user={user} jwt={jwt} />
+                              </div>
+                           );
+                        })
+                     ) : (
+                        <div className={cn('is-empty')}>
+                           <span>You dont have a {item.title}</span>
+                        </div>
+                     )}
                   </div>
                   {item.users.length > 4 && <ModalCustom item={item}>More...</ModalCustom>}
                </div>

@@ -1,15 +1,4 @@
-function getDayOfWeek(dayIndex) {
-   const daysOfWeek = [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-   ];
-   return daysOfWeek[dayIndex];
-}
+// format time
 function formatTime(createdAt) {
    const now = new Date();
    const createdDate = new Date(createdAt);

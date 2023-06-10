@@ -69,13 +69,13 @@ function ChatBox(props) {
    }, [messages]);
    useEffect(() => {
       socket.on('getMessage', (data) => {
-         if (data.conversation_id === newId && data.sender !== userName) {
+         if (data.conversation_id === newId) {
             setMessages((prev) => [...prev, data]);
             !newId && setNewId(data.conversation_id);
          }
       });
       socket.on('getIdRemoveMes', (data) => {
-         if (data.conversation_id === newId && data.sender !== userName) {
+         if (data.conversation_id === newId) {
             if (data.member_remove_message.includes('all')) {
                setMessages((pre) =>
                   pre.map((mes) => {
@@ -104,11 +104,11 @@ function ChatBox(props) {
             id: newId || null,
          };
          const res = await Messages.createMessages(newMessage, jwt);
-
-         setMessages((pre) => [...pre, res.data.message]);
+         // setMessages((pre) => [...pre, res.data.message]);
          setRefresh((pre) => !pre);
          !newId && setNewId(res.data.message.conversation_id);
          socket.emit('sendMessage', { ...res.data.message, receiver: newMessage.receiver });
+         socket.emit('sendConversation', { ...res.data.conversation });
       } catch (error) {
          console.log('error:', error);
       }
@@ -119,16 +119,17 @@ function ChatBox(props) {
          const result = response.data.message;
          if (result.member_remove_message.includes(userName)) {
             setMessages((pre) => pre.filter((mes) => mes.id !== result.id));
-         } else if (result.member_remove_message.includes('all')) {
-            setMessages((pre) =>
-               pre.map((mes) => {
-                  if (mes.id === result.id) {
-                     return result;
-                  }
-                  return mes;
-               }),
-            );
          }
+         // else if (result.member_remove_message.includes('all')) {
+         //    setMessages((pre) =>
+         //       pre.map((mes) => {
+         //          if (mes.id === result.id) {
+         //             return result;
+         //          }
+         //          return mes;
+         //       }),
+         //    );
+         // }
          if (value.sender === userName) socket.emit('sendIdRemoveMes', result);
       } catch (error) {
          console.log('error:', error);
