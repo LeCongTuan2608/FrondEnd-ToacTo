@@ -13,6 +13,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import User from 'API/User';
 import { UserOtherContext } from 'Context/UserOtherContext';
+import { useCookies } from 'react-cookie';
 
 const cn = classNames.bind(styles);
 
@@ -24,7 +25,7 @@ const loginSchema = yup.object().shape({
 });
 
 function Login(props) {
-   const { setLimitSuggest, setNewUser } = useContext(UserOtherContext);
+   const { setLimitSuggest, setNewUser, setLogin } = useContext(UserOtherContext);
    const [loadings, setLoading] = useState(false);
    const [token, setToken] = useState(localStorage.getItem('token'));
    const [errorMes, setErrorMes] = useState('');
@@ -38,15 +39,20 @@ function Login(props) {
          const user = await User.login(values);
          const response = user.data;
          localStorage.setItem('token', response.token);
-         localStorage.setItem('type', 'Bearer');
+         localStorage.setItem('type', response.type);
          localStorage.setItem('refresh_token', response.refreshToken);
          localStorage.setItem('user_name', response.user_name);
          localStorage.setItem('email', response.email);
          localStorage.setItem('full_name', response.full_name);
          localStorage.setItem('role_id', response.role_id);
+         localStorage.setItem('token_expires', response.tokenExpires);
+         localStorage.setItem('refresh_token_expires', response.refreshTokenExpires);
+         setLogin((pre) => !pre);
          setNewUser((pre) => !pre);
-         setLoading(false);
-         navigate('/');
+         setTimeout(() => {
+            setLoading(false);
+            navigate('/');
+         }, 2500);
       } catch (error) {
          setLoading(false);
          console.log('error:', error);

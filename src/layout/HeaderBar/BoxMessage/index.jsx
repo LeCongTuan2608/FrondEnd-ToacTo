@@ -9,6 +9,7 @@ import styles from './BoxMessage.module.scss';
 import Conversation from 'API/Conversation';
 import socket from '../../../socket';
 import { ConversationContext } from 'Context/ConversationContext';
+import { useRef } from 'react';
 
 const cn = classNames.bind(styles);
 BoxMessage.propTypes = {};
@@ -28,8 +29,9 @@ function BoxMessage(props) {
          if (
             conversation.map((conv) => conv.id).includes(data.conversation_id) ||
             data.receiver.includes(userName)
-         )
+         ) {
             setRefresh((pre) => !pre);
+         }
       });
       socket.on('getIdRemoveMes', (data) => {
          if (conversation.map((conv) => conv.id).includes(data.conversation_id)) {
@@ -37,7 +39,6 @@ function BoxMessage(props) {
          }
       });
    }, []);
-
    const handleCloseModal = (e) => {
       e.stopPropagation();
    };

@@ -15,6 +15,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import img_avatar from '../../images/avatar.png';
 import styles from './Profile.module.scss';
+import User from 'API/User';
 const cn = classNames.bind(styles);
 Profile.propTypes = {};
 const components = [
@@ -43,10 +44,14 @@ function Profile(props) {
    const { theme } = useContext(ThemeContext);
    const location = useLocation();
    const [showScrollButton, setShowScrollButton] = useState(false);
-
+   const [userInfo, setUserInfo] = useState(false);
+   const jwt = {
+      type: localStorage.getItem('type'),
+      token: localStorage.getItem('token'),
+   };
    useEffect(() => {
       const handleScroll = () => {
-         if (window.pageYOffset > 400) {
+         if (window.scrollY > 400) {
             setShowScrollButton(true);
          } else {
             setShowScrollButton(false);
@@ -56,6 +61,16 @@ function Profile(props) {
       return () => {
          window.removeEventListener('scroll', handleScroll);
       };
+   }, []);
+   useEffect(() => {
+      const getUser = async () => {
+         const res = await User.getUser(jwt);
+         const data = res.data.result;
+         console.log('data:', data);
+
+         setUserInfo(data);
+      };
+      getUser();
    }, []);
 
    const path =
@@ -85,8 +100,8 @@ function Profile(props) {
                            </div>
                         </div>
                         <div className={cn('name')}>
-                           <h1>Tuấn Lê</h1>
-                           <span>@tuanle</span>
+                           <h1>{userInfo.full_name}</h1>
+                           <span>{userInfo.user_name}</span>
                            <div>
                               <Avatar.Group>
                                  <Avatar src="https://joesch.moe/api/v1/random?key=1" />

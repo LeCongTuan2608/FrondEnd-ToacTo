@@ -107,7 +107,11 @@ function ChatBox(props) {
          // setMessages((pre) => [...pre, res.data.message]);
          setRefresh((pre) => !pre);
          !newId && setNewId(res.data.message.conversation_id);
-         socket.emit('sendMessage', { ...res.data.message, receiver: newMessage.receiver });
+         socket.emit('sendMessage', {
+            ...res.data.message,
+            receiver: newMessage.receiver,
+            full_name: localStorage.getItem('full_name'),
+         });
          socket.emit('sendConversation', { ...res.data.conversation });
       } catch (error) {
          console.log('error:', error);

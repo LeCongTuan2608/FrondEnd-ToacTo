@@ -10,6 +10,7 @@ import ChatBox from '../components/ChatBox';
 import { useDispatch, useSelector } from 'react-redux/es/exports';
 import socket from '../socket';
 import chatBoxSlice, { addChatBox } from 'store/slices/chatBoxSlice';
+import { useRef } from 'react';
 const cn = classNames.bind(styles);
 
 MainLayout.propTypes = {};
@@ -20,6 +21,7 @@ function MainLayout(props) {
    const getChatBox = useSelector((state) => state?.chatBox?.chatBoxes);
    const [token, setToken] = useState(localStorage.getItem('token'));
    const userName = localStorage.getItem('user_name');
+   const ref = useRef(null);
    const dispatch = useDispatch();
    useEffect(() => {
       if (token) {
@@ -37,7 +39,34 @@ function MainLayout(props) {
          }
       });
    }, []);
-
+   useEffect(() => {
+      socket.on('getMessage', (data) => {
+         if (data.sender === userName) {
+            if (ref.current) {
+               clearInterval(ref.current);
+               document.title = 'Toac To';
+            }
+         }
+         if (data.receiver.includes(userName)) {
+            let isBlinking = false;
+            if (ref.current) {
+               clearInterval(ref.current);
+            }
+            ref.current = setInterval(() => {
+               document.title = isBlinking ? 'Toac To' : `${data.full_name} sent you a message!`;
+               isBlinking = !isBlinking;
+            }, 1000);
+         }
+      });
+   }, []);
+   useEffect(() => {
+      if (getChatBox.length === 0) {
+         if (ref.current) {
+            clearInterval(ref.current);
+            document.title = 'Toac To';
+         }
+      }
+   }, [getChatBox]);
    if (!token) {
       return <Navigate to="/login" replace />;
    }

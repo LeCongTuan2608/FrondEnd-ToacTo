@@ -25,12 +25,12 @@ export const ConversationProvider = ({ children }) => {
             console.log('error:', error);
          }
       };
-      getConversation();
+      jwt.token && getConversation();
    }, [refresh]);
    useEffect(() => {
       const count =
          conversation && conversation.filter((conv) => !conv?.checked?.includes(user_name));
-      setMesNotSeen(count.length);
+      jwt.token && setMesNotSeen(count.length);
    }, [conversation]);
    return (
       <ConversationContext.Provider

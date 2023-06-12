@@ -15,7 +15,6 @@ const cn = classNames.bind(styles);
 SiderBar.propTypes = {};
 function SiderBar(props) {
    const { styled, items } = props;
-
    const dispatch = useDispatch();
    const { theme } = useContext(ThemeContext);
    const { setMesNotSeen, conversation, setConversation } = useContext(ConversationContext);

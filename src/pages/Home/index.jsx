@@ -21,40 +21,11 @@ const cn = classNames.bind(styles);
 
 const { Content, Header } = Layout;
 Home.propTypes = {};
-// function getItem(label, key, icon, children) {
-//    return {
-//       key,
-//       icon,
-//       children,
-//       label,
-//    };
-// }
-
 function Home(props) {
    const { theme } = useContext(ThemeContext);
    const { suggest, follower, following, friends } = useContext(UserOtherContext);
    const isSmallScreen = useMediaQuery({ query: '(min-width: 1262px)' });
    const isTabletOrMobile = useMediaQuery({ query: '(min-width: 932px)' });
-   const jwt = {
-      type: localStorage.getItem('type'),
-      token: localStorage.getItem('token'),
-   };
-   // useEffect(() => {
-   //    const getSuggest = async () => {
-   //       try {
-   //          const response = await User.getSuggest(jwt);
-   //          console.log(response);
-   //       } catch (error) {
-   //          console.log('error:', error);
-   //       }
-   //    };
-   //    getSuggest();
-   // }, []);
-   // getItem('Lê Công Duy', '2', <DesktopOutlined />),
-   const suggestList = suggest?.map((item) => {
-      // return getItem(item.full_name, item.user_name);
-      return item;
-   });
    return (
       <Layout
          style={{

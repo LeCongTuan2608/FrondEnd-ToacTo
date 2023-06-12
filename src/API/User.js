@@ -9,12 +9,16 @@ const User = {
       const url = 'auth/login';
       return axiosClient.post(url, data);
    },
-   refreshToken(data, jwt) {
+   refreshToken(data) {
       const url = 'token/refresh';
-      return axiosClient.post(url, data, config(jwt.type, jwt.token));
+      return axiosClient.post(url, data);
    },
 
    //======================== user actions ========================
+   getUser(jwt) {
+      const url = 'auth';
+      return axiosClient.get(url, config(jwt.type, jwt.token));
+   },
    register(data) {
       const url = 'auth/register';
       return axiosClient.post(url, data);

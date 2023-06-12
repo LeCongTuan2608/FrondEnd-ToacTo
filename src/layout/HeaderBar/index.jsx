@@ -22,6 +22,7 @@ import Switches from './Switches';
 import Message from 'components/Message';
 import BoxMessage from './BoxMessage';
 import BoxNotification from './BoxNotification';
+import { useCookies } from 'react-cookie';
 //
 const cn = classNames.bind(styles);
 const { Header, Sider } = Layout;

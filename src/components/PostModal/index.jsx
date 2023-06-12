@@ -5,6 +5,7 @@ import { useContext, useEffect, useState, useRef } from 'react';
 import classNames from 'classnames/bind';
 import styles from './PostModal.module.scss';
 import { useMediaQuery } from 'react-responsive';
+import Post from 'API/Post';
 const cn = classNames.bind(styles);
 PostModal.propTypes = {};
 const options = [
@@ -40,6 +41,11 @@ function PostModal(props) {
    const [previewImage, setPreviewImage] = useState('');
    const [previewTitle, setPreviewTitle] = useState('');
    const [fileList, setFileList] = useState([]);
+   const [image, setImage] = useState();
+   const jwt = {
+      type: localStorage.getItem('type'),
+      token: localStorage.getItem('token'),
+   };
 
    const handleCancel = () => setPreviewOpen(false);
    const handlePreview = async (file) => {
@@ -59,7 +65,6 @@ function PostModal(props) {
          onSuccess('ok');
       }, 0);
    };
-
    //==================================================
    const handleChangeAudience = (value) => {
       setAudience(value);
@@ -69,23 +74,27 @@ function PostModal(props) {
    };
    const handleCreatePost = async () => {
       try {
-         console.log({
-            content: content.current.innerText,
-            file: fileList,
-            userName: localStorage.getItem('userName'),
-            audience: audience,
-         });
          setLoadings(true);
-         setTimeout(() => {
-            setLoadings(false);
-            setModalOpen(false);
-            //clear modal
-            content.current.innerText = '';
-            setFileList([]);
-            setPreviewOpen(false);
-            setDis(!dis);
-            //
-         }, 3000);
+         const form = new FormData();
+         form.append('userPost', localStorage.getItem('user_name'));
+         form.append('content', content.current.innerText);
+         form.append('audience', audience);
+         fileList?.map((item) => {
+            if (item.type.split('/').includes('image')) {
+               return form.append('images', item.originFileObj);
+            } else if (item.type.split('/').includes('video')) {
+               return form.append('videos', item.originFileObj);
+            }
+         });
+         const res = await Post.newPost(form, jwt);
+         setLoadings(false);
+         setModalOpen(false);
+         //clear modal
+         content.current.innerText = '';
+         setFileList([]);
+         setPreviewOpen(false);
+         setDis(!dis);
+         //
       } catch (error) {
          console.log('error:', error);
       }
@@ -122,7 +131,7 @@ function PostModal(props) {
             />
             <div style={{ display: 'flex', flex: 1 }}>
                <span style={{ flex: 1 }}>
-                  <h3 style={{ margin: 0 }}>{localStorage.getItem('userName')}</h3>
+                  <h3 style={{ margin: 0 }}>{localStorage.getItem('user_name')}</h3>
                </span>
                <Select
                   defaultValue={options[0].value}

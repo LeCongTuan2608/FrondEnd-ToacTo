@@ -1,12 +1,14 @@
 import axios from 'axios';
+import User from './User';
 
 // const url = 'https://web-social-2c4s.onrender.com/';
 const url = 'http://localhost:4000/';
 const axiosClient = axios.create({
    baseURL: url,
-   headers: {
-      'Content-Type': 'application/JSON',
-   },
+   // headers: {
+   //    'Content-Type': 'application/JSON',
+   //    'Content-Type': 'multipart/form-data',
+   // },
 });
 // Add a request interceptor
 axios.interceptors.request.use(
@@ -27,11 +29,23 @@ axios.interceptors.response.use(
       // Do something with response data
       return response;
    },
-   function (error) {
+   async function (error) {
       // Any status codes that falls outside the range of 2xx cause this function to trigger
       // Do something with response error
-      if (error.response.status === 401) {
-         window.location.replace('/login');
+      // if (error.response.status === 401) {
+      //    window.location.replace('/login');
+      // }
+      const originalRequest = error.config;
+      if (error.response.status === 401 && !originalRequest?.sent) {
+         originalRequest.sent = true;
+         try {
+            const new_access_token = await User.refreshToken(localStorage.getItem('refresh_token'));
+            originalRequest.headers.Authorization = `Bearer ${new_access_token}`;
+            return axios(originalRequest);
+         } catch (error) {
+            console.log('error:', error);
+            if (error.response.status === 401) window.location.replace('/login');
+         }
       }
       return Promise.reject(error);
    },

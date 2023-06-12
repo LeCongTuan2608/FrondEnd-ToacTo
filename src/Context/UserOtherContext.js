@@ -23,7 +23,9 @@ export const UserOtherProvider = ({ children }) => {
    const [following, setFollowing] = useState([]);
    const [limitFollowing, setLimitFollowing] = useState(5);
    const [offsetFollowing, setOffSetFollowing] = useState(0);
+   //=================================================
    const [newUser, setNewUser] = useState(false);
+   const [login, setLogin] = useState(false);
    const jwt = {
       type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
@@ -42,8 +44,8 @@ export const UserOtherProvider = ({ children }) => {
             console.log('error:', error);
          }
       };
-      getSuggest();
-   }, [offsetSuggest, limitSuggest, newUser]);
+      jwt.token && getSuggest();
+   }, [offsetSuggest, limitSuggest, newUser, login]);
 
    useEffect(() => {
       const getFriends = async () => {
@@ -59,8 +61,8 @@ export const UserOtherProvider = ({ children }) => {
             console.log('error:', error);
          }
       };
-      getFriends();
-   }, [offsetFriend, limitFriend, newUser]);
+      jwt.token && getFriends();
+   }, [offsetFriend, limitFriend, newUser, login]);
 
    useEffect(() => {
       const getFollower = async () => {
@@ -75,8 +77,8 @@ export const UserOtherProvider = ({ children }) => {
             console.log('error:', error);
          }
       };
-      getFollower();
-   }, [offsetFollower, limitFollower, newUser]);
+      jwt.token && getFollower();
+   }, [offsetFollower, limitFollower, newUser, login]);
 
    useEffect(() => {
       const getFollowing = async () => {
@@ -91,8 +93,8 @@ export const UserOtherProvider = ({ children }) => {
             console.log('error:', error);
          }
       };
-      getFollowing();
-   }, [offsetFollower, limitFollower, newUser]);
+      jwt.token && getFollowing();
+   }, [offsetFollower, limitFollower, newUser, login]);
 
    return (
       <UserOtherContext.Provider
@@ -115,6 +117,8 @@ export const UserOtherProvider = ({ children }) => {
             setNewUser,
             setSuggest,
             setFriends,
+            //
+            setLogin,
          }}>
          {children}
       </UserOtherContext.Provider>
