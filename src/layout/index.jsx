@@ -34,7 +34,10 @@ function MainLayout(props) {
    }, [token]);
    useEffect(() => {
       socket.on('getConversation', (data) => {
-         if (data.member.includes(userName) && data.last_message.sender !== userName) {
+         const checked =
+            getChatBox.filter((item) => JSON.stringify(item.member) === JSON.stringify(data.member))
+               .length === 0;
+         if (checked && data.member.includes(userName) && data.last_message.sender !== userName) {
             dispatch(addChatBox(data));
          }
       });
@@ -70,7 +73,7 @@ function MainLayout(props) {
    if (!token) {
       return <Navigate to="/login" replace />;
    }
-   console.log(getChatBox);
+   // console.log(getChatBox);
    return (
       <div style={{ height: 'auto', position: 'relative' }}>
          <Layout
@@ -82,7 +85,7 @@ function MainLayout(props) {
             <div className={cn('container-chat-box')}>
                {getChatBox.length > 0 &&
                   getChatBox.map((box, index) => {
-                     return <ChatBox key={box?.id || box.member.join()} chatBox={box} />;
+                     return <ChatBox key={box?.id || box?.member.join()} chatBox={box} />;
                   })}
             </div>
          </Layout>

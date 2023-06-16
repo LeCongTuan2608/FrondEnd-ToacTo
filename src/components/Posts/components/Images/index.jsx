@@ -5,58 +5,54 @@ import classNames from 'classnames/bind';
 import styles from './Images.module.scss';
 const cn = classNames.bind(styles);
 Images.propTypes = {};
-const images = [
-   {
-      id: 1,
-      url: 'https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp',
-   },
-   {
-      id: 2,
-      url: 'https://gw.alipayobjects.com/zos/antfincdn/x43I27A55%26/photo-1438109491414-7198515b166b.webp',
-   },
-   {
-      id: 3,
-      url: 'https://gw.alipayobjects.com/zos/antfincdn/cV16ZqzMjW/photo-1473091540282-9b846e7965e3.webp',
-   },
-   {
-      id: 4,
-      url: 'https://gw.alipayobjects.com/zos/antfincdn/x43I27A55%26/photo-1438109491414-7198515b166b.webp',
-   },
-];
+
 function Images(props) {
+   const { images } = props;
    const [visible, setVisible] = useState(false);
    const [current, setCurrent] = useState(0);
    return (
-      <div className={cn('images-wrap')}>
-         {images.map((image, key) => {
-            if (key === 3) return;
-            if (key === images.length - 2) {
-               return (
-                  <div style={{ position: 'relative' }}>
-                     <Image preview={false} key={key} src={image.url} height={'100%'} />
-                     <div
-                        onClick={() => {
-                           setVisible(true);
-                           setCurrent(key);
-                        }}
-                        className={cn('image-overlay')}>
-                        +{images.length - 3}
+      <div
+         className={cn('images-wrap')}
+         style={
+            images?.length === 1
+               ? { gridTemplateRows: 'unset', gridTemplateColumns: 'unset' }
+               : null
+         }>
+         {images.length === 1 ? (
+            <div style={{ position: 'relative' }}>
+               <Image preview={false} key={images[0]?.id} src={images[0]?.url} height={'100%'} />
+            </div>
+         ) : (
+            images?.map((image, index) => {
+               if (index === 3) return;
+               if (index === 2) {
+                  return (
+                     <div style={{ position: 'relative' }}>
+                        <Image preview={false} key={image.id} src={image.url} height={'100%'} />
+                        <div
+                           onClick={() => {
+                              setVisible(true);
+                              setCurrent(index);
+                           }}
+                           className={cn('image-overlay')}>
+                           +{images.length - 3}
+                        </div>
                      </div>
-                  </div>
+                  );
+               }
+               return (
+                  <Image
+                     preview={false}
+                     key={image.id}
+                     src={image.url}
+                     onClick={() => {
+                        setVisible(true);
+                        setCurrent(index);
+                     }}
+                  />
                );
-            }
-            return (
-               <Image
-                  preview={false}
-                  key={key}
-                  src={image.url}
-                  onClick={() => {
-                     setVisible(true);
-                     setCurrent(key);
-                  }}
-               />
-            );
-         })}
+            })
+         )}
          <div
             style={{
                display: 'none',
@@ -67,8 +63,8 @@ function Images(props) {
                   onVisibleChange: (vis) => setVisible(vis),
                   current: current,
                }}>
-               {images.map((image, key) => {
-                  return <Image src={image.url} key={key} />;
+               {images?.map((image, key) => {
+                  return <Image src={image.url} key={image.id} />;
                })}
             </Image.PreviewGroup>
          </div>

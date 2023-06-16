@@ -23,6 +23,8 @@ import Message from 'components/Message';
 import BoxMessage from './BoxMessage';
 import BoxNotification from './BoxNotification';
 import { useCookies } from 'react-cookie';
+import { addChatBox } from 'store/slices/chatBoxSlice';
+import { useDispatch } from 'react-redux';
 //
 const cn = classNames.bind(styles);
 const { Header, Sider } = Layout;
@@ -59,6 +61,7 @@ function HeaderBar(props) {
    const navigate = useNavigate();
    const isMobile = useMediaQuery({ query: '(min-width: 501px)' });
    const location = useLocation();
+   const dispatch = useDispatch();
 
    const handleMenuClick = (e) => {
       if (e.key !== '1') {
@@ -157,6 +160,7 @@ function HeaderBar(props) {
             <div
                onClick={() => {
                   localStorage.clear();
+                  dispatch(addChatBox());
                   navigate('/login');
                }}
                style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 0' }}>

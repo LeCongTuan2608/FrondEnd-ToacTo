@@ -12,10 +12,22 @@ const Post = {
          },
       });
    },
-   //    logout(data) {
-   //       const url = 'auth/logout';
-   //       return axiosClient.post(url, data);
-   //    },
+   getPost(jwt, params) {
+      const url = 'feed-posts';
+      return axiosClient.get(url, config(jwt.type, jwt.token, params));
+   },
+   setLiked(jwt, id) {
+      const url = `feed-posts/posts/liked/${id}`;
+      return axiosClient.get(url, config(jwt.type, jwt.token));
+   },
+   getComments(jwt, id, params) {
+      const url = `feed-posts/posts/comment/${id}`;
+      return axiosClient.get(url, config(jwt.type, jwt.token, params));
+   },
+   newComment(jwt, data) {
+      const url = `feed-posts/posts/comment`;
+      return axiosClient.post(url, data, config(jwt.type, jwt.token));
+   },
    //    // ========================== suggest ================================
    //    getSuggest(params, jwt) {
    //       const url = 'users/suggest';

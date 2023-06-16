@@ -89,7 +89,7 @@ function ChatBox(props) {
             setMesNotSeen((pre) => (pre <= 0 ? 0 : pre - 1));
          }
       });
-   }, []);
+   }, [newId]);
    const onClose = () => {
       dispatch(removeChatBox(chatBox.id || chatBox.member));
    };

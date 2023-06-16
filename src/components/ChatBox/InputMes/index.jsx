@@ -80,7 +80,7 @@ function InputMes(props) {
             )}
          </div>
 
-         <Tooltip title="send" onClick={handleSubmit}>
+         <Tooltip title="submit" onClick={handleSubmit}>
             <Button shape="circle" icon={<SendOutlined />} />
          </Tooltip>
       </>

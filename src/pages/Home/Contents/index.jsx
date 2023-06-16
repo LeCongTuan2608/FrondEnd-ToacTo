@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Avatar, Input, Layout, Modal, Select, Space, Tag } from 'antd';
 import styles from './Contents.module.scss';
@@ -9,15 +9,51 @@ import Posts from 'components/Posts';
 import PostsSkeleton from 'components/PostsSkeleton';
 import img_avt from '../../../images/avatar.png';
 import PostModal from '../../../components/PostModal';
+import Post from 'API/Post';
 const cn = classNames.bind(styles);
 
 Contents.propTypes = {};
 const { Content, Header } = Layout;
 
 function Contents(props) {
-   const [posts, setPosts] = useState(true);
+   const [posts, setPosts] = useState([]);
    const { theme } = useContext(ThemeContext);
    const [modalOpen, setModalOpen] = useState(false);
+   const [params, SetParams] = useState({ offset: 0, limit: 15 });
+   const [isBottomReached, setIsBottomReached] = useState(false);
+   const jwt = {
+      type: localStorage.getItem('type'),
+      token: localStorage.getItem('token'),
+   };
+   useEffect(() => {
+      const handleScroll = () => {
+         const isScrolledToBottom =
+            window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 800;
+         setIsBottomReached(isScrolledToBottom);
+      };
+      window.addEventListener('scroll', handleScroll);
+      return () => {
+         window.removeEventListener('scroll', handleScroll);
+      };
+   }, []);
+   useEffect(() => {
+      if (isBottomReached) {
+         SetParams((pre) => ({ ...pre, offset: pre.offset + posts.length + 1 }));
+      }
+   }, [isBottomReached, posts.length]);
+
+   useEffect(() => {
+      const getPosts = async () => {
+         try {
+            const res = await Post.getPost(jwt, params);
+            const results = res.data.feedPosts;
+            setPosts((pre) => [...pre, ...results]);
+         } catch (error) {
+            console.log('error:', error);
+         }
+      };
+      getPosts();
+   }, [params]);
 
    return (
       <Layout
@@ -79,12 +115,11 @@ function Contents(props) {
                   background: theme === 'light' ? 'white' : '#242526',
                }}>
                <div className={cn('posts')}>
-                  {posts ? (
+                  {posts.length > 0 ? (
                      <>
-                        <Posts />
-                        <Posts />
-                        <Posts />
-                        <Posts />
+                        {posts.map((post) => {
+                           return <Posts key={post.post_id} post={post} />;
+                        })}
                         <PostsSkeleton />
                         <PostsSkeleton />
                      </>

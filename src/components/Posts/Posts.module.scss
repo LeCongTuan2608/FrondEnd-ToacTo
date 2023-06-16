@@ -19,6 +19,16 @@
          }
       }
    }
+   & .user {
+      display: flex;
+      font-weight: 500;
+      flex-direction: column;
+      & .user-name {
+         color: rgb(125, 125, 125);
+         font-style: italic;
+         font-size: 0.8rem;
+      }
+   }
 }
 .main-posts {
    padding: 10px 0;
