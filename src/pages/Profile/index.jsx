@@ -12,39 +12,22 @@ import { ThemeContext } from 'Context/ThemeContext';
 import { Avatar, Button, Divider, Layout, Menu, Tooltip } from 'antd';
 import classNames from 'classnames/bind';
 import { useContext, useEffect, useState } from 'react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useSearchParams } from 'react-router-dom';
 import img_avatar from '../../images/avatar.png';
 import styles from './Profile.module.scss';
 import User from 'API/User';
+import Post from 'API/Post';
 const cn = classNames.bind(styles);
 Profile.propTypes = {};
-const components = [
-   {
-      label: <Link to={'/profile'}>Posts</Link>,
-      key: 'posts',
-      icon: <ProfileOutlined />,
-   },
-   {
-      label: <Link to={'/profile/info'}>Information</Link>,
-      key: 'info',
-      icon: <UserOutlined />,
-   },
-   {
-      label: <Link to={'/profile/images'}>Images</Link>,
-      key: 'images',
-      icon: <FileImageOutlined />,
-   },
-   {
-      label: <Link to={'/profile/videos'}>Video</Link>,
-      key: 'videos',
-      icon: <VideoCameraOutlined />,
-   },
-];
+
 function Profile(props) {
    const { theme } = useContext(ThemeContext);
    const location = useLocation();
    const [showScrollButton, setShowScrollButton] = useState(false);
-   const [userInfo, setUserInfo] = useState(false);
+   const [userInfo, setUserInfo] = useState({});
+   const [searchParams, setSearchParams] = useSearchParams();
+   const userName = searchParams.get('user_name');
+
    const jwt = {
       type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
@@ -64,10 +47,8 @@ function Profile(props) {
    }, []);
    useEffect(() => {
       const getUser = async () => {
-         const res = await User.getUser(jwt);
+         const res = await User.getUser(jwt, userName);
          const data = res.data.result;
-         console.log('data:', data);
-
          setUserInfo(data);
       };
       getUser();
@@ -86,6 +67,29 @@ function Profile(props) {
          behavior: 'smooth',
       });
    };
+
+   const components = [
+      {
+         label: <Link to={`/profile?user_name=${userName}`}>Posts</Link>,
+         key: 'posts',
+         icon: <ProfileOutlined />,
+      },
+      {
+         label: <Link to={`/profile/info?user_name=${userName}`}>Information</Link>,
+         key: 'info',
+         icon: <UserOutlined />,
+      },
+      {
+         label: <Link to={`/profile/images?user_name=${userName}`}>Images</Link>,
+         key: 'images',
+         icon: <FileImageOutlined />,
+      },
+      {
+         label: <Link to={`/profile/videos?user_name=${userName}`}>Video</Link>,
+         key: 'videos',
+         icon: <VideoCameraOutlined />,
+      },
+   ];
    return (
       <Layout className={cn('wrapper')} style={{ background: theme === 'dark' && '#18191a' }}>
          <div className={cn('container')}>
@@ -100,8 +104,8 @@ function Profile(props) {
                            </div>
                         </div>
                         <div className={cn('name')}>
-                           <h1>{userInfo.full_name}</h1>
-                           <span>{userInfo.user_name}</span>
+                           <h1>{userInfo?.full_name}</h1>
+                           <span>{userInfo?.user_name}</span>
                            <div>
                               <Avatar.Group>
                                  <Avatar src="https://joesch.moe/api/v1/random?key=1" />

@@ -115,20 +115,12 @@ function Contents(props) {
                   background: theme === 'light' ? 'white' : '#242526',
                }}>
                <div className={cn('posts')}>
-                  {posts.length > 0 ? (
-                     <>
-                        {posts.map((post) => {
-                           return <Posts key={post.post_id} post={post} />;
-                        })}
-                        <PostsSkeleton />
-                        <PostsSkeleton />
-                     </>
-                  ) : (
-                     <>
-                        <PostsSkeleton />
-                        <PostsSkeleton />
-                     </>
-                  )}
+                  {posts.length > 0 &&
+                     posts.map((post) => {
+                        return <Posts key={post.post_id} post={post} />;
+                     })}
+                  <PostsSkeleton />
+                  <PostsSkeleton />
                </div>
             </div>
          </Content>

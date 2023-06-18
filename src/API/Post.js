@@ -16,6 +16,10 @@ const Post = {
       const url = 'feed-posts';
       return axiosClient.get(url, config(jwt.type, jwt.token, params));
    },
+   getPostByUser(jwt, params, userName) {
+      const url = `feed-posts/posts/${userName}`;
+      return axiosClient.get(url, config(jwt.type, jwt.token, params));
+   },
    setLiked(jwt, id) {
       const url = `feed-posts/posts/liked/${id}`;
       return axiosClient.get(url, config(jwt.type, jwt.token));

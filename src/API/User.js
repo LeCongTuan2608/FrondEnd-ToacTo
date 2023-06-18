@@ -15,8 +15,8 @@ const User = {
    },
 
    //======================== user actions ========================
-   getUser(jwt) {
-      const url = 'auth';
+   getUser(jwt, userName) {
+      const url = `users/profile/${userName}`;
       return axiosClient.get(url, config(jwt.type, jwt.token));
    },
    register(data) {

@@ -16,7 +16,7 @@ import classNames from 'classnames/bind';
 import { ThemeContext } from 'Context/ThemeContext';
 import { useContext, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './HeaderBar.module.scss';
 import Switches from './Switches';
 import Message from 'components/Message';
@@ -84,7 +84,8 @@ function HeaderBar(props) {
             navigate('/video');
             break;
          case 'profile':
-            navigate('/profile');
+            const userName = localStorage.getItem('user_name');
+            navigate(`/profile?user_name=${userName}`);
             break;
          default:
             break;
