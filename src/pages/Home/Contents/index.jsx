@@ -47,6 +47,8 @@ function Contents(props) {
          try {
             const res = await Post.getPost(jwt, params);
             const results = res.data.feedPosts;
+            console.log('results:', results);
+
             setPosts((pre) => [...pre, ...results]);
          } catch (error) {
             console.log('error:', error);
@@ -109,16 +111,18 @@ function Contents(props) {
                overflow: 'initial',
             }}>
             <div
-               className={cn(theme === 'dark' ? 'theme-dark' : 'theme-light', 'posts')}
+               className={cn(theme === 'dark' ? 'theme-dark' : 'theme-light')}
                style={{
                   textAlign: 'center',
                   background: theme === 'light' ? 'white' : '#242526',
                }}>
                <div className={cn('posts')}>
-                  {posts.length > 0 &&
-                     posts.map((post) => {
-                        return <Posts key={post.post_id} post={post} />;
-                     })}
+                  <>
+                     {posts.length > 0 &&
+                        posts.map((post) => {
+                           return <Posts key={post.post_id} post={post} />;
+                        })}
+                  </>
                   <PostsSkeleton />
                   <PostsSkeleton />
                </div>

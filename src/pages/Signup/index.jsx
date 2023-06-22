@@ -54,6 +54,7 @@ function Signup(props) {
    };
    const onFinish = async (values) => {
       try {
+         console.log('values:', values);
          setLoading(true);
          const newValues = {
             ...values,

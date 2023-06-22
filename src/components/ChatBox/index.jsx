@@ -20,20 +20,20 @@ function ChatBox(props) {
    const dispatch = useDispatch();
    const { mesNotSeen, setMesNotSeen, setRefresh } = useContext(ConversationContext);
    const [userName] = useState(localStorage.getItem('user_name'));
-   const [newId, setNewId] = useState(chatBox.id);
+   const [newId, setNewId] = useState(chatBox?.id);
    const data = useSelector((state) => state.chatBoxes);
    const [userInfo, setUserInfo] = useState(
       chatBox?.group
          ? {
               group_name:
-                 chatBox.group_name ||
-                 chatBox.Users.filter((item) => item.user_name !== userName)
+                 chatBox?.group_name ||
+                 chatBox?.Users.filter((item) => item.user_name !== userName)
                     .map((item) => item.full_name)
                     .join(', '),
-              avatar: chatBox.group_name,
-              group: chatBox.group,
+              avatar: chatBox?.group_name,
+              group: chatBox?.group,
            }
-         : chatBox.Users.filter((item) => item.user_name !== userName)[0],
+         : chatBox?.Users.filter((item) => item.user_name !== userName)[0],
    );
    const [messages, setMessages] = useState([]);
    // console.log('message:', message);
@@ -91,7 +91,7 @@ function ChatBox(props) {
       });
    }, [newId]);
    const onClose = () => {
-      dispatch(removeChatBox(chatBox.id || chatBox.member));
+      dispatch(removeChatBox(chatBox?.id || chatBox.member));
    };
 
    const onSubmit = async (value) => {
@@ -145,10 +145,10 @@ function ChatBox(props) {
          <div className={cn('chat-box')}>
             <div className={cn('chat-header')}>
                <div className={cn('avatar')}>
-                  <img src={userInfo.avatar || img_avatar} alt="" />
+                  <img src={userInfo?.avatar || img_avatar} alt="" />
                </div>
                <div className={cn('user-name')}>
-                  <h3>{userInfo.full_name || userInfo.group_name || 'undefined'}</h3>
+                  <h3>{userInfo?.full_name || userInfo?.group_name || 'undefined'}</h3>
                </div>
                <div onClick={onClose} className={cn('btn-close')}>
                   <CloseOutlined style={{ fontSize: 20 }} />

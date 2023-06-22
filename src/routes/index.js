@@ -71,6 +71,39 @@ export const MainRoutes = [
       ],
    },
    {
+      path: '/user',
+      key: 'user',
+      label: 'User',
+      icon: <UserOutlined />,
+      element: <Profile />,
+      children: [
+         {
+            path: '',
+            key: 'posts',
+            label: 'Posts',
+            element: <ListPosts />,
+         },
+         {
+            path: 'info',
+            key: 'info',
+            label: 'Information',
+            element: <Info />,
+         },
+         {
+            path: 'images',
+            key: 'images',
+            label: 'Images',
+            element: <Images />,
+         },
+         {
+            path: 'videos',
+            key: 'videos',
+            label: 'Video',
+            element: <Videos />,
+         },
+      ],
+   },
+   {
       path: '/help-support',
       key: 'help-support',
       label: 'help-support',

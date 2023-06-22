@@ -23,9 +23,13 @@ const User = {
       const url = 'auth/register';
       return axiosClient.post(url, data);
    },
-   update(data, jwt) {
-      const url = 'auth/register';
-      return axiosClient.post(url, data, config(jwt.type, jwt.token));
+   update(data, jwt, user_name) {
+      const url = `users/${user_name}`;
+      return axiosClient.patch(url, data, config(jwt.type, jwt.token));
+   },
+   uploadAvatar(data, jwt) {
+      const url = `users/avatar`;
+      return axiosClient.patch(url, data, config(jwt.type, jwt.token));
    },
    logout(data) {
       const url = 'auth/logout';

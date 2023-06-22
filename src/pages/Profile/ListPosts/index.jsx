@@ -22,10 +22,15 @@ function ListPosts(props) {
    };
    useEffect(() => {
       const getPosts = async () => {
-         const res = await Post.getPostByUser(jwt, {}, userName);
-         const results = res.data.results;
-         setPosts(results);
-         setLoading(false);
+         try {
+            const res = await Post.getPostByUser(jwt, {}, userName);
+            const results = res.data.results;
+            setPosts(results);
+            setLoading(false);
+         } catch (error) {
+            console.log('error:', error);
+            setLoading(false);
+         }
       };
       getPosts();
    }, []);

@@ -20,7 +20,15 @@ function Images(props) {
          }>
          {images.length === 1 ? (
             <div style={{ position: 'relative' }}>
-               <Image preview={false} key={images[0]?.id} src={images[0]?.url} height={'100%'} />
+               <Image
+                  preview={false}
+                  key={images[0]?.id}
+                  src={images[0]?.url}
+                  height={'100%'}
+                  onClick={() => {
+                     setVisible(true);
+                  }}
+               />
             </div>
          ) : (
             images?.map((image, index) => {
@@ -34,8 +42,8 @@ function Images(props) {
                               setVisible(true);
                               setCurrent(index);
                            }}
-                           className={cn('image-overlay')}>
-                           +{images.length - 3}
+                           className={cn((images.length > 3) & 'image-overlay')}>
+                           {images.length > 3 && '+' + images.length - 3}
                         </div>
                      </div>
                   );

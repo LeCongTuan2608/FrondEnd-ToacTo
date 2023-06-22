@@ -87,13 +87,9 @@ function Posts(props) {
          }>
          <div className={cn('header-posts', `${theme === 'light' ? 'theme-light' : 'theme-dark'}`)}>
             <Space style={{ width: '100%' }}>
-               <Avatar
-                  size="large"
-                  style={{
-                     backgroundColor: '#87d068',
-                  }}
-                  icon={<UserOutlined />}
-               />
+               <div className={cn('img-avatar')}>
+                  <img src={post.user?.avatar?.url} alt="" />
+               </div>
                <div className={cn('user')}>
                   <span className={cn('full-name')}>{post?.user.full_name}</span>
                   <span className={cn('user-name')}>{post?.user.user_name}</span>

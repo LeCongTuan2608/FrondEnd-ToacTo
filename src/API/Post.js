@@ -5,12 +5,7 @@ const config = (type, token, params) => {
 const Post = {
    newPost(data, jwt) {
       const url = 'feed-posts/posts/new';
-      return axiosClient.post(url, data, {
-         headers: {
-            Authorization: `${jwt.type} ${jwt.token}`,
-            'Content-Type': 'multipart/form-data',
-         },
-      });
+      return axiosClient.post(url, data, config(jwt.type, jwt.token));
    },
    getPost(jwt, params) {
       const url = 'feed-posts';

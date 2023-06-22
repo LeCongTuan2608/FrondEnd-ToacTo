@@ -45,5 +45,5 @@ const chatBoxSlice = createSlice({
       },
    },
 });
-export const { addChatBox, removeChatBox } = chatBoxSlice.actions;
+export const { addChatBox, removeChatBox, removeChatBoxAll } = chatBoxSlice.actions;
 export default chatBoxSlice.reducer;

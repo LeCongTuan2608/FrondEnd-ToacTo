@@ -23,7 +23,7 @@ import Message from 'components/Message';
 import BoxMessage from './BoxMessage';
 import BoxNotification from './BoxNotification';
 import { useCookies } from 'react-cookie';
-import { addChatBox } from 'store/slices/chatBoxSlice';
+import { addChatBox, removeChatBoxAll } from 'store/slices/chatBoxSlice';
 import { useDispatch } from 'react-redux';
 //
 const cn = classNames.bind(styles);
@@ -71,7 +71,6 @@ function HeaderBar(props) {
    const handleOpenChange = (flag) => {
       setOpen(flag);
    };
-
    const handleClickPage = (e) => {
       switch (e.key) {
          case 'home':
@@ -161,7 +160,7 @@ function HeaderBar(props) {
             <div
                onClick={() => {
                   localStorage.clear();
-                  dispatch(addChatBox());
+                  dispatch(removeChatBoxAll());
                   navigate('/login');
                }}
                style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 0' }}>
@@ -199,7 +198,7 @@ function HeaderBar(props) {
                   gap: 10,
                   background: theme === 'light' ? 'white' : '#242526',
                }}
-               selectedKeys={[location.pathname.slice(1) || 'home']}
+               selectedKeys={[location.pathname.split('/')[1] || 'home']}
                items={pages}
                onClick={handleClickPage}
             />
