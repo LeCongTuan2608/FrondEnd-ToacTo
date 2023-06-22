@@ -1,5 +1,6 @@
 import {
    HomeOutlined,
+   InsuranceOutlined,
    SearchOutlined,
    UserOutlined,
    VideoCameraAddOutlined,
@@ -14,6 +15,11 @@ import Videos from 'pages/Profile/Videos';
 import Video from 'pages/Video';
 import Setting from 'pages/Setting';
 import SearchPage from 'pages/SearchPage';
+import Admin from 'pages/Admin';
+import AllPosts from 'pages/Admin/AllPosts';
+import PostsBan from 'pages/Admin/PostsBan';
+import AllUsers from 'pages/Admin/AllUsers';
+import UsersBan from 'pages/Admin/UsersBan';
 
 export const MainRoutes = [
    {
@@ -114,5 +120,37 @@ export const MainRoutes = [
       key: 'setting',
       label: 'Setting',
       element: <Setting />,
+   },
+   {
+      path: '/admin',
+      key: 'admin',
+      label: 'Admin',
+      element: <Admin />,
+      children: [
+         {
+            path: 'posts',
+            key: 'posts_manager',
+            label: 'Posts Manager',
+            element: <AllPosts />,
+         },
+         {
+            path: 'posts/ban',
+            key: 'posts_ban',
+            label: 'Posts are forbidden',
+            element: <PostsBan />,
+         },
+         {
+            path: 'users',
+            key: 'users_manager',
+            label: 'Images',
+            element: <AllUsers />,
+         },
+         {
+            path: 'users/ban',
+            key: 'users_ban',
+            label: 'Video',
+            element: <UsersBan />,
+         },
+      ],
    },
 ];

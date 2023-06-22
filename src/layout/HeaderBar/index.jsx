@@ -3,6 +3,7 @@ import {
    BellOutlined,
    ExperimentOutlined,
    HomeOutlined,
+   InsuranceOutlined,
    LogoutOutlined,
    MenuOutlined,
    QuestionOutlined,
@@ -10,6 +11,7 @@ import {
    SettingOutlined,
    UserOutlined,
    VideoCameraAddOutlined,
+   YuqueOutlined,
 } from '@ant-design/icons';
 import { Avatar, Badge, Dropdown, Layout, Menu, Space, Switch } from 'antd';
 import classNames from 'classnames/bind';
@@ -62,7 +64,7 @@ function HeaderBar(props) {
    const isMobile = useMediaQuery({ query: '(min-width: 501px)' });
    const location = useLocation();
    const dispatch = useDispatch();
-
+   const role = localStorage.getItem('role_id');
    const handleMenuClick = (e) => {
       if (e.key !== '1') {
          setOpen(false);
@@ -171,6 +173,22 @@ function HeaderBar(props) {
       },
    ];
 
+   if (role) {
+      const admin = {
+         key: '5',
+         label: (
+            <div
+               onClick={() => {
+                  navigate('/admin/posts');
+               }}
+               style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 0' }}>
+               <InsuranceOutlined />
+               Admin
+            </div>
+         ),
+      };
+      items.splice(items.length - 3, 0, admin);
+   }
    return (
       <Header
          className={cn('header')}
@@ -183,6 +201,7 @@ function HeaderBar(props) {
                   navigate('/');
                }}>
                <span>
+                  <YuqueOutlined />
                   <h2>ToacTo</h2>
                </span>
             </div>

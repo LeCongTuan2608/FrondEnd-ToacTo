@@ -47,8 +47,6 @@ function Contents(props) {
          try {
             const res = await Post.getPost(jwt, params);
             const results = res.data.feedPosts;
-            console.log('results:', results);
-
             setPosts((pre) => [...pre, ...results]);
          } catch (error) {
             console.log('error:', error);
