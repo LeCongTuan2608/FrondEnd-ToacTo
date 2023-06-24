@@ -4,13 +4,20 @@ import classNames from 'classnames/bind';
 import styles from './ChatBox.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { addChatBox, removeChatBox } from 'store/slices/chatBoxSlice';
-import { CloseOutlined, DownOutlined, MoreOutlined, SendOutlined } from '@ant-design/icons';
+import {
+   CloseOutlined,
+   DownOutlined,
+   MoreOutlined,
+   SendOutlined,
+   SettingOutlined,
+} from '@ant-design/icons';
 import { Button, Dropdown, Input, Space, Tooltip, message } from 'antd';
 import img_avatar from '../../images/avatar.png';
 import InputMes from './InputMes';
 import socket from '../../socket';
 import Messages from 'API/Messages';
 import { ConversationContext } from 'Context/ConversationContext';
+import { useNavigate } from 'react-router-dom';
 const cn = classNames.bind(styles);
 ChatBox.propTypes = {};
 
@@ -22,6 +29,7 @@ function ChatBox(props) {
    const [userName] = useState(localStorage.getItem('user_name'));
    const [newId, setNewId] = useState(chatBox?.id);
    const data = useSelector((state) => state.chatBoxes);
+   const navigate = useNavigate();
    const [userInfo, setUserInfo] = useState(
       chatBox?.group
          ? {
@@ -35,9 +43,8 @@ function ChatBox(props) {
            }
          : chatBox?.Users.filter((item) => item.user_name !== userName)[0],
    );
-   const [messages, setMessages] = useState([]);
-   // console.log('message:', message);
 
+   const [messages, setMessages] = useState([]);
    // alert notifine
    const [messageApi, contextHolder] = message.useMessage();
    const errorNotifine = () => {
@@ -123,35 +130,46 @@ function ChatBox(props) {
          const result = response.data.message;
          if (result.member_remove_message.includes(userName)) {
             setMessages((pre) => pre.filter((mes) => mes.id !== result.id));
+         } else if (result.member_remove_message.includes('all')) {
+            setMessages((pre) =>
+               pre.map((mes) => {
+                  if (mes.id === result.id) {
+                     return result;
+                  }
+                  return mes;
+               }),
+            );
          }
-         // else if (result.member_remove_message.includes('all')) {
-         //    setMessages((pre) =>
-         //       pre.map((mes) => {
-         //          if (mes.id === result.id) {
-         //             return result;
-         //          }
-         //          return mes;
-         //       }),
-         //    );
-         // }
          if (value.sender === userName) socket.emit('sendIdRemoveMes', result);
       } catch (error) {
          console.log('error:', error);
          errorNotifine();
       }
    };
+   const handleNavigate = (e) => {
+      !chatBox.group && navigate(`/user?user_name=${userInfo.user_name}`);
+   };
    return (
       <div className={cn('wrapper')}>
          <div className={cn('chat-box')}>
             <div className={cn('chat-header')}>
-               <div className={cn('avatar')}>
-                  <img src={userInfo?.avatar || img_avatar} alt="" />
+               <div className={cn('user')} onClick={handleNavigate}>
+                  <div className={cn('avatar')}>
+                     <img src={userInfo?.avatar?.url || img_avatar} alt="" />
+                  </div>
+                  <div className={cn('user-name')}>
+                     <span>
+                        <h3>{userInfo?.full_name || userInfo?.group_name || 'undefined'}</h3>
+                     </span>
+                  </div>
                </div>
-               <div className={cn('user-name')}>
-                  <h3>{userInfo?.full_name || userInfo?.group_name || 'undefined'}</h3>
-               </div>
-               <div onClick={onClose} className={cn('btn-close')}>
-                  <CloseOutlined style={{ fontSize: 20 }} />
+               <div>
+                  <div className={cn('btn-close')}>
+                     <SettingOutlined style={{ fontSize: 20 }} />
+                  </div>
+                  <div onClick={onClose} className={cn('btn-close')}>
+                     <CloseOutlined style={{ fontSize: 20 }} />
+                  </div>
                </div>
             </div>
             <div className={cn('chat-messages')}>

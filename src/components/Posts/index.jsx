@@ -1,6 +1,7 @@
 import {
    CommentOutlined,
    ExclamationCircleOutlined,
+   FileExcelOutlined,
    HeartOutlined,
    MoreOutlined,
    StopOutlined,
@@ -22,14 +23,13 @@ const { Header, Content, Footer } = Layout;
 Posts.propTypes = {};
 
 function Posts(props) {
-   const { post } = props;
+   const { post, handleBlock, handleBan } = props;
    const { theme } = useContext(ThemeContext);
    const [open, setOpen] = useState(false);
    const [like, setLike] = useState({
       status: post?.status_liked || 0,
       amount: post?.like_count,
    });
-
    const [openComment, setOpenComment] = useState(false);
    const [seeMore, setSeeMore] = useState(false);
    const [text, setText] = useState(post?.content.length);
@@ -37,6 +37,7 @@ function Posts(props) {
       type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
    };
+   const role = localStorage.getItem('role_id');
 
    const handleLike = async (e) => {
       try {
@@ -57,6 +58,9 @@ function Posts(props) {
    const handleComment = (e) => {
       setOpenComment(!openComment);
    };
+   const handleMenuClick = (e) => {
+      setOpen(false);
+   };
    const items = [
       {
          key: '1',
@@ -71,13 +75,43 @@ function Posts(props) {
          key: '2',
          // danger: true,
          label: (
-            <div style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}>
+            <div
+               style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}
+               onClick={(e) => {
+                  handleBlock(e, post.posts_id);
+               }}>
                <StopOutlined />
                Block
             </div>
          ),
       },
    ];
+   if (role === '1') {
+      const item = {
+         key: '3',
+         danger: true,
+         label: (
+            <div
+               style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}
+               onClick={(e) => {
+                  handleBan(e, post.posts_id);
+               }}>
+               {post.ban ? (
+                  <>
+                     <FileExcelOutlined />
+                     Remove the ban
+                  </>
+               ) : (
+                  <>
+                     <FileExcelOutlined />
+                     Ban
+                  </>
+               )}
+            </div>
+         ),
+      };
+      items.push(item);
+   }
 
    return (
       <Layout
@@ -95,7 +129,7 @@ function Posts(props) {
                   <span className={cn('user-name')}>{post?.user.user_name}</span>
                </div>
                <Dropdown
-                  menu={{ items }}
+                  menu={{ items, onClick: handleMenuClick }}
                   trigger={['click']}
                   onOpenChange={handleOpenChange}
                   open={open}>

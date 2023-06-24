@@ -1,8 +1,6 @@
+import { config } from 'utils';
 import axiosClient from './axiosClient';
 
-const config = (type, token) => {
-   return { headers: { Authorization: `${type} ${token}` } };
-};
 const Messages = {
    getAllMessages(conversationId, jwt) {
       const url = `message/${conversationId}`;

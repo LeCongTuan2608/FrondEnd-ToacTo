@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Avatar, Input, Layout, Modal, Select, Space, Tag } from 'antd';
 import styles from './Contents.module.scss';
@@ -10,6 +10,7 @@ import PostsSkeleton from 'components/PostsSkeleton';
 import img_avt from '../../../images/avatar.png';
 import PostModal from '../../../components/PostModal';
 import Post from 'API/Post';
+import Admin from 'API/Admin';
 const cn = classNames.bind(styles);
 
 Contents.propTypes = {};
@@ -21,6 +22,8 @@ function Contents(props) {
    const [modalOpen, setModalOpen] = useState(false);
    const [params, SetParams] = useState({ offset: 0, limit: 15 });
    const [isBottomReached, setIsBottomReached] = useState(false);
+   const ref = useRef(0);
+
    const jwt = {
       type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
@@ -38,22 +41,35 @@ function Contents(props) {
    }, []);
    useEffect(() => {
       if (isBottomReached) {
-         SetParams((pre) => ({ ...pre, offset: pre.offset + posts.length + 1 }));
+         SetParams((pre) => ({ ...pre, offset: ref.current }));
       }
-   }, [isBottomReached, posts.length]);
-
+   }, [isBottomReached]);
    useEffect(() => {
       const getPosts = async () => {
          try {
             const res = await Post.getPost(jwt, params);
             const results = res.data.feedPosts;
             setPosts((pre) => [...pre, ...results]);
+            ref.current = ref.current + results.length + 3;
          } catch (error) {
             console.log('error:', error);
          }
       };
       getPosts();
    }, [params]);
+   const handleBlock = (_, id) => {
+      setPosts((pre) => {
+         return pre.filter((item) => item.posts_id !== id);
+      });
+   };
+   const handleBan = async (_, id) => {
+      try {
+         const res = await Admin.banPosts(jwt, id);
+         setPosts((pre) => pre.filter((item) => item.posts_id !== id));
+      } catch (error) {
+         console.log('error:', error);
+      }
+   };
 
    return (
       <Layout
@@ -118,7 +134,14 @@ function Contents(props) {
                   <>
                      {posts.length > 0 &&
                         posts.map((post) => {
-                           return <Posts key={post.post_id} post={post} />;
+                           return (
+                              <Posts
+                                 key={post.posts_id}
+                                 post={post}
+                                 handleBlock={handleBlock}
+                                 handleBan={handleBan}
+                              />
+                           );
                         })}
                   </>
                   <PostsSkeleton />

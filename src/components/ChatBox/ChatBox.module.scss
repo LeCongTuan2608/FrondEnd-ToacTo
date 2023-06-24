@@ -14,9 +14,23 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+
       box-shadow: rgba(17, 17, 26, 0.2) 0px 1px 0px;
-      padding: 5px;
+      padding: 0.2rem 0.4rem;
+      & > div {
+         display: flex;
+         gap: 10px;
+         align-items: center;
+      }
+      & .user {
+         padding-left: 0.2rem;
+         padding-right: 1.7rem;
+         border-radius: 0.3rem;
+         cursor: pointer;
+         &:hover {
+            background: rgba(204, 204, 204, 0.697);
+         }
+      }
    }
 }
 .avatar {
@@ -34,8 +48,10 @@
 .user-name {
    flex: 1;
    text-align: start;
+
    & h3 {
       margin: 0;
+      text-align: start;
    }
 }
 .btn-close {

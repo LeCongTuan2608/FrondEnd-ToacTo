@@ -1,8 +1,5 @@
+import { config } from 'utils';
 import axiosClient from './axiosClient';
-
-const config = (type, token) => {
-   return { headers: { Authorization: `${type} ${token}` } };
-};
 
 const Conversation = {
    getAllConversation(jwt) {

@@ -15,7 +15,7 @@ import { ThemeContext } from 'Context/ThemeContext';
 import { Avatar, Button, Divider, Layout, Menu, Modal, Tooltip } from 'antd';
 import classNames from 'classnames/bind';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { Link, Outlet, useLocation, useSearchParams } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import img_avatar_default from '../../images/img-user-default.jpg';
 import styles from './Profile.module.scss';
 import User from 'API/User';
@@ -35,12 +35,14 @@ function Profile(props) {
    const [imagePreview, setImagePreview] = useState();
    const inputFile = useRef();
    const [avatar, setAvatar] = useState();
+   const navigate = useNavigate();
    const userName = searchParams.get('user_name');
    const currentUser = localStorage.getItem('user_name');
    const jwt = {
       type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
    };
+
    const pathname = userName === currentUser ? 'profile' : 'user';
 
    useEffect(() => {
@@ -58,18 +60,24 @@ function Profile(props) {
    }, []);
    useEffect(() => {
       const getUser = async () => {
-         const res = await User.getUser(jwt, userName);
-         const data = res.data.result;
-         setAvatar(data.avatar.url);
-         setUserInfo(data);
+         try {
+            !userName && navigate('*');
+            const res = await User.getUser(jwt, userName);
+            const data = res.data.result;
+
+            setAvatar(data.avatar?.url);
+            setUserInfo(data);
+         } catch (error) {
+            console.log('error:', error);
+         }
       };
       getUser();
-   }, []);
+   }, [location.pathname, pathname]);
    useEffect(() => {
       return () => {
          imagePreview && URL.revokeObjectURL(imagePreview.preview);
       };
-   }, [imagePreview]);
+   }, [imagePreview, location.pathname, pathname]);
 
    const path =
       location.pathname.substring(location.pathname.lastIndexOf('/') + 1) === pathname
@@ -180,9 +188,11 @@ function Profile(props) {
                               <img src={avatar || img_avatar_default} alt="" />
                            </div>
                            <div className={cn('icon-avatar')}>
-                              <div onClick={showModal}>
-                                 <CameraOutlined />
-                              </div>
+                              {userName === currentUser && (
+                                 <div onClick={showModal}>
+                                    <CameraOutlined />
+                                 </div>
+                              )}
                            </div>
                         </div>
                         <div className={cn('name')}>

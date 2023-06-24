@@ -16,7 +16,7 @@ import {
 } from '@ant-design/icons';
 import { ThemeContext } from 'Context/ThemeContext';
 import PostsSkeleton from 'components/PostsSkeleton';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 const cn = classNames.bind(styles);
 
 Admin.propTypes = {};
@@ -30,22 +30,19 @@ function getItem(label, key, icon, children, type) {
    };
 }
 const items = [
-   getItem('Posts', 'posts_manager', <ReadOutlined />, [
-      getItem('All Posts', 'posts'),
+   getItem('Posts', 'posts_manager', <ReadOutlined />, [getItem('All Posts', 'posts')]),
+   getItem('Users', 'users_manager', <TeamOutlined />, [getItem('All users', 'users')]),
+   getItem('Ban', 'ban', <TeamOutlined />, [
       getItem('Posts has been ban', 'posts/ban'),
-   ]),
-   getItem('Users', 'users_manager', <TeamOutlined />, [
-      getItem('All users', 'users'),
       getItem('Users has been ban', 'users/ban'),
    ]),
 ];
 function Admin(props) {
    const { theme } = useContext(ThemeContext);
    const location = useLocation();
-   console.log('location:');
-
    const [selectedKey, setSelectedKeys] = useState('posts');
    const navigate = useNavigate();
+   const role = localStorage.getItem('role_id');
    useEffect(() => {
       if (!location.pathname.split('/')[2]) {
          navigate('posts');
@@ -56,12 +53,15 @@ function Admin(props) {
       setSelectedKeys(key);
       navigate(key);
    };
+   if (role !== '1') {
+      return <Navigate to="/" replace />;
+   }
    return (
       <Layout style={{ position: 'relative' }}>
          <div className={cn('slider-bar')}>
             <div className={cn('menu-wrap')}>
                <Menu
-                  defaultOpenKeys={['posts_manager', 'users_manager']}
+                  defaultOpenKeys={['posts_manager', 'users_manager', 'ban']}
                   mode="inline"
                   theme={theme === 'light' ? 'light' : 'dark'}
                   items={items}

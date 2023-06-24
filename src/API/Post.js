@@ -1,7 +1,5 @@
+import { config } from 'utils';
 import axiosClient from './axiosClient';
-const config = (type, token, params) => {
-   return { headers: { Authorization: `${type} ${token}` }, params: params || null };
-};
 const Post = {
    newPost(data, jwt) {
       const url = 'feed-posts/posts/new';

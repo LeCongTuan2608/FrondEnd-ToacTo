@@ -38,21 +38,26 @@ function Login(props) {
          setLoading(true);
          const user = await User.login(values);
          const response = user.data;
-         localStorage.setItem('token', response.token);
-         localStorage.setItem('type', response.type);
-         localStorage.setItem('refresh_token', response.refreshToken);
-         localStorage.setItem('user_name', response.user_name);
-         localStorage.setItem('email', response.email);
-         localStorage.setItem('full_name', response.full_name);
-         localStorage.setItem('role_id', response.role_id);
-         localStorage.setItem('token_expires', response.tokenExpires);
-         localStorage.setItem('refresh_token_expires', response.refreshTokenExpires);
-         setLogin((pre) => !pre);
-         setNewUser((pre) => !pre);
-         setTimeout(() => {
+         if (response.ban) {
+            setErrorMes('Sorry, this account has been banned :(');
             setLoading(false);
-            navigate('/');
-         }, 2500);
+         } else {
+            localStorage.setItem('token', response.token);
+            localStorage.setItem('type', response.type);
+            localStorage.setItem('refresh_token', response.refreshToken);
+            localStorage.setItem('user_name', response.user_name);
+            localStorage.setItem('email', response.email);
+            localStorage.setItem('full_name', response.full_name);
+            localStorage.setItem('role_id', response.role_id);
+            localStorage.setItem('token_expires', response.tokenExpires);
+            localStorage.setItem('refresh_token_expires', response.refreshTokenExpires);
+            setLogin((pre) => !pre);
+            setNewUser((pre) => !pre);
+            setTimeout(() => {
+               setLoading(false);
+               navigate('/');
+            }, 2500);
+         }
       } catch (error) {
          setLoading(false);
          console.log('error:', error);

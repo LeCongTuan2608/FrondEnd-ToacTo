@@ -23,9 +23,12 @@ const { Content, Header } = Layout;
 Home.propTypes = {};
 function Home(props) {
    const { theme } = useContext(ThemeContext);
-   const { suggest, follower, following, friends } = useContext(UserOtherContext);
+   const { suggest, follower, following, friends, setNewUser } = useContext(UserOtherContext);
    const isSmallScreen = useMediaQuery({ query: '(min-width: 1262px)' });
    const isTabletOrMobile = useMediaQuery({ query: '(min-width: 932px)' });
+   useEffect(() => {
+      setNewUser((pre) => !pre);
+   }, []);
    return (
       <Layout
          style={{

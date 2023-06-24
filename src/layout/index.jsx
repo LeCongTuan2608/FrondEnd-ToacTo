@@ -58,7 +58,7 @@ function MainLayout(props) {
             ref.current = setInterval(() => {
                document.title = isBlinking ? 'Toac To' : `${data.full_name} sent you a message!`;
                isBlinking = !isBlinking;
-            }, 1000);
+            }, 1300);
          }
       });
    }, []);

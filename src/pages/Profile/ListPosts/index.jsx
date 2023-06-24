@@ -5,7 +5,7 @@ import classNames from 'classnames/bind';
 import styles from './ListPosts.module.scss';
 import { ArrowUpOutlined } from '@ant-design/icons';
 import PostsSkeleton from 'components/PostsSkeleton';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import Post from 'API/Post';
 import User from 'API/User';
 const cn = classNames.bind(styles);
@@ -20,6 +20,7 @@ function ListPosts(props) {
       type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
    };
+   const location = useLocation();
    useEffect(() => {
       const getPosts = async () => {
          try {
@@ -33,7 +34,7 @@ function ListPosts(props) {
          }
       };
       getPosts();
-   }, []);
+   }, [location.pathname]);
    return (
       <div className={cn('list-wrap')}>
          {loading ? (

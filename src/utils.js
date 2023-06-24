@@ -20,5 +20,7 @@ function formatTime(createdAt) {
       return `${dayOfWeek} ${hours}:${minutes}`;
    }
 }
-
-export { formatTime };
+const config = (type, token, params) => {
+   return { headers: { Authorization: `${type} ${token}` }, params: params || null };
+};
+export { formatTime, config };

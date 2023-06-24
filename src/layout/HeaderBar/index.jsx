@@ -173,7 +173,7 @@ function HeaderBar(props) {
       },
    ];
 
-   if (role) {
+   if (role === '1') {
       const admin = {
          key: '5',
          label: (

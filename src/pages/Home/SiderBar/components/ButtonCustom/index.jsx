@@ -21,8 +21,8 @@ function ButtonCustom(props) {
       try {
          e.stopPropagation();
          const res = await User.handleFollow(user.user_name, jwt);
-         if (follow) showNotifine('warning', `You just unfollowed ${user}!!`);
-         else showNotifine('success', `You just followed ${user}`);
+         if (follow) showNotifine('warning', `You just unfollowed ${user.full_name}!!`);
+         else showNotifine('success', `You just followed ${user.full_name}`);
          setFollow(!follow);
       } catch (error) {
          console.log('error:', error);

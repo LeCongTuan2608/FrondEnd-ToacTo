@@ -4,7 +4,7 @@ import { Descriptions, Layout, Button, Form, Input, Select, DatePicker, Divider 
 import { ThemeContext } from 'Context/ThemeContext';
 import classNames from 'classnames/bind';
 import styles from './Info.module.scss';
-import { useOutletContext, useSearchParams } from 'react-router-dom';
+import { useLocation, useOutletContext, useSearchParams } from 'react-router-dom';
 import { Option } from 'antd/es/mentions';
 import {
    EnvironmentOutlined,
@@ -31,7 +31,6 @@ const signupSchema = yup.object().shape({
       .min(5, 'Too short!')
       .max(50, 'Too long!')
       .required('Please input your full name!'),
-   email: yup.string().email('Invalid email').required('Please input your email!'),
    gender: yup.string().oneOf(['male', 'female', 'other']).required('Please select your gender!'),
 });
 function Info(props) {
@@ -53,9 +52,13 @@ function Info(props) {
    useEffect(() => {
       if (!info.user_name) {
          const getUser = async () => {
-            const res = await User.getUser(jwt, userNameQuery);
-            const data = res.data.result;
-            data && setInfo({ ...data, birth_day: data.birth_day && dayjs(data.birth_day) });
+            try {
+               const res = await User.getUser(jwt, userNameQuery);
+               const data = res.data.result;
+               data && setInfo({ ...data, birth_day: data.birth_day && dayjs(data.birth_day) });
+            } catch (error) {
+               console.log('error:', error);
+            }
          };
          getUser();
       }
@@ -111,17 +114,6 @@ function Info(props) {
                         rules={[yupSync]}>
                         <Input placeholder="Full name" />
                      </Form.Item>
-                     <Form.Item
-                        className={cn('input-field')}
-                        label="Email"
-                        name="email"
-                        rules={[yupSync]}>
-                        <Input
-                           prefix={<UserOutlined className="site-form-item-icon" />}
-                           placeholder="Email"
-                        />
-                     </Form.Item>
-
                      <Form.Item
                         className={cn('input-field')}
                         name="gender"
@@ -191,9 +183,6 @@ function Info(props) {
                   contentStyle={theme === 'light' ? {} : { color: 'white' }}>
                   <Descriptions.Item label="UserName">{info.user_name}</Descriptions.Item>
                   <Descriptions.Item label="Full name">{info.full_name}</Descriptions.Item>
-                  <Descriptions.Item label="Email">
-                     {checkUser ? info.email : info.email?.replace(/./g, '*')}
-                  </Descriptions.Item>
                   <Descriptions.Item label="Gender">{info.gender}</Descriptions.Item>
                   <Descriptions.Item label="Birth day">
                      {checkUser

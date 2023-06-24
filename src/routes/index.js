@@ -20,6 +20,12 @@ import AllPosts from 'pages/Admin/AllPosts';
 import PostsBan from 'pages/Admin/PostsBan';
 import AllUsers from 'pages/Admin/AllUsers';
 import UsersBan from 'pages/Admin/UsersBan';
+import PwdSecurity from 'pages/Setting/PwdSecurity';
+import PersonalInformation from 'pages/Setting/PersonalInformation';
+import Following from 'pages/Setting/Following';
+import Followers from 'pages/Setting/Followers';
+import BlockedPosts from 'pages/Setting/BlockedPosts';
+import BlockedUsers from 'pages/Setting/BlockedUsers';
 
 export const MainRoutes = [
    {
@@ -120,6 +126,44 @@ export const MainRoutes = [
       key: 'setting',
       label: 'Setting',
       element: <Setting />,
+      children: [
+         {
+            path: 'personal-information',
+            key: 'personal_information',
+            label: 'Personal information',
+            element: <PersonalInformation />,
+         },
+         {
+            path: 'password-security',
+            key: 'password_and_security',
+            label: 'password and security',
+            element: <PwdSecurity />,
+         },
+         {
+            path: 'following',
+            key: 'following',
+            label: 'Following',
+            element: <Following />,
+         },
+         {
+            path: 'followers',
+            key: 'followers',
+            label: 'Followers',
+            element: <Followers />,
+         },
+         {
+            path: 'blocked-posts',
+            key: 'blocked_posts',
+            label: 'Blocked posts',
+            element: <BlockedPosts />,
+         },
+         {
+            path: 'blocked-users',
+            key: 'blocked_users',
+            label: 'Blocked users',
+            element: <BlockedUsers />,
+         },
+      ],
    },
    {
       path: '/admin',
