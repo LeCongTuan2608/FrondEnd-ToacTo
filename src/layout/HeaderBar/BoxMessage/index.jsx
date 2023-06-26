@@ -17,6 +17,7 @@ BoxMessage.propTypes = {};
 function BoxMessage(props) {
    const { children } = props;
    const [open, setOpen] = useState(false);
+   const btnIconRef = useRef(null);
    const [userName] = useState(localStorage.getItem('user_name'));
    const { conversation, setConversation, mesNotSeen, setRefresh, setMesNotSeen } =
       useContext(ConversationContext);
@@ -24,6 +25,19 @@ function BoxMessage(props) {
       type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
    };
+   // handle when click outside
+   useEffect(() => {
+      const handleClickOutsideTab = (e) => {
+         const target = e.target;
+         if (target.closest('.box-wrap') === null && !btnIconRef.current.contains(target)) {
+            setOpen(false);
+         }
+      };
+      document.addEventListener('click', handleClickOutsideTab);
+      return () => {
+         document.removeEventListener('click', handleClickOutsideTab);
+      };
+   }, []);
    useEffect(() => {
       socket.on('getMessage', (data) => {
          if (
@@ -42,11 +56,6 @@ function BoxMessage(props) {
    const handleCloseModal = (e) => {
       e.stopPropagation();
    };
-   const handleOutsideClick = (e) => {
-      if (e.target === e.currentTarget) {
-         setOpen(false);
-      }
-   };
    const handleRemoveMessage = async (id) => {
       try {
          const response = await Conversation.removeConversation(id, jwt);
@@ -64,32 +73,29 @@ function BoxMessage(props) {
                !open && setRefresh((pre) => !pre);
             }}>
             <Badge count={mesNotSeen} size="small">
-               <Button shape="circle" icon={<MessageOutlined />} size="large" />
+               <Button shape="circle" icon={<MessageOutlined />} size="large" ref={btnIconRef} />
             </Badge>
          </Tooltip>
          {open && (
-            <>
-               <div className={cn('box-wrap')}>
-                  <div className={cn('layer')} onClick={handleOutsideClick}></div>
-                  <div onClick={handleCloseModal} className={cn('container')}>
-                     <div>
-                        <h2>Chat</h2>
-                     </div>
-                     <div className={cn('wrap-message')}>
-                        {conversation.map((item, index) => {
-                           return (
-                              <Message
-                                 setOpen={setOpen}
-                                 key={item.id}
-                                 conversationItem={item}
-                                 onRemove={handleRemoveMessage}
-                              />
-                           );
-                        })}
-                     </div>
+            <div className={cn('box-wrap')}>
+               <div onClick={handleCloseModal} className={cn('container')}>
+                  <div>
+                     <h2>Chat</h2>
+                  </div>
+                  <div className={cn('wrap-message')}>
+                     {conversation.map((item, index) => {
+                        return (
+                           <Message
+                              setOpen={setOpen}
+                              key={item.id}
+                              conversationItem={item}
+                              onRemove={handleRemoveMessage}
+                           />
+                        );
+                     })}
                   </div>
                </div>
-            </>
+            </div>
          )}
       </div>
    );

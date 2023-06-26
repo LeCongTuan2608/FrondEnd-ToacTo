@@ -1,6 +1,6 @@
 import { PlusOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Divider, Modal, Select, Space, Upload } from 'antd';
-import img_avt from '../../images/avatar.png';
+import avatar_default from '../../images/img-user-default.jpg';
 import { useContext, useEffect, useState, useRef } from 'react';
 import classNames from 'classnames/bind';
 import styles from './PostModal.module.scss';
@@ -126,17 +126,19 @@ function PostModal(props) {
             <Avatar
                size={64}
                icon={<UserOutlined />}
-               src={img_avt}
+               src={localStorage.getItem('avatar') || avatar_default}
                style={{ border: '1px solid #bdbdbdc2' }}
             />
             <div style={{ display: 'flex', flex: 1 }}>
                <span style={{ flex: 1 }}>
-                  <h3 style={{ margin: 0 }}>{localStorage.getItem('user_name')}</h3>
+                  <h3 style={{ margin: 0 }}>{localStorage.getItem('full_name')}</h3>
+                  <span style={{ margin: 0 }}>{localStorage.getItem('user_name')}</span>
                </span>
                <Select
                   defaultValue={options[0].value}
                   style={{
                      width: 120,
+                     height: '100%',
                   }}
                   onChange={handleChangeAudience}
                   options={options}

@@ -15,7 +15,14 @@ import { ThemeContext } from 'Context/ThemeContext';
 import { Avatar, Button, Divider, Layout, Menu, Modal, Tooltip } from 'antd';
 import classNames from 'classnames/bind';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { Link, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import {
+   Link,
+   Navigate,
+   Outlet,
+   useLocation,
+   useNavigate,
+   useSearchParams,
+} from 'react-router-dom';
 import img_avatar_default from '../../images/img-user-default.jpg';
 import styles from './Profile.module.scss';
 import User from 'API/User';
@@ -115,6 +122,9 @@ function Profile(props) {
       } else {
          setImagePreview('');
       }
+   };
+   const handleEdit = () => {
+      navigate(`/${pathname}/info?user_name=${userName}&edit=true`);
    };
 
    //
@@ -232,7 +242,7 @@ function Profile(props) {
                                  <Button type="primary" icon={<PlusOutlined />} size="large">
                                     Add to news
                                  </Button>
-                                 <Button icon={<EditOutlined />} size="large">
+                                 <Button icon={<EditOutlined />} size="large" onClick={handleEdit}>
                                     Edit profile
                                  </Button>
                               </>

@@ -11,6 +11,14 @@ const User = {
       const url = 'token/refresh';
       return axiosClient.post(url, data);
    },
+   changePassword(jwt, data) {
+      const url = 'auth/change-password';
+      return axiosClient.patch(url, data, config(jwt.type, jwt.token));
+   },
+   changeEmail(jwt, data) {
+      const url = 'auth/change-email';
+      return axiosClient.patch(url, data, config(jwt.type, jwt.token));
+   },
 
    //======================== user actions ========================
    getUser(jwt, userName) {

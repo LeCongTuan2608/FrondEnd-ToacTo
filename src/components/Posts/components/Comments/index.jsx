@@ -11,7 +11,7 @@ const cn = classNames.bind(styles);
 Comments.propTypes = {};
 
 function Comments(props) {
-   const { postId } = props;
+   const { post } = props;
    const [comments, setComments] = useState([]);
    const [params, SetParams] = useState({ offset: 0, limit: 5 });
    const jwt = {
@@ -20,7 +20,7 @@ function Comments(props) {
    };
    useEffect(() => {
       const getComments = async () => {
-         const res = await Post.getComments(jwt, postId, params);
+         const res = await Post.getComments(jwt, post.posts_id, params);
          const result = res.data.results;
          setComments((pre) => [...pre, ...result]);
       };
@@ -31,10 +31,14 @@ function Comments(props) {
          const data = {
             content: e,
             img: null,
-            posts_id: postId,
+            posts_id: post.posts_id,
+            commentator: localStorage.getItem('user_name'),
+            name_commentator: localStorage.getItem('full_name'),
+            owner_posts: post.user.user_name,
          };
          const res = await Post.newComment(jwt, data);
          const result = res.data.result;
+         console.log('result:', result);
          setComments((pre) => [result, ...pre]);
       } catch (error) {
          console.log('error:', error);

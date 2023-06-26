@@ -1,4 +1,4 @@
-import { Layout } from 'antd';
+import { Layout, Modal } from 'antd';
 import { ThemeContext } from 'Context/ThemeContext';
 import Login from 'pages/Login';
 import { useContext, useEffect, useState } from 'react';
@@ -11,10 +11,13 @@ import { useDispatch, useSelector } from 'react-redux/es/exports';
 import socket from '../socket';
 import chatBoxSlice, { addChatBox } from 'store/slices/chatBoxSlice';
 import { useRef } from 'react';
+import dayjs from 'dayjs';
 const cn = classNames.bind(styles);
-
+//
+const tokenExpires = dayjs(localStorage.getItem('token_expires'));
+const dateCurrent = dayjs();
+const checkExpires = tokenExpires.isAfter(dateCurrent);
 MainLayout.propTypes = {};
-const boxChat = [1, 2, 3];
 function MainLayout(props) {
    const { theme } = useContext(ThemeContext);
    const navigate = useNavigate();
@@ -70,9 +73,29 @@ function MainLayout(props) {
          }
       }
    }, [getChatBox]);
+   // check token expires
+   useEffect(() => {
+      if (!checkExpires) {
+         const warning = () => {
+            Modal.warning({
+               title: 'This is a warning message',
+               content: 'Login session has expired, please login again!',
+               centered: true,
+               onOk: () => {
+                  localStorage.clear();
+                  navigate('/login');
+               },
+            });
+         };
+         warning();
+      }
+   }, []);
+   //
+
    if (!token) {
       return <Navigate to="/login" replace />;
    }
+
    // console.log(getChatBox);
    return (
       <div style={{ height: 'auto', position: 'relative' }}>

@@ -34,4 +34,7 @@
    max-width: 700px;
    margin: 0 auto;
    padding: 2rem 0;
+   min-height: calc(100vh - 55px);
+   display: flex;
+   flex-direction: column;
 }

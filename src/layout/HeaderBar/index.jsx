@@ -13,7 +13,7 @@ import {
    VideoCameraAddOutlined,
    YuqueOutlined,
 } from '@ant-design/icons';
-import { Avatar, Badge, Dropdown, Layout, Menu, Space, Switch } from 'antd';
+import { Avatar, Badge, Button, Dropdown, Layout, Menu, Space, Switch, Tooltip } from 'antd';
 import classNames from 'classnames/bind';
 import { ThemeContext } from 'Context/ThemeContext';
 import { useContext, useState } from 'react';
@@ -231,29 +231,27 @@ function HeaderBar(props) {
                         trigger={['click']}
                         onOpenChange={handleOpenChange}
                         open={open}>
-                        <Avatar
-                           size="large"
-                           style={{
-                              backgroundColor: '#fff7e6',
-                              color: '#d46b08',
-                              cursor: 'pointer',
-                           }}
-                           icon={<SettingOutlined />}
-                        />
+                        <Tooltip>
+                           <Button shape="circle" icon={<SettingOutlined />} size="large" />
+                        </Tooltip>
                      </Dropdown>
                   </>
                ) : (
                   <Dropdown menu={{ items }} trigger={['click']}>
-                     <Avatar
-                        size="large"
+                     <Tooltip
                         style={{
-                           backgroundColor: '#f9f0ff',
-                           color: '#531dab',
-                           cursor: 'pointer',
-                           marginBottom: 7,
-                        }}
-                        icon={<MenuOutlined />}
-                     />
+                           marginTop: 7,
+                        }}>
+                        <Button
+                           shape="circle"
+                           icon={<MenuOutlined />}
+                           size="large"
+                           style={{
+                              border: 'none',
+                              height: 33,
+                           }}
+                        />
+                     </Tooltip>
                   </Dropdown>
                )}
             </Space>

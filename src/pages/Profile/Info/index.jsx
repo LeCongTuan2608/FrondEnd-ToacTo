@@ -35,20 +35,32 @@ const signupSchema = yup.object().shape({
 });
 function Info(props) {
    const [userInfo] = useOutletContext();
+   const { theme } = useContext(ThemeContext);
    const [info, setInfo] = useState({
       ...userInfo,
       birth_day: userInfo.birth_day && dayjs(userInfo.birth_day),
    });
-   const { theme } = useContext(ThemeContext);
-   const [edit, setEdit] = useState(false);
-   const [form] = Form.useForm();
+   // url browser
    const [searchParams, setSearchParams] = useSearchParams();
    const userName = localStorage.getItem('user_name');
    const userNameQuery = searchParams.get('user_name');
+   const editQuery = searchParams.get('edit');
+   const location = useLocation();
+   // state
+   const [edit, setEdit] = useState(editQuery ? true : false);
+   const [form] = Form.useForm();
+
    const jwt = {
       type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
    };
+   useEffect(() => {
+      if (userNameQuery !== userName && editQuery) {
+         searchParams.delete('edit');
+         setSearchParams(searchParams);
+      }
+      editQuery && setEdit(editQuery && userName === userNameQuery ? true : false);
+   }, [location.pathname, location.search]);
    useEffect(() => {
       if (!info.user_name) {
          const getUser = async () => {
@@ -77,6 +89,16 @@ function Info(props) {
 
    const onFinishFailed = (errorInfo) => {
       console.log('Failed:', errorInfo);
+   };
+   const handleClickEdit = () => {
+      if (editQuery) {
+         searchParams.delete('edit');
+         setSearchParams(searchParams);
+      } else {
+         searchParams.set('edit', 'true');
+         setSearchParams(searchParams);
+      }
+      setEdit(!edit);
    };
    // validate form
    const yupSync = {
@@ -157,11 +179,7 @@ function Info(props) {
                            marginTop: 40,
                            '> div': { justifyContent: 'center' },
                         }}>
-                        <Button
-                           type="dashed"
-                           onClick={() => {
-                              setEdit(!edit);
-                           }}>
+                        <Button type="dashed" onClick={handleClickEdit}>
                            Cancel
                         </Button>
                         <Button type="primary" htmlType="submit">
@@ -203,11 +221,7 @@ function Info(props) {
                {info.user_name !== userName
                   ? null
                   : !edit && (
-                       <Button
-                          type="primary"
-                          onClick={() => {
-                             setEdit(!edit);
-                          }}>
+                       <Button type="primary" onClick={handleClickEdit}>
                           Edit
                        </Button>
                     )}

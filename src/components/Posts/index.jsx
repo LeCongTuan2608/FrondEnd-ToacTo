@@ -146,7 +146,7 @@ function Posts(props) {
             </Space>
          </div>
          <Content className={cn('main-posts')}>
-            <div style={{ padding: '0 10px', marginBottom: 10 }}>
+            <div style={{ padding: '0 15px', marginBottom: 10 }}>
                <p style={seeMore ? { display: 'block' } : {}}>
                   <span>{post?.content}</span>
                </p>
@@ -189,7 +189,7 @@ function Posts(props) {
                <span>Comment {post?.comment_count ? `(${post?.comment_count})` : null}</span>
             </Space>
          </Footer>
-         {openComment && <Comments postId={post?.posts_id} />}
+         {openComment && <Comments post={post} />}
       </Layout>
    );
 }

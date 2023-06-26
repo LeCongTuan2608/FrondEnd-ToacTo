@@ -1,0 +1,88 @@
+.wrapper {
+   padding: 5px 10px;
+   position: relative;
+   &:hover {
+      background: #efefef;
+      cursor: pointer;
+      .btn-more {
+         display: block;
+      }
+   }
+}
+.notifi-wrap {
+   display: flex;
+   gap: 10px;
+   align-items: center;
+   width: 350px;
+}
+.item-first {
+   width: 50px;
+   height: 50px;
+   border-radius: 100rem;
+   border: 1px solid #0000003b;
+   overflow: hidden;
+   & img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+   }
+}
+.item-middle {
+   position: relative;
+   display: flex;
+   flex: 1;
+   align-items: center;
+   & span,
+   p {
+      line-height: 1.2;
+      text-align: start;
+   }
+   & .middle-child {
+      flex: 1;
+      gap: 10px;
+      > span {
+         font-size: 15px;
+      }
+      & div {
+         display: flex;
+         flex: 1;
+         flex-direction: column;
+         display: flex;
+         font-style: italic;
+         opacity: 0.7;
+         font-size: 14px;
+         width: 100%;
+         align-items: flex-start;
+         & > p {
+            max-width: 220px;
+            margin: 0;
+            overflow: hidden;
+            max-height: 3rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* number of lines to show */
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+         }
+      }
+   }
+   .item-end {
+      & div {
+         width: 10px;
+         height: 10px;
+         background: rgb(0, 96, 230);
+         border-radius: 100rem;
+      }
+   }
+}
+.btn-more {
+   position: absolute;
+   right: 7%;
+   top: 0;
+   height: 100%;
+   & > div {
+      height: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+   }
+}
