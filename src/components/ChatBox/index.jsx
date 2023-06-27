@@ -41,7 +41,7 @@ function ChatBox(props) {
               avatar: chatBox?.group_name,
               group: chatBox?.group,
            }
-         : chatBox?.Users.filter((item) => item.user_name !== userName)[0],
+         : chatBox?.Users?.filter((item) => item.user_name !== userName)[0],
    );
 
    const [messages, setMessages] = useState([]);
