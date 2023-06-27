@@ -12,7 +12,7 @@ import {
    SettingOutlined,
 } from '@ant-design/icons';
 import { Button, Dropdown, Input, Space, Tooltip, message } from 'antd';
-import img_avatar from '../../images/avatar.png';
+import img_avatar_default from '../../images/img-user-default.jpg';
 import InputMes from './InputMes';
 import socket from '../../socket';
 import Messages from 'API/Messages';
@@ -155,7 +155,7 @@ function ChatBox(props) {
             <div className={cn('chat-header')}>
                <div className={cn('user')} onClick={handleNavigate}>
                   <div className={cn('avatar')}>
-                     <img src={userInfo?.avatar?.url || img_avatar} alt="" />
+                     <img src={userInfo?.avatar?.url || img_avatar_default} alt="" />
                   </div>
                   <div className={cn('user-name')}>
                      <span>
