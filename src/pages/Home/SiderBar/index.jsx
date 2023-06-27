@@ -75,7 +75,7 @@ function SiderBar(props) {
                                  key={user.id || user.user_name}
                                  className={cn('item')}
                                  onClick={(e) => handleOpenChat(user, e)}>
-                                 <AvatarCustom avatar={user.avatar.url} />
+                                 <AvatarCustom avatar={user.avatar?.url} />
                                  <span className={cn('full-name')}>{user.full_name}</span>
                                  <ButtonCustom title={item.title} user={user} jwt={jwt} />
                               </div>
