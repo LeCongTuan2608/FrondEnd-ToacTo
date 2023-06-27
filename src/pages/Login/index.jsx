@@ -45,7 +45,7 @@ function Login(props) {
             localStorage.setItem('full_name', response.full_name);
             localStorage.setItem('email', response.email);
             localStorage.setItem('user_name', response.user_name);
-            localStorage.setItem('avatar', response.avatar.url);
+            localStorage.setItem('avatar', response.avatar?.url);
             localStorage.setItem('role_id', response.role_id);
             localStorage.setItem('type', response.type);
             localStorage.setItem('token', response.token);
