@@ -28,6 +28,7 @@ import styles from './Profile.module.scss';
 import User from 'API/User';
 import Post from 'API/Post';
 import ButtonCustom from 'pages/Home/SiderBar/components/ButtonCustom';
+import PostModal from 'components/PostModal';
 const cn = classNames.bind(styles);
 Profile.propTypes = {};
 
@@ -35,6 +36,7 @@ function Profile(props) {
    const { theme } = useContext(ThemeContext);
    const location = useLocation();
    const [showScrollButton, setShowScrollButton] = useState(false);
+   const [modalOpen, setModalOpen] = useState(false);
    const [userInfo, setUserInfo] = useState({});
    const [searchParams, setSearchParams] = useSearchParams();
    const [open, setOpen] = useState(false);
@@ -239,9 +241,16 @@ function Profile(props) {
                         <div className={cn('setting')}>
                            {currentUser === userName ? (
                               <>
-                                 <Button type="primary" icon={<PlusOutlined />} size="large">
+                                 <Button
+                                    type="primary"
+                                    icon={<PlusOutlined />}
+                                    size="large"
+                                    onClick={() => {
+                                       setModalOpen(true);
+                                    }}>
                                     Add to news
                                  </Button>
+                                 <PostModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
                                  <Button icon={<EditOutlined />} size="large" onClick={handleEdit}>
                                     Edit profile
                                  </Button>

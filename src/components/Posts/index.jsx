@@ -18,6 +18,7 @@ import InputMes from 'components/ChatBox/InputMes';
 import avatar from '../../images/avatar.png';
 import Comment from './components/Comments';
 import Comments from './components/Comments';
+import socket from 'socket';
 const cn = classNames.bind(styles);
 const { Header, Content, Footer } = Layout;
 Posts.propTypes = {};
@@ -38,6 +39,7 @@ function Posts(props) {
       token: localStorage.getItem('token'),
    };
    const role = localStorage.getItem('role_id');
+   const userName = localStorage.getItem('user_name');
 
    const handleLike = async (e) => {
       try {
@@ -48,6 +50,13 @@ function Posts(props) {
             };
          });
          const res = await Post.setLiked(jwt, post.posts_id);
+         console.log('res:', res);
+         if (res.data.created) {
+            socket.emit('sendNotification', {
+               sender: userName,
+               receiver: res.data.resultPosts.user_posts,
+            });
+         }
       } catch (error) {
          console.log('error:', error);
       }

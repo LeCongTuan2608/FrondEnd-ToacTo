@@ -12,6 +12,7 @@ import Conversation from 'API/Conversation';
 import { ConversationContext } from 'Context/ConversationContext';
 import { formatTime } from 'utils';
 import socket from 'socket';
+import img_avatar_default from '../../images/img-user-default.jpg';
 const cn = classNames.bind(styles);
 
 Message.propTypes = {};
@@ -101,12 +102,18 @@ function Message(props) {
          ),
       },
    ];
+   const avatar =
+      conversationItem.avatar ||
+      conversationItem.Users.filter(
+         (item) => item.user_name !== localStorage.getItem('user_name'),
+      )[0].avatar?.url ||
+      img_avatar_default;
    return (
       <div className={cn('wrapper')}>
          <div onClick={handleOpenChat}>
             <div className={cn('message-wrap')}>
                <div className={cn('item-first')}>
-                  <img src={conversationItem.avatar || img_avatar} alt="" />
+                  <img src={avatar} alt="" />
                </div>
                <div className={cn('item-middle')}>
                   <div className={cn('middle-child')}>

@@ -14,9 +14,10 @@ import { useRef } from 'react';
 import dayjs from 'dayjs';
 const cn = classNames.bind(styles);
 //
-const tokenExpires = dayjs(localStorage.getItem('token_expires'));
+const getTokenExpires = localStorage.getItem('token_expires');
+const tokenExpires = dayjs(getTokenExpires);
 const dateCurrent = dayjs();
-const checkExpires = tokenExpires.isAfter(dateCurrent);
+const checkExpires = getTokenExpires && !tokenExpires.isAfter(dateCurrent);
 MainLayout.propTypes = {};
 function MainLayout(props) {
    const { theme } = useContext(ThemeContext);
@@ -75,7 +76,7 @@ function MainLayout(props) {
    }, [getChatBox]);
    // check token expires
    useEffect(() => {
-      if (!checkExpires) {
+      if (checkExpires) {
          const warning = () => {
             Modal.warning({
                title: 'This is a warning message',

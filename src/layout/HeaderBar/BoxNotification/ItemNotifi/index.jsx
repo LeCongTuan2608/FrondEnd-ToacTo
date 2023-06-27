@@ -1,21 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './ItemNotifi.module.scss';
 import img_avatar_default from '../../../../images/img-user-default.jpg';
 import { Button, Dropdown, Tooltip } from 'antd';
 import { CheckOutlined, DeleteOutlined, MoreOutlined } from '@ant-design/icons';
+import Notification from 'API/Notification';
+import { formatTime } from 'utils';
 const cn = classNames.bind(styles);
 ItemNotifi.propTypes = {};
 
 function ItemNotifi(props) {
-   const [checked, setChecked] = useState(false);
-
+   const { data, handleRemoveNotifi } = props;
+   const [checked, setChecked] = useState(data.checked);
+   const handleChecked = () => {
+      setChecked(!checked);
+   };
    const items = [
       {
          key: '1',
          label: (
-            <div style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}>
+            <div
+               onClick={handleChecked}
+               style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}>
                <CheckOutlined />
                {checked ? 'Mark as read' : 'Mark as unread'}
             </div>
@@ -25,7 +32,11 @@ function ItemNotifi(props) {
          key: '2',
          danger: true,
          label: (
-            <div style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}>
+            <div
+               onClick={() => {
+                  handleRemoveNotifi(data.id);
+               }}
+               style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}>
                <DeleteOutlined />
                Delete
             </div>
@@ -37,21 +48,20 @@ function ItemNotifi(props) {
          <div>
             <div className={cn('notifi-wrap')}>
                <div className={cn('item-first')}>
-                  <img src={img_avatar_default} alt="" />
+                  <img src={data.notifi_sender?.avatar?.url || img_avatar_default} alt="" />
                </div>
                <div className={cn('item-middle')}>
                   <div className={cn('middle-child')}>
                      <div>
                         <p>
-                           ai do da like bai viet cua ban ai do da like bai viet cua banai do da
-                           like bai viet cua banai do da like bai viet cua ban
+                           <b>{data.notifi_sender?.full_name}</b> {data.content}
                         </p>
                         <span
                            style={{
                               fontWeight: checked ? 450 : 500,
                               color: checked ? null : 'rgb(0 96 230)',
                            }}>
-                           10phut truoc
+                           {formatTime(data.createdAt)} before
                         </span>
                      </div>
                   </div>

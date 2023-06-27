@@ -7,7 +7,7 @@ import { ThemeContext } from 'Context/ThemeContext';
 import { UserOutlined } from '@ant-design/icons';
 import Posts from 'components/Posts';
 import PostsSkeleton from 'components/PostsSkeleton';
-import img_avt from '../../../images/avatar.png';
+import img_avatar_default from '../../../images/img-user-default.jpg';
 import PostModal from '../../../components/PostModal';
 import Post from 'API/Post';
 import Admin from 'API/Admin';
@@ -28,6 +28,7 @@ function Contents(props) {
       type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
    };
+   const avatar = localStorage.getItem('avatar');
    useEffect(() => {
       const handleScroll = () => {
          const isScrolledToBottom =
@@ -64,7 +65,7 @@ function Contents(props) {
    };
    const handleBan = async (_, id) => {
       try {
-         const res = await Admin.banPosts(jwt, id);
+         await Admin.banPosts(jwt, id);
          setPosts((pre) => pre.filter((item) => item.posts_id !== id));
       } catch (error) {
          console.log('error:', error);
@@ -93,6 +94,7 @@ function Contents(props) {
                      width: 35,
                   }}
                   icon={<UserOutlined />}
+                  src={avatar || img_avatar_default}
                />
                <Input
                   onClick={(e) => {

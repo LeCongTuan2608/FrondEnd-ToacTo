@@ -44,7 +44,7 @@ function PersonalInformation(props) {
       <div style={{ borderRadius: '1rem', padding: '1rem 0', background: 'white' }}>
          {contextHolder}
          <div style={{ textAlign: 'start', padding: '0 2rem' }}>
-            <h1>Change you email</h1>
+            <h1>Change your email</h1>
          </div>
          <div style={{ padding: '8rem 0' }}>
             <Form

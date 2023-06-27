@@ -50,7 +50,7 @@ function PwdSecurity(props) {
       <div style={{ borderRadius: '1rem', padding: '1rem 0', background: 'white' }}>
          {contextHolder}
          <div style={{ textAlign: 'start', padding: '0 2rem' }}>
-            <h1>Change you password</h1>
+            <h1>Change your password</h1>
          </div>
          <div style={{ borderRadius: '1rem', padding: '5rem 0', background: 'white' }}>
             <Form

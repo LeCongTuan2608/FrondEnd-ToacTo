@@ -1,28 +1,34 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './Comments.module.scss';
-import avatar from '../../../../images/avatar.png';
-import { useEffect, useState } from 'react';
+import img_avatar_default from '../../../../images/img-user-default.jpg';
+import { useEffect, useRef, useState } from 'react';
 import Post from 'API/Post';
 import InputMes from 'components/ChatBox/InputMes';
 import { MoreOutlined } from '@ant-design/icons';
 import { Dropdown, Space } from 'antd';
+import socket from 'socket';
 const cn = classNames.bind(styles);
 Comments.propTypes = {};
 
 function Comments(props) {
    const { post } = props;
    const [comments, setComments] = useState([]);
+   console.log('comments:', comments);
+
    const [params, SetParams] = useState({ offset: 0, limit: 5 });
+   const refCmt = useRef(0);
    const jwt = {
       type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
    };
+   const userName = localStorage.getItem('user_name');
    useEffect(() => {
       const getComments = async () => {
          const res = await Post.getComments(jwt, post.posts_id, params);
-         const result = res.data.results;
-         setComments((pre) => [...pre, ...result]);
+         const results = res.data.results;
+         refCmt.current = refCmt.current + results.length;
+         setComments((pre) => [...pre, ...results]);
       };
       getComments();
    }, [params]);
@@ -40,6 +46,10 @@ function Comments(props) {
          const result = res.data.result;
          console.log('result:', result);
          setComments((pre) => [result, ...pre]);
+         socket.emit('sendNotification', {
+            sender: userName,
+            receiver: post.user.user_name,
+         });
       } catch (error) {
          console.log('error:', error);
       }
@@ -47,7 +57,7 @@ function Comments(props) {
    const handleLoadMore = (e) => {
       e.preventDefault();
       SetParams((pre) => {
-         return { ...pre, offset: comments.length + 1 };
+         return { ...pre, offset: refCmt.current };
       });
    };
    const handleUpdateCmt = (e) => {};
@@ -67,7 +77,7 @@ function Comments(props) {
                   return (
                      <div key={cmt.id} className={cn('comment')}>
                         <div className={cn('user-avatar')}>
-                           <img src={avatar} alt="" />
+                           <img src={cmt.user_info?.avatar.url || img_avatar_default} alt="" />
                         </div>
                         <div className={cn('container')}>
                            <div>
