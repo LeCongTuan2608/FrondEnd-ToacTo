@@ -41,7 +41,7 @@ function ChatBox(props) {
               avatar: chatBox?.group_name,
               group: chatBox?.group,
            }
-         : chatBox?.Users?.filter((item) => item.user_name !== userName)[0],
+         : chatBox?.users?.filter((item) => item.user_name !== userName)[0],
    );
 
    const [messages, setMessages] = useState([]);
@@ -212,7 +212,7 @@ function ChatBox(props) {
                         return (
                            <li key={mes.id} className={cn('message', 'friend')}>
                               <div className={cn('avatar')} style={{ width: 35, height: 35 }}>
-                                 <img src={img_avatar} alt="" />
+                                 <img src={userInfo?.avatar?.url || img_avatar_default} alt="" />
                               </div>
                               {mes?.member_remove_message?.includes('all') ? (
                                  <p className={cn('is-removed')}>This message has been deleted!</p>

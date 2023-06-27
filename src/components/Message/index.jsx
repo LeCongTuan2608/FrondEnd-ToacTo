@@ -104,7 +104,7 @@ function Message(props) {
    ];
    const avatar =
       conversationItem.avatar ||
-      conversationItem.Users.filter(
+      conversationItem.users.filter(
          (item) => item.user_name !== localStorage.getItem('user_name'),
       )[0].avatar?.url ||
       img_avatar_default;
@@ -122,9 +122,8 @@ function Message(props) {
                            fontWeight: checked ? 450 : 500,
                         }}>
                         {(conversationItem.group && conversationItem.group_name) ||
-                           conversationItem.Users.filter(
-                              (user) => !user.user_name.includes(userName),
-                           )
+                           conversationItem.users
+                              .filter((user) => !user.user_name.includes(userName))
                               .map((user) => user.full_name)
                               .join(', ')}
                      </span>

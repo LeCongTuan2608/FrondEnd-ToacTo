@@ -7,7 +7,8 @@ import Post from 'API/Post';
 import InputMes from 'components/ChatBox/InputMes';
 import { MoreOutlined } from '@ant-design/icons';
 import { Dropdown, Space } from 'antd';
-import socket from 'socket';
+import socket from '../../../../socket';
+
 const cn = classNames.bind(styles);
 Comments.propTypes = {};
 

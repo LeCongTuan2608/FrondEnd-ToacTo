@@ -97,7 +97,7 @@ function MainLayout(props) {
       return <Navigate to="/login" replace />;
    }
 
-   // console.log(getChatBox);
+   console.log(getChatBox);
    return (
       <div style={{ height: 'auto', position: 'relative' }}>
          <Layout
