@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { Button, Dropdown, Input, Menu, Space, Tooltip } from 'antd';
 import { DownOutlined, SendOutlined, SmileOutlined } from '@ant-design/icons';
 import classNames from 'classnames/bind';
-import styles from './InputMes.module.scss';
+import styles from './InputCmt.module.scss';
 import { Icons } from 'Icons';
 const cn = classNames.bind(styles);
-InputMes.propTypes = {};
+InputCmt.propTypes = {};
 
-function InputMes(props) {
-   const { onSubmit, blocked } = props;
+function InputCmt(props) {
+   const { onSubmit } = props;
 
    const [inputMes, setInputMes] = useState('');
    const [open, setOpen] = useState(false);
@@ -53,12 +53,11 @@ function InputMes(props) {
       <>
          <Input
             type="text"
-            placeholder={blocked.length !== 0 ? 'This user has blocked!' : 'input your text'}
+            placeholder="input your text"
             value={inputMes}
             onInput={onInput}
             onPressEnter={handleSubmit}
             ref={inputRef}
-            disabled={blocked.length !== 0}
          />
          <div className={cn('icon-wrap')}>
             <Tooltip title="icon" onClick={handleOpenModalIcon}>
@@ -67,7 +66,6 @@ function InputMes(props) {
                   icon={<SmileOutlined />}
                   ref={btnIconRef}
                   className={cn('btn-icon')}
-                  disabled={blocked.length !== 0}
                />
             </Tooltip>
             {open && (
@@ -84,10 +82,10 @@ function InputMes(props) {
          </div>
 
          <Tooltip title="submit" onClick={handleSubmit}>
-            <Button shape="circle" icon={<SendOutlined />} disabled={blocked.length !== 0} />
+            <Button shape="circle" icon={<SendOutlined />} />
          </Tooltip>
       </>
    );
 }
 
-export default InputMes;
+export default InputCmt;

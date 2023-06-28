@@ -72,7 +72,7 @@ function UsersItem(props) {
             </span>
             <span>{item.user_name}</span>
             <div>
-               <span>Relationship: {item.email}</span>
+               <span>Email: {item.email}</span>
                <span>Relationship: {item.relationship}</span>
                <span>Location: {item.location}</span>
             </div>

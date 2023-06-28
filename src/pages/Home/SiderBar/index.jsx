@@ -27,15 +27,16 @@ function SiderBar(props) {
    const handleOpenChat = async (value, e) => {
       try {
          e.stopPropagation();
-         const response = await Conversation.getConversation(value.user_name, jwt);
-         const result = response.data.conversation;
+         const res = await Conversation.getConversation(value.user_name, jwt);
+         const result = res.data.conversation;
 
          const newChatBox = !result && {
-            Users: [
+            users: [
                { avatar: value.avatar, full_name: value.full_name, user_name: value.user_name },
             ],
             group: false,
             member: [userName, value.user_name],
+            blocked: result?.blocked,
          };
          dispatch(addChatBox(result || newChatBox));
          if (result && !result?.checked.includes(userName)) {

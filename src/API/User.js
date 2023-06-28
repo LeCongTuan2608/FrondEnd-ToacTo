@@ -66,5 +66,19 @@ const User = {
       const url = `users/follow/${params}`;
       return axiosClient.get(url, config(jwt.type, jwt.token));
    },
+   // ========================== blocked ================================
+   handleBlocked(jwt, data) {
+      const url = `users/blocked`;
+      return axiosClient.post(url, data, config(jwt.type, jwt.token));
+   },
+   getBlockedByUserName(jwt, userName) {
+      const url = `users/blocked-by-username/${userName}`;
+      return axiosClient.get(url, config(jwt.type, jwt.token));
+   },
+   // ========================== search ================================
+   Search(jwt, params) {
+      const url = `users/search`;
+      return axiosClient.get(url, config(jwt.type, jwt.token, params));
+   },
 };
 export default User;

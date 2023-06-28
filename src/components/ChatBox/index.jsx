@@ -6,10 +6,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addChatBox, removeChatBox } from 'store/slices/chatBoxSlice';
 import {
    CloseOutlined,
+   DeleteOutlined,
    DownOutlined,
+   LockOutlined,
    MoreOutlined,
    SendOutlined,
    SettingOutlined,
+   StopOutlined,
+   UnlockOutlined,
 } from '@ant-design/icons';
 import { Button, Dropdown, Input, Space, Tooltip, message } from 'antd';
 import img_avatar_default from '../../images/img-user-default.jpg';
@@ -18,6 +22,8 @@ import socket from '../../socket';
 import Messages from 'API/Messages';
 import { ConversationContext } from 'Context/ConversationContext';
 import { useNavigate } from 'react-router-dom';
+import Conversation from 'API/Conversation';
+import User from 'API/User';
 const cn = classNames.bind(styles);
 ChatBox.propTypes = {};
 
@@ -26,10 +32,14 @@ function ChatBox(props) {
    const { chatBox } = props;
    const dispatch = useDispatch();
    const { mesNotSeen, setMesNotSeen, setRefresh } = useContext(ConversationContext);
-   const [userName] = useState(localStorage.getItem('user_name'));
    const [newId, setNewId] = useState(chatBox?.id);
    const data = useSelector((state) => state.chatBoxes);
    const navigate = useNavigate();
+   const [blocked, setBlocked] = useState(
+      chatBox.group ? [] : chatBox?.blocked?.map((item) => item.user_name) || [],
+   );
+
+   const userName = localStorage.getItem('user_name');
    const [userInfo, setUserInfo] = useState(
       chatBox?.group
          ? {
@@ -71,6 +81,22 @@ function ChatBox(props) {
       };
       getMessage();
    }, [newId]);
+   useEffect(() => {
+      if (!chatBox?.blocked) {
+         const getBlocked = async () => {
+            try {
+               const userOther = chatBox.member.filter((item) => item !== userName)[0];
+               const response = await User.getBlockedByUserName(jwt, userOther);
+               const data = response.data.blocked.map((item) => item.user_name);
+               setBlocked(data);
+            } catch (error) {
+               console.log('error:', error);
+            }
+         };
+         getBlocked();
+      }
+   }, []);
+
    useEffect(() => {
       containerDiv.current && (containerDiv.current.scrollTop = containerDiv.current.scrollHeight);
    }, [messages]);
@@ -149,6 +175,61 @@ function ChatBox(props) {
    const handleNavigate = (e) => {
       !chatBox.group && navigate(`/user?user_name=${userInfo.user_name}`);
    };
+   // ==============================================================================
+   const handleBlockUser = async (e) => {
+      try {
+         const user_blocked = chatBox.member.filter((item) => !item.includes(userName))[0];
+         await User.handleBlocked(jwt, { user_blocked });
+         if (blocked.includes(userName))
+            setBlocked((pre) => pre.filter((item) => item !== userName));
+         else setBlocked((pre) => [...pre, userName]);
+      } catch (error) {
+         console.log('error:', error);
+      }
+   };
+   const handleDeleteConv = async (e) => {
+      try {
+         if (newId) {
+            await Conversation.removeConversation(newId, jwt);
+            setMessages([]);
+         }
+      } catch (error) {
+         console.log('error:', error);
+      }
+   };
+   const checkBlocked = blocked.length > 1 || blocked?.includes(userName);
+   const items = [
+      {
+         key: '1',
+         label: (
+            <div
+               style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}
+               onClick={handleBlockUser}>
+               {!checkBlocked ? (
+                  <>
+                     <LockOutlined /> Block
+                  </>
+               ) : (
+                  <>
+                     <UnlockOutlined />
+                     UnBlock
+                  </>
+               )}
+            </div>
+         ),
+      },
+      {
+         key: '2',
+         label: (
+            <div
+               onClick={handleDeleteConv}
+               style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}>
+               <DeleteOutlined />
+               Delete
+            </div>
+         ),
+      },
+   ];
    return (
       <div className={cn('wrapper')}>
          <div className={cn('chat-box')}>
@@ -165,7 +246,14 @@ function ChatBox(props) {
                </div>
                <div>
                   <div className={cn('btn-close')}>
-                     <SettingOutlined style={{ fontSize: 20 }} />
+                     <Dropdown
+                        menu={{
+                           items,
+                        }}
+                        placement="bottomRight"
+                        trigger={['click']}>
+                        <SettingOutlined style={{ fontSize: 20 }} />
+                     </Dropdown>
                   </div>
                   <div onClick={onClose} className={cn('btn-close')}>
                      <CloseOutlined style={{ fontSize: 20 }} />
@@ -249,7 +337,7 @@ function ChatBox(props) {
                </ul>
             </div>
             <div className={cn('chat-input')}>
-               <InputMes onSubmit={onSubmit} />
+               <InputMes onSubmit={onSubmit} blocked={blocked} />
             </div>
          </div>
       </div>

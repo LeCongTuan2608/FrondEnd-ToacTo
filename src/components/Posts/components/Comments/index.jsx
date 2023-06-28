@@ -8,6 +8,7 @@ import InputMes from 'components/ChatBox/InputMes';
 import { MoreOutlined } from '@ant-design/icons';
 import { Dropdown, Space } from 'antd';
 import socket from '../../../../socket';
+import InputCmt from '../InputCmt';
 
 const cn = classNames.bind(styles);
 Comments.propTypes = {};
@@ -70,7 +71,7 @@ function Comments(props) {
    return (
       <>
          <div className={cn('input-comment')}>
-            <InputMes onSubmit={onSubmit} />
+            <InputCmt onSubmit={onSubmit} />
          </div>
          <div>
             <div className={cn('comments-list')}>
