@@ -123,6 +123,7 @@ function Profile(props) {
          setImagePreview(file);
       } else {
          setImagePreview('');
+         localStorage.setItem('avatar', null);
       }
    };
    const handleEdit = () => {

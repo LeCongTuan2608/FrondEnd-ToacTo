@@ -79,7 +79,7 @@ function Comments(props) {
                   return (
                      <div key={cmt.id} className={cn('comment')}>
                         <div className={cn('user-avatar')}>
-                           <img src={cmt.user_info?.avatar.url || img_avatar_default} alt="" />
+                           <img src={cmt.user_info?.avatar?.url || img_avatar_default} alt="" />
                         </div>
                         <div className={cn('container')}>
                            <div>
