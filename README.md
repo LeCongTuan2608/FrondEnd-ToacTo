@@ -1,7 +1,7 @@
 # Frontend-ToacTo
 frontend social network
 # How to install and run project? (Frontend)
-
+## To run the project make sure you have nodejs installed on your computer
 ### Step 1: CLick "Download ZIP" -> unzip folder
 ![image](https://github.com/LeCongTuan2608/FrondEnd-ToacTo/assets/93369087/440421f8-4920-47b0-a175-8735577453cb)
 
