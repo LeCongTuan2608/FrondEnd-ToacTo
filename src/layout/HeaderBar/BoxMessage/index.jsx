@@ -1,7 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Avatar, Badge, Button, Dropdown, Modal, Space, Tooltip } from 'antd';
-import { AliwangwangOutlined, MessageOutlined } from '@ant-design/icons';
+import {
+   AliwangwangOutlined,
+   CheckOutlined,
+   DeleteOutlined,
+   EllipsisOutlined,
+   MessageOutlined,
+} from '@ant-design/icons';
 import { useContext, useState, useEffect, useCallback } from 'react';
 import Message from 'components/Message';
 import classNames from 'classnames/bind';
@@ -65,6 +71,27 @@ function BoxMessage(props) {
          console.log('error:', error);
       }
    };
+   const items = [
+      {
+         key: '1',
+         label: (
+            <div style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}>
+               <CheckOutlined />
+               Mark all as read
+            </div>
+         ),
+      },
+      {
+         key: '2',
+         danger: true,
+         label: (
+            <div style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}>
+               <DeleteOutlined />
+               Delete all
+            </div>
+         ),
+      },
+   ];
    return (
       <div className={cn('wrapper')}>
          <Tooltip
@@ -79,8 +106,19 @@ function BoxMessage(props) {
          {open && (
             <div className={cn('box-wrap')}>
                <div onClick={handleCloseModal} className={cn('container')}>
-                  <div>
-                     <h2>Chat</h2>
+                  <div className={cn('container-header')}>
+                     <div className={cn('header-title')}>
+                        <div>
+                           <span>
+                              <h2>Chat</h2>
+                           </span>
+                        </div>
+                        <Tooltip>
+                           <Dropdown menu={{ items }} trigger={['click']}>
+                              <Button shape="circle" icon={<EllipsisOutlined />} />
+                           </Dropdown>
+                        </Tooltip>
+                     </div>
                   </div>
                   <div className={cn('wrap-message')}>
                      {conversation.map((item, index) => {

@@ -71,6 +71,14 @@ function Contents(props) {
          console.log('error:', error);
       }
    };
+   const handleDelete = async (_, id) => {
+      try {
+         await Admin.deletePosts(jwt, id);
+         setPosts((pre) => pre.filter((item) => item.posts_id !== id));
+      } catch (error) {
+         console.log('error:', error);
+      }
+   };
 
    return (
       <Layout
@@ -105,7 +113,7 @@ function Contents(props) {
                   className={cn(theme === 'dark' ? 'theme-dark' : 'theme-light')}
                   style={theme === 'dark' ? { background: '#3a3b3c', color: '#fff ' } : {}}
                />
-               <PostModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
+               {modalOpen && <PostModal modalOpen={modalOpen} setModalOpen={setModalOpen} />}
             </div>
             <Space size={[25, 0]} wrap>
                <Tag color="magenta">magenta</Tag>
@@ -142,6 +150,7 @@ function Contents(props) {
                                  post={post}
                                  handleBlock={handleBlock}
                                  handleBan={handleBan}
+                                 handleDelete={handleDelete}
                               />
                            );
                         })}

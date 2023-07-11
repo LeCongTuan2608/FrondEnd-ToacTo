@@ -1,0 +1,6 @@
+.full-name {
+   cursor: pointer;
+   &:hover b {
+      text-decoration: underline;
+   }
+}

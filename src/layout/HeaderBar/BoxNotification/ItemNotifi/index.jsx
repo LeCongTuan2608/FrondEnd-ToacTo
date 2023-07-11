@@ -11,10 +11,24 @@ const cn = classNames.bind(styles);
 ItemNotifi.propTypes = {};
 
 function ItemNotifi(props) {
-   const { data, handleRemoveNotifi } = props;
+   const { data, handleRemoveNotifi, setNotifiCount, checkedNoti } = props;
    const [checked, setChecked] = useState(data.checked);
-   const handleChecked = () => {
-      setChecked(!checked);
+   const jwt = {
+      type: localStorage.getItem('type'),
+      token: localStorage.getItem('token'),
+   };
+   const handleChecked = async () => {
+      try {
+         await Notification.checkedNotification(jwt, data.id);
+         if (checked) {
+            setNotifiCount((pre) => pre + 1);
+         } else {
+            setNotifiCount((pre) => pre - 1);
+         }
+         setChecked(!checked);
+      } catch (error) {
+         console.log('error:', error);
+      }
    };
    const items = [
       {
@@ -24,7 +38,7 @@ function ItemNotifi(props) {
                onClick={handleChecked}
                style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}>
                <CheckOutlined />
-               {checked ? 'Mark as read' : 'Mark as unread'}
+               {checked ? 'Mark as unread' : 'Mark as read'}
             </div>
          ),
       },
@@ -43,12 +57,19 @@ function ItemNotifi(props) {
          ),
       },
    ];
+   const position =
+      data.type === 'FOLLOW' ? '0px -986px' : data.type === 'LIKE' ? '0px -1711px' : null;
    return (
       <div className={cn('wrapper')}>
          <div>
             <div className={cn('notifi-wrap')}>
                <div className={cn('item-first')}>
-                  <img src={data.notifi_sender?.avatar?.url || img_avatar_default} alt="" />
+                  <div className={cn('avatar-wrap')}>
+                     <img src={data.notifi_sender?.avatar?.url || img_avatar_default} alt="" />
+                  </div>
+                  <div className={cn('icon')}>
+                     <i style={{ backgroundPosition: position }}></i>
+                  </div>
                </div>
                <div className={cn('item-middle')}>
                   <div className={cn('middle-child')}>

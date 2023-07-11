@@ -30,7 +30,8 @@ const getBase64 = (file) =>
       reader.onerror = (error) => reject(error);
    });
 function PostModal(props) {
-   const { modalOpen, setModalOpen } = props;
+   const { modalOpen, setModalOpen, data } = props;
+   const [showSpan, setShowSpan] = useState(true);
    const [dis, setDis] = useState(true);
    const [loadings, setLoadings] = useState(false);
    const [audience, setAudience] = useState('public');
@@ -41,11 +42,20 @@ function PostModal(props) {
    const [previewImage, setPreviewImage] = useState('');
    const [previewTitle, setPreviewTitle] = useState('');
    const [fileList, setFileList] = useState([]);
-   const [image, setImage] = useState();
+
    const jwt = {
       type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
    };
+   useEffect(() => {
+      if (data) {
+         content?.current && (content.current.innerText = data.content);
+         setShowSpan((pre) => !pre);
+         setDis(false);
+         setFileList(data.images);
+         setAudience(data.audience);
+      }
+   }, []);
 
    const handleCancel = () => setPreviewOpen(false);
    const handlePreview = async (file) => {
@@ -70,8 +80,16 @@ function PostModal(props) {
       setAudience(value);
    };
    const handleInputContent = (e) => {
-      content.current.innerText === '' ? setDis(true) : setDis(false);
+      if (e.target.innerText !== '') {
+         setShowSpan((pre) => false);
+         setDis(false);
+      } else {
+         setShowSpan((pre) => true);
+         setDis(true);
+      }
+      fileList.length !== 0 && setDis(false);
    };
+
    const handleCreatePost = async () => {
       try {
          setLoadings(true);
@@ -86,7 +104,7 @@ function PostModal(props) {
                return form.append('videos', item.originFileObj);
             }
          });
-         const res = await Post.newPost(form, jwt);
+         await Post.newPost(form, jwt);
          setLoadings(false);
          setModalOpen(false);
          //clear modal
@@ -99,10 +117,57 @@ function PostModal(props) {
          console.log('error:', error);
       }
    };
+   const handleUpdatePost = async () => {
+      try {
+         setLoadings(true);
+         // const newData = {
+         //    userPost: localStorage.getItem('user_name'),
+         //    content: content.current.innerText,
+         //    audience: audience,
+         //    images: fileList,
+         // };
+         const oldImages = [];
+         const oldVideos = [];
+         const form = new FormData();
+         form.append('user_update', localStorage.getItem('user_name'));
+         form.append('content', content.current.innerText);
+         form.append('audience', audience);
+
+         fileList?.map((item) => {
+            if (item.originFileObj) {
+               if (item.type.split('/').includes('image')) {
+                  return form.append('images', item.originFileObj);
+               } else if (item.type.split('/').includes('video')) {
+                  return form.append('videos', item.originFileObj);
+               }
+            }
+            return oldImages.push(item);
+         });
+         form.append('old_images', JSON.stringify(oldImages));
+         form.append('old_videos', JSON.stringify(oldVideos));
+         const res = await Post.updatePosts(jwt, data.posts_id, form);
+         console.log('res:', res);
+         setTimeout(() => {
+            setLoadings(false);
+            setModalOpen(false);
+            //clear modal
+            content.current.innerText = '';
+            setFileList([]);
+            setPreviewOpen(false);
+            setDis(!dis);
+         }, 500);
+      } catch (error) {
+         console.log('error:', error);
+      }
+   };
    return (
       <Modal
          className={cn('cus-modal')}
-         title={<p style={{ textAlign: 'center', margin: 0, fontSize: 23 }}>Create new post</p>}
+         title={
+            <p style={{ textAlign: 'center', margin: 0, fontSize: 23 }}>
+               {data ? 'Update post' : 'Create new post'}
+            </p>
+         }
          width={isMobileScreen ? '100%' : 520}
          style={
             isMobileScreen && {
@@ -135,7 +200,8 @@ function PostModal(props) {
                   <span style={{ margin: 0 }}>{localStorage.getItem('user_name')}</span>
                </span>
                <Select
-                  defaultValue={options[0].value}
+                  defaultValue={audience}
+                  value={audience}
                   style={{
                      width: 120,
                      height: '100%',
@@ -146,9 +212,7 @@ function PostModal(props) {
             </div>
          </div>
          <div className={cn('content-wrap')} style={isMobileScreen ? { flex: 1 } : null}>
-            {(!content.current || content.current.innerText === '') && (
-               <span>What are you thinking about?</span>
-            )}
+            {showSpan && <span>What are you thinking about?</span>}
             <div
                onInput={handleInputContent}
                ref={content}
@@ -186,14 +250,25 @@ function PostModal(props) {
             </Modal>
          </div>
          <div>
-            <Button
-               type="primary"
-               block
-               disabled={dis}
-               loading={loadings}
-               onClick={handleCreatePost}>
-               Post
-            </Button>
+            {data ? (
+               <Button
+                  type="primary"
+                  block
+                  disabled={dis}
+                  loading={loadings}
+                  onClick={handleUpdatePost}>
+                  Update
+               </Button>
+            ) : (
+               <Button
+                  type="primary"
+                  block
+                  disabled={dis}
+                  loading={loadings}
+                  onClick={handleCreatePost}>
+                  Post
+               </Button>
+            )}
          </div>
       </Modal>
    );

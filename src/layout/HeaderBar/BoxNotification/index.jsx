@@ -3,8 +3,14 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './BoxNotification.module.scss';
 import { useContext, useState, useEffect } from 'react';
-import { Badge, Button, Tooltip } from 'antd';
-import { BellOutlined } from '@ant-design/icons';
+import { Badge, Button, Dropdown, Menu, Tooltip } from 'antd';
+import {
+   BellOutlined,
+   CheckOutlined,
+   DeleteOutlined,
+   EllipsisOutlined,
+   MoreOutlined,
+} from '@ant-design/icons';
 import ItemNotifi from './ItemNotifi';
 import Notification from 'API/Notification';
 import ItemNotifiSkeleton from './ItemNotifiSkeleton';
@@ -17,6 +23,7 @@ function BoxNotification(props) {
    const [notifi, setNotifi] = useState([]);
    const [loading, setLoading] = useState(true);
    const [notifiCount, setNotifiCount] = useState(0);
+   const [current, setCurrent] = useState('all');
    const btnIconRef = useRef(null);
    const jwt = {
       type: localStorage.getItem('type'),
@@ -25,23 +32,25 @@ function BoxNotification(props) {
    const userName = localStorage.getItem('user_name');
 
    useEffect(() => {
-      const getNotifi = async () => {
-         try {
-            setLoading(true);
-            const res = await Notification.getNotification(jwt);
-            const results = res.data.results;
-            const count = res.data.notificationCount;
-            setNotifiCount(count);
-            setNotifi(results);
-            setTimeout(() => {
-               setLoading(false);
-            }, 500);
-         } catch (error) {
-            console.log('error:', error);
-         }
-      };
-      getNotifi();
-   }, [open]);
+      if (current === 'all') {
+         const getNotifi = async () => {
+            try {
+               setLoading(true);
+               const res = await Notification.getNotification(jwt);
+               const results = res.data.results;
+               const count = res.data.notificationCount;
+               setNotifiCount(count);
+               setNotifi(results);
+               setTimeout(() => {
+                  setLoading(false);
+               }, 500);
+            } catch (error) {
+               console.log('error:', error);
+            }
+         };
+         getNotifi();
+      }
+   }, [open, current]);
    useEffect(() => {
       socket.on('getNotification', (data) => {
          const { sender, receiver } = data;
@@ -67,12 +76,75 @@ function BoxNotification(props) {
       e.stopPropagation();
    };
 
-   const handleRemoveNotifi = (id) => {
-      setNotifi((pre) => {
-         return pre.filter((item) => item.id !== id);
-      });
+   const handleRemoveNotifi = async (id) => {
+      try {
+         await Notification.deleteNotification(jwt, id);
+         setNotifi((pre) => {
+            return pre.filter((item) => {
+               if (item.id === id && !item.checked) {
+                  setNotifiCount((pre) => pre - 1);
+               }
+               return item.id !== id;
+            });
+         });
+      } catch (error) {
+         console.log('error:', error);
+      }
    };
-
+   const onClick = (e) => {
+      setCurrent(e.key);
+      if (e.key === 'unread') {
+         setNotifi((pre) => {
+            return pre.filter((item) => !item.checked);
+         });
+      }
+   };
+   const handleReadAll = async () => {
+      try {
+         await Notification.checkedAllNotification(jwt);
+         setNotifiCount(0);
+         setNotifi((pre) => {
+            return pre.map((item) => {
+               return { ...item, checked: true };
+            });
+         });
+      } catch (error) {
+         console.log('error:', error);
+      }
+   };
+   const items = [
+      {
+         key: '1',
+         label: (
+            <div
+               onClick={handleReadAll}
+               style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}>
+               <CheckOutlined />
+               Mark all as read
+            </div>
+         ),
+      },
+      {
+         key: '2',
+         danger: true,
+         label: (
+            <div style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}>
+               <DeleteOutlined />
+               Delete all
+            </div>
+         ),
+      },
+   ];
+   const option = [
+      {
+         label: 'All',
+         key: 'all',
+      },
+      {
+         label: 'Unread',
+         key: 'unread',
+      },
+   ];
    return (
       <div className={cn('wrapper')}>
          <Tooltip onClick={() => setOpen(!open)}>
@@ -83,8 +155,27 @@ function BoxNotification(props) {
          {open && (
             <div className={cn('box-wrap')}>
                <div onClick={handleCloseModal} className={cn('container')}>
-                  <div>
-                     <h2>Notification</h2>
+                  <div className={cn('container-header')}>
+                     <div className={cn('header-title')}>
+                        <div>
+                           <span>
+                              <h2>Notification</h2>
+                           </span>
+                        </div>
+                        <Tooltip>
+                           <Dropdown menu={{ items }} trigger={['click']}>
+                              <Button shape="circle" icon={<EllipsisOutlined />} />
+                           </Dropdown>
+                        </Tooltip>
+                     </div>
+                     <div className={cn('header-option')}>
+                        <Menu
+                           onClick={onClick}
+                           selectedKeys={[current]}
+                           mode="horizontal"
+                           items={option}
+                        />
+                     </div>
                   </div>
                   <div className={cn('wrap-notifi')}>
                      {loading ? (
@@ -102,6 +193,7 @@ function BoxNotification(props) {
                                  key={item.id}
                                  data={item}
                                  handleRemoveNotifi={handleRemoveNotifi}
+                                 setNotifiCount={setNotifiCount}
                               />
                            );
                         })

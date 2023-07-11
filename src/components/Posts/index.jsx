@@ -1,8 +1,11 @@
 import {
    CommentOutlined,
+   DeleteOutlined,
+   EditOutlined,
    ExclamationCircleOutlined,
    FileExcelOutlined,
    HeartOutlined,
+   LockOutlined,
    MoreOutlined,
    StopOutlined,
    UserOutlined,
@@ -19,14 +22,18 @@ import avatar from '../../images/avatar.png';
 import Comment from './components/Comments';
 import Comments from './components/Comments';
 import socket from 'socket';
+import { useNavigate } from 'react-router-dom';
+import PostModal from 'components/PostModal';
 const cn = classNames.bind(styles);
 const { Header, Content, Footer } = Layout;
 Posts.propTypes = {};
 
 function Posts(props) {
-   const { post, handleBlock, handleBan } = props;
+   const { post, handleBlock, handleBan, handleDelete } = props;
    const { theme } = useContext(ThemeContext);
+   const [modalOpen, setModalOpen] = useState(false);
    const [open, setOpen] = useState(false);
+   const navigate = useNavigate();
    const [like, setLike] = useState({
       status: post?.status_liked || 0,
       amount: post?.like_count,
@@ -50,7 +57,6 @@ function Posts(props) {
             };
          });
          const res = await Post.setLiked(jwt, post.posts_id);
-         console.log('res:', res);
          if (res.data.created) {
             socket.emit('sendNotification', {
                sender: userName,
@@ -70,8 +76,29 @@ function Posts(props) {
    const handleMenuClick = (e) => {
       setOpen(false);
    };
-   const items = [
-      {
+   const handleNavigate = () => {
+      if (post.user?.user_name === userName) navigate(`/profile?user_name=${post.user?.user_name}`);
+      else navigate(`/user?user_name=${post.user?.user_name}`);
+   };
+   const items = [];
+   if (post.user.user_name === userName) {
+      const update = {
+         key: '0',
+         label: (
+            <div
+               style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}
+               onClick={(e) => {
+                  setModalOpen(true);
+               }}>
+               <EditOutlined />
+               Update
+            </div>
+         ),
+      };
+      items.push(update);
+   }
+   if (post.user.user_name !== userName) {
+      const report = {
          key: '1',
          label: (
             <div style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}>
@@ -79,10 +106,9 @@ function Posts(props) {
                Report
             </div>
          ),
-      },
-      {
+      };
+      const block = {
          key: '2',
-         // danger: true,
          label: (
             <div
                style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}
@@ -93,10 +119,12 @@ function Posts(props) {
                Block
             </div>
          ),
-      },
-   ];
+      };
+      items.push(report);
+      items.push(block);
+   }
    if (role === '1') {
-      const item = {
+      const ban = {
          key: '3',
          danger: true,
          label: (
@@ -119,22 +147,41 @@ function Posts(props) {
             </div>
          ),
       };
-      items.push(item);
+      items.push(ban);
    }
-
+   if (role === '1' || (post.user.user_name === userName && handleDelete)) {
+      const deletePost = {
+         key: '4',
+         danger: true,
+         label: (
+            <div
+               style={{ display: 'flex', gap: 15, alignItems: 'center', padding: '5px 20px' }}
+               onClick={(e) => {
+                  handleDelete(e, post.posts_id);
+               }}>
+               <DeleteOutlined />
+               Delete
+            </div>
+         ),
+      };
+      items.push(deletePost);
+   }
    return (
       <Layout
          className={cn('posts-wrap')}
          style={
             theme === 'light' ? { background: 'white' } : { background: '#242526', color: 'white' }
          }>
+         {modalOpen && <PostModal modalOpen={modalOpen} setModalOpen={setModalOpen} data={post} />}
          <div className={cn('header-posts', `${theme === 'light' ? 'theme-light' : 'theme-dark'}`)}>
             <Space style={{ width: '100%' }}>
                <div className={cn('img-avatar')}>
                   <img src={post.user?.avatar?.url} alt="" />
                </div>
                <div className={cn('user')}>
-                  <span className={cn('full-name')}>{post?.user.full_name}</span>
+                  <span onClick={handleNavigate} className={cn('full-name')}>
+                     {post?.user.full_name}
+                  </span>
                   <span className={cn('user-name')}>{post?.user.user_name}</span>
                </div>
                <Dropdown
@@ -154,26 +201,43 @@ function Posts(props) {
                </Dropdown>
             </Space>
          </div>
-         <Content className={cn('main-posts')}>
-            <div style={{ padding: '0 15px', marginBottom: 10 }}>
-               <p style={seeMore ? { display: 'block' } : {}}>
-                  <span>{post?.content}</span>
-               </p>
-               {text > 500 && (
-                  <div>
-                     <span
-                        onClick={() => {
-                           setSeeMore(!seeMore);
-                        }}>
-                        {!seeMore ? 'See more...' : 'Hidden'}
-                     </span>
-                  </div>
-               )}
+         {post.ban ? (
+            <div className={cn('ban-container')}>
+               <div className={cn('container-first')}>
+                  <LockOutlined />
+               </div>
+               <div className={cn('container-end')}>
+                  <span>
+                     <h3>This content is currently not showing!</h3>
+                  </span>
+                  <span>
+                     <p>This post has been banned for some sensitive reasons!!</p>
+                  </span>
+               </div>
             </div>
-            <div>
-               <Images images={post?.images} />
-            </div>
-         </Content>
+         ) : (
+            <Content className={cn('main-posts')}>
+               <div style={{ padding: '0 15px', marginBottom: 10 }}>
+                  <p style={seeMore ? { display: 'block' } : {}}>
+                     <span>{post?.content}</span>
+                  </p>
+                  {text > 500 && (
+                     <div>
+                        <span
+                           onClick={() => {
+                              setSeeMore(!seeMore);
+                           }}>
+                           {!seeMore ? 'See more...' : 'Hidden'}
+                        </span>
+                     </div>
+                  )}
+               </div>
+               <div>
+                  <Images images={post?.images} />
+               </div>
+            </Content>
+         )}
+
          <Divider
             style={{
                background: theme === 'dark' ? '#4a4d4f' : '#ced0d4',
@@ -191,7 +255,7 @@ function Posts(props) {
             style={theme === 'light' ? { background: 'white' } : { background: '#242526' }}>
             <Space className={cn('button-wrap')} onClick={handleLike}>
                <HeartOutlined />
-               <span>Tym {like.amount > 0 ? `(${like.amount})` : null}</span>
+               <span>Like {like.amount > 0 ? `(${like.amount})` : null}</span>
             </Space>
             <Space className={cn('button-wrap')} onClick={handleComment}>
                <CommentOutlined />

@@ -1,5 +1,5 @@
 import { ThemeContext } from 'Context/ThemeContext';
-import { Layout } from 'antd';
+import { Divider, Layout } from 'antd';
 import classNames from 'classnames/bind';
 import { useContext } from 'react';
 import styles from './SiderBar.module.scss';
@@ -29,17 +29,20 @@ function SiderBar(props) {
          e.stopPropagation();
          const res = await Conversation.getConversation(value.user_name, jwt);
          const result = res.data.conversation;
+         let newChatBox = {};
+         if (!result?.id) {
+            newChatBox = {
+               users: [
+                  { avatar: value.avatar, full_name: value.full_name, user_name: value.user_name },
+               ],
+               group: false,
+               member: [userName, value.user_name],
+               blocked: result?.blocked,
+            };
+         }
 
-         const newChatBox = !result && {
-            users: [
-               { avatar: value.avatar, full_name: value.full_name, user_name: value.user_name },
-            ],
-            group: false,
-            member: [userName, value.user_name],
-            blocked: result?.blocked,
-         };
-         dispatch(addChatBox(result || newChatBox));
-         if (result && !result?.checked.includes(userName)) {
+         dispatch(addChatBox(result?.id ? result : newChatBox));
+         if (result?.id && !result?.checked.includes(userName)) {
             setMesNotSeen((pre) => {
                return pre <= 0 ? pre : pre - 1;
             });
@@ -89,6 +92,9 @@ function SiderBar(props) {
                      )}
                   </div>
                   {item.users.length > 4 && <ModalCustom item={item}>More...</ModalCustom>}
+                  {item.title !== 'Friends' && (
+                     <Divider style={{ margin: '1rem auto', width: '90%', minWidth: '90%' }} />
+                  )}
                </div>
             );
          })}

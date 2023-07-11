@@ -22,9 +22,9 @@ function Videos(props) {
    return (
       <div className={cn('videos-wrap')} style={{ paddingBottom: arr.length >= 6 ? null : 300 }}>
          <div className={cn('list-videos')}>
-            {arr.map((item, index) => {
+            {/* {arr.map((item, index) => {
                return <VideoModal item={item} key={index} />;
-            })}
+            })} */}
          </div>
       </div>
    );

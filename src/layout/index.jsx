@@ -17,7 +17,7 @@ const cn = classNames.bind(styles);
 const getTokenExpires = localStorage.getItem('token_expires');
 const tokenExpires = dayjs(getTokenExpires);
 const dateCurrent = dayjs();
-const checkExpires = getTokenExpires && !tokenExpires.isAfter(dateCurrent);
+const checkExpires = getTokenExpires && tokenExpires.isAfter(dateCurrent);
 MainLayout.propTypes = {};
 function MainLayout(props) {
    const { theme } = useContext(ThemeContext);
@@ -41,7 +41,7 @@ function MainLayout(props) {
          const checked =
             getChatBox.filter((item) => JSON.stringify(item.member) === JSON.stringify(data.member))
                .length === 0;
-         if (checked && data.member.includes(userName) && data.last_message.sender !== userName) {
+         if (data.member.includes(userName) && data.last_message.sender !== userName && checked) {
             dispatch(addChatBox(data));
          }
       });
@@ -76,11 +76,11 @@ function MainLayout(props) {
    }, [getChatBox]);
    // check token expires
    useEffect(() => {
-      if (checkExpires) {
+      if (getTokenExpires && !checkExpires) {
          const warning = () => {
             Modal.warning({
-               title: 'This is a warning message',
-               content: 'Login session has expired, please login again!',
+               title: 'Notification',
+               content: 'Login session has expired, please login again!!',
                centered: true,
                onOk: () => {
                   localStorage.clear();
@@ -97,7 +97,7 @@ function MainLayout(props) {
       return <Navigate to="/login" replace />;
    }
 
-   console.log(getChatBox);
+   // console.log(getChatBox);
    return (
       <div style={{ height: 'auto', position: 'relative' }}>
          <Layout

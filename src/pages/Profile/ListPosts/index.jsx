@@ -8,6 +8,7 @@ import PostsSkeleton from 'components/PostsSkeleton';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import Post from 'API/Post';
 import User from 'API/User';
+import Admin from 'API/Admin';
 const cn = classNames.bind(styles);
 ListPosts.propTypes = {};
 
@@ -26,8 +27,10 @@ function ListPosts(props) {
          try {
             const res = await Post.getPostByUser(jwt, {}, userName);
             const results = res.data.results;
-            setPosts(results);
-            setLoading(false);
+            setTimeout(() => {
+               setPosts(results);
+               setLoading(false);
+            }, 500);
          } catch (error) {
             console.log('error:', error);
             setLoading(false);
@@ -35,6 +38,27 @@ function ListPosts(props) {
       };
       getPosts();
    }, [location.pathname]);
+   const handleBlock = (_, id) => {
+      setPosts((pre) => {
+         return pre.filter((item) => item.posts_id !== id);
+      });
+   };
+   const handleBan = async (_, id) => {
+      try {
+         await Admin.banPosts(jwt, id);
+         setPosts((pre) => pre.filter((item) => item.posts_id !== id));
+      } catch (error) {
+         console.log('error:', error);
+      }
+   };
+   const handleDelete = async (_, id) => {
+      try {
+         await Post.deletePosts(jwt, id);
+         setPosts((pre) => pre.filter((item) => item.posts_id !== id));
+      } catch (error) {
+         console.log('error:', error);
+      }
+   };
    return (
       <div className={cn('list-wrap')}>
          {loading ? (
@@ -44,7 +68,15 @@ function ListPosts(props) {
             </>
          ) : posts.length > 0 ? (
             posts.map((post) => {
-               return <Posts key={post.posts_id} post={post} />;
+               return (
+                  <Posts
+                     key={post.posts_id}
+                     post={post}
+                     handleBlock={handleBlock}
+                     handleBan={handleBan}
+                     handleDelete={handleDelete}
+                  />
+               );
             })
          ) : (
             <div className={cn('posts-is-empty')}>

@@ -13,6 +13,15 @@ const Post = {
       const url = `feed-posts/posts/${userName}`;
       return axiosClient.get(url, config(jwt.type, jwt.token, params));
    },
+   updatePosts(jwt, id, data) {
+      const url = `feed-posts/posts/by-id/${id}`;
+      return axiosClient.patch(url, data, config(jwt.type, jwt.token));
+   },
+   deletePosts(jwt, id) {
+      const url = `feed-posts/posts/by-id/${id}`;
+      return axiosClient.delete(url, config(jwt.type, jwt.token));
+   },
+   // ==============================================================
    setLiked(jwt, id) {
       const url = `feed-posts/posts/liked/${id}`;
       return axiosClient.get(url, config(jwt.type, jwt.token));
@@ -20,6 +29,10 @@ const Post = {
    getComments(jwt, id, params) {
       const url = `feed-posts/posts/comment/${id}`;
       return axiosClient.get(url, config(jwt.type, jwt.token, params));
+   },
+   deleteComments(jwt, id) {
+      const url = `feed-posts/posts/comment/${id}`;
+      return axiosClient.delete(url, config(jwt.type, jwt.token));
    },
    newComment(jwt, data) {
       const url = `feed-posts/posts/comment`;

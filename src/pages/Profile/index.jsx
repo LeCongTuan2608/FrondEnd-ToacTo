@@ -62,9 +62,14 @@ function Profile(props) {
             setShowScrollButton(false);
          }
       };
+      const handlePageLoad = () => {
+         window.scrollTo(0, 0);
+      };
       window.addEventListener('scroll', handleScroll);
+      window.addEventListener('load', handlePageLoad);
       return () => {
          window.removeEventListener('scroll', handleScroll);
+         window.removeEventListener('load', handlePageLoad);
       };
    }, []);
    useEffect(() => {
@@ -104,7 +109,8 @@ function Profile(props) {
          setConfirmLoading(true);
          const form = new FormData();
          form.append('avatar', imagePreview);
-         await User.uploadAvatar(form, jwt);
+         const res = await User.uploadAvatar(form, jwt);
+         localStorage.setItem('avatar', res.data?.file?.path);
          setOpen(false);
          setConfirmLoading(false);
          setAvatar(imagePreview?.preview);
@@ -251,7 +257,9 @@ function Profile(props) {
                                     }}>
                                     Add to news
                                  </Button>
-                                 <PostModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
+                                 {modalOpen && (
+                                    <PostModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
+                                 )}
                                  <Button icon={<EditOutlined />} size="large" onClick={handleEdit}>
                                     Edit profile
                                  </Button>

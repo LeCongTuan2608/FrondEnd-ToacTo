@@ -62,6 +62,10 @@
    & span {
       font-weight: 500;
    }
+   & .full-name {
+      display: flex;
+      gap: 0.5rem;
+   }
 }
 .option {
    display: flex;

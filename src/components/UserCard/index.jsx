@@ -8,6 +8,10 @@ import Conversation from 'API/Conversation';
 import { useDispatch } from 'react-redux';
 import { addChatBox } from 'store/slices/chatBoxSlice';
 import { ConversationContext } from 'Context/ConversationContext';
+import styles from './UserCard.module.scss';
+import classNames from 'classnames/bind';
+import { useNavigate } from 'react-router-dom';
+const cn = classNames.bind(styles);
 UserCard.propTypes = {};
 
 function UserCard(props) {
@@ -17,6 +21,7 @@ function UserCard(props) {
    const [api, contextHolder] = notification.useNotification();
    const { setMesNotSeen, conversation, setConversation } = useContext(ConversationContext);
    const dispatch = useDispatch();
+   const navigate = useNavigate();
    const jwt = {
       type: localStorage.getItem('type'),
       token: localStorage.getItem('token'),
@@ -39,6 +44,7 @@ function UserCard(props) {
       //          : {},
       // });
    };
+
    const handleOpenChat = async (e) => {
       try {
          e.stopPropagation();
@@ -69,6 +75,10 @@ function UserCard(props) {
          console.log('error:', error);
       }
    };
+   const handleNavigate = () => {
+      if (user?.user_name === userName) navigate(`/profile?user_name=${user?.user_name}`);
+      else navigate(`/user?user_name=${user?.user_name}`);
+   };
    return (
       <div
          style={{
@@ -95,7 +105,7 @@ function UserCard(props) {
                gap: 5,
             }}>
             <p style={{ margin: 0, fontSize: 15 }}>
-               <span>
+               <span className={cn('full-name')} onClick={handleNavigate}>
                   <b>{user?.full_name}</b>
                </span>
             </p>

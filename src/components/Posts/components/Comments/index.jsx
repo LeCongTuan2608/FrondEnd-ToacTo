@@ -9,6 +9,8 @@ import { MoreOutlined } from '@ant-design/icons';
 import { Dropdown, Space } from 'antd';
 import socket from '../../../../socket';
 import InputCmt from '../InputCmt';
+import { formatTime } from 'utils';
+import { useNavigate } from 'react-router-dom';
 
 const cn = classNames.bind(styles);
 Comments.propTypes = {};
@@ -16,8 +18,7 @@ Comments.propTypes = {};
 function Comments(props) {
    const { post } = props;
    const [comments, setComments] = useState([]);
-   console.log('comments:', comments);
-
+   const navigate = useNavigate();
    const [params, SetParams] = useState({ offset: 0, limit: 5 });
    const refCmt = useRef(0);
    const jwt = {
@@ -46,7 +47,6 @@ function Comments(props) {
          };
          const res = await Post.newComment(jwt, data);
          const result = res.data.result;
-         console.log('result:', result);
          setComments((pre) => [result, ...pre]);
          socket.emit('sendNotification', {
             sender: userName,
@@ -63,10 +63,61 @@ function Comments(props) {
       });
    };
    const handleUpdateCmt = (e) => {};
-   const handleDeleteCmt = (id) => {
-      setComments((pre) => {
-         return pre.filter((cmt) => cmt.id !== id);
-      });
+   const handleDeleteCmt = async (id) => {
+      try {
+         await Post.deleteComments(jwt, id);
+         setComments((pre) => {
+            return pre.filter((cmt) => cmt.id !== id);
+         });
+      } catch (error) {
+         console.log('error:', error);
+      }
+   };
+   const handleNavigate = (cmt) => {
+      if (cmt?.user_comment === userName) navigate(`/profile?user_name=${cmt?.user_comment}`);
+      else navigate(`/user?user_name=${cmt?.user_comment}`);
+   };
+   const commentator = (id) => {
+      return [
+         {
+            label: (
+               <div onClick={() => handleUpdateCmt(id)}>
+                  <span>Update comment!</span>
+               </div>
+            ),
+            key: '0',
+         },
+         {
+            label: (
+               <div onClick={() => handleDeleteCmt(id)}>
+                  <span>Delete!</span>
+               </div>
+            ),
+            key: '1',
+            danger: true,
+         },
+      ];
+   };
+   const otherCommentator = (id) => {
+      return [
+         {
+            label: (
+               <div>
+                  <span>Report comment!</span>
+               </div>
+            ),
+            key: '0',
+         },
+         {
+            label: (
+               <div>
+                  <span>Hide comment!</span>
+               </div>
+            ),
+            key: '1',
+            danger: true,
+         },
+      ];
    };
    return (
       <>
@@ -83,7 +134,24 @@ function Comments(props) {
                         </div>
                         <div className={cn('container')}>
                            <div>
-                              <span className={cn('full-name')}>{cmt?.user_info?.full_name}</span>
+                              <span className={cn('full-name')}>
+                                 <span
+                                    onClick={(e) => {
+                                       handleNavigate(cmt);
+                                    }}
+                                    style={{ cursor: 'pointer' }}>
+                                    {cmt?.user_info?.full_name}
+                                 </span>
+                                 <span
+                                    style={{
+                                       fontSize: '0.8rem',
+                                       fontStyle: 'italic',
+                                       color: '#999999',
+                                       fontWeight: 'initial',
+                                    }}>
+                                    {formatTime(cmt.createdAt)} ago
+                                 </span>
+                              </span>
                               <p className={cn('content')}>{cmt.content}</p>
                            </div>
                         </div>
@@ -91,25 +159,10 @@ function Comments(props) {
                            <Dropdown
                               placement="bottomLeft"
                               menu={{
-                                 items: [
-                                    {
-                                       label: (
-                                          <div onClick={() => handleUpdateCmt(cmt.id)}>
-                                             <span>Update comment!</span>
-                                          </div>
-                                       ),
-                                       key: '0',
-                                    },
-                                    {
-                                       label: (
-                                          <div onClick={() => handleDeleteCmt(cmt.id)}>
-                                             <span>Delete!</span>
-                                          </div>
-                                       ),
-                                       key: '1',
-                                       danger: true,
-                                    },
-                                 ],
+                                 items:
+                                    cmt?.user_info?.user_name === userName
+                                       ? commentator(cmt.id)
+                                       : otherCommentator(cmt.id),
                               }}
                               trigger={['click']}>
                               <Space>

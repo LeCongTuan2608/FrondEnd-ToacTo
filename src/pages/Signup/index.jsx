@@ -37,7 +37,7 @@ const signupSchema = yup.object().shape({
    confirm: yup.string().required('Please input your confirm password!'),
    gender: yup.string().oneOf(['male', 'female', 'other']).required('Please select your gender!'),
    birth_day: yup.date().required('Please select your email!'),
-   phone: yup.string().required('Please input your phone!'),
+   // phone: yup.string().required('Please input your phone!'),
 });
 function Signup(props) {
    const [loadings, setLoading] = useState(false);
@@ -190,11 +190,7 @@ function Signup(props) {
                      rules={[yupSync]}>
                      <DatePicker style={{ width: '100%' }} />
                   </Form.Item>
-                  <Form.Item
-                     className={cn('input-field')}
-                     label="Phone"
-                     name="phone"
-                     rules={[yupSync]}>
+                  <Form.Item className={cn('input-field')} label="Phone" name="phone">
                      <Input
                         prefix={<PhoneOutlined className="site-form-item-icon" />}
                         placeholder="Confirm password"

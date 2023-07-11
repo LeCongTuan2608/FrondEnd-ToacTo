@@ -102,7 +102,7 @@ function ChatBox(props) {
    }, [messages]);
    useEffect(() => {
       socket.on('getMessage', (data) => {
-         if (data.conversation_id === newId) {
+         if (data.conversation_id === newId && data.sender !== userName) {
             setMessages((prev) => [...prev, data]);
             !newId && setNewId(data.conversation_id);
          }
@@ -137,7 +137,7 @@ function ChatBox(props) {
             id: newId || null,
          };
          const res = await Messages.createMessages(newMessage, jwt);
-         // setMessages((pre) => [...pre, res.data.message]);
+         setMessages((pre) => [...pre, res.data.message]);
          setRefresh((pre) => !pre);
          !newId && setNewId(res.data.message.conversation_id);
          socket.emit('sendMessage', {

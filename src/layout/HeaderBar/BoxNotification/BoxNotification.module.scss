@@ -16,7 +16,32 @@
       box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
       min-width: 375px;
       top: 100%;
+      & .container-header {
+         display: flex;
+         flex-direction: column;
+         padding: 1rem 0.8rem;
 
+         & .header-title {
+            display: flex;
+            line-height: 1;
+            justify-content: space-between;
+            align-items: center;
+            & button {
+               outline: unset !important;
+               border: unset !important;
+            }
+         }
+         & .header-option {
+            & > ul {
+               line-height: 2 !important;
+               border-bottom: unset;
+               & li > span {
+                  padding: 0 0.3rem;
+                  font-weight: 700;
+               }
+            }
+         }
+      }
       &::-webkit-scrollbar {
          width: 5px;
       }
