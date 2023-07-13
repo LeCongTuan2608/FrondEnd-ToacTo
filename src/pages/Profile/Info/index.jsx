@@ -80,6 +80,7 @@ function Info(props) {
       try {
          delete values.user_name;
          await User.update(values, jwt, userName);
+         localStorage.setItem('full_name', values.full_name);
          setEdit(!info);
          setInfo({ ...userInfo, ...values });
       } catch (error) {

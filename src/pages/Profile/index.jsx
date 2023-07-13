@@ -2,6 +2,7 @@ import {
    AntDesignOutlined,
    ArrowUpOutlined,
    CameraOutlined,
+   CheckOutlined,
    EditOutlined,
    FileImageOutlined,
    MessageOutlined,
@@ -36,14 +37,17 @@ function Profile(props) {
    const { theme } = useContext(ThemeContext);
    const location = useLocation();
    const [showScrollButton, setShowScrollButton] = useState(false);
-   const [modalOpen, setModalOpen] = useState(false);
-   const [userInfo, setUserInfo] = useState({});
-   const [searchParams, setSearchParams] = useSearchParams();
-   const [open, setOpen] = useState(false);
    const [confirmLoading, setConfirmLoading] = useState(false);
    const [imagePreview, setImagePreview] = useState();
-   const inputFile = useRef();
+   const [modalOpen, setModalOpen] = useState(false);
+   const [editAbout, setEditAbout] = useState(false);
+   const [userInfo, setUserInfo] = useState({});
+   const [about, setAbout] = useState(null);
+   const [open, setOpen] = useState(false);
    const [avatar, setAvatar] = useState();
+   const [searchParams, setSearchParams] = useSearchParams();
+   const inputFile = useRef();
+   const inputAbout = useRef();
    const navigate = useNavigate();
    const userName = searchParams.get('user_name');
    const currentUser = localStorage.getItem('user_name');
@@ -78,9 +82,9 @@ function Profile(props) {
             !userName && navigate('*');
             const res = await User.getUser(jwt, userName);
             const data = res.data.result;
-
             setAvatar(data.avatar?.url);
             setUserInfo(data);
+            setAbout(data?.about);
          } catch (error) {
             console.log('error:', error);
          }
@@ -130,6 +134,15 @@ function Profile(props) {
       } else {
          setImagePreview('');
          localStorage.setItem('avatar', null);
+      }
+   };
+   const handleUpdateAbout = async () => {
+      try {
+         await User.update({ about: inputAbout.current.value }, jwt, currentUser);
+         setEditAbout(!editAbout);
+         setAbout(inputAbout.current.value);
+      } catch (error) {
+         console.log('error:', error);
       }
    };
    const handleEdit = () => {
@@ -243,6 +256,42 @@ function Profile(props) {
                                     icon={<AntDesignOutlined />}
                                  />
                               </Avatar.Group>
+                           </div>
+                           <div className={cn('about')}>
+                              {editAbout ? (
+                                 <div class={cn('input__about')}>
+                                    <input
+                                       name="about"
+                                       id="about"
+                                       placeholder="Write your about..."
+                                       max={70}
+                                       defaultValue={about}
+                                       ref={inputAbout}
+                                       class={cn('formbold-form-input')}></input>
+                                    <div className={cn('icon-edit')} onClick={handleUpdateAbout}>
+                                       <CheckOutlined />
+                                    </div>
+                                 </div>
+                              ) : userName === currentUser ? (
+                                 <div className={cn('about__text')}>
+                                    <p>{about || 'Write your about...'}</p>
+                                    <div
+                                       className={cn('icon-edit')}
+                                       onClick={() => {
+                                          setEditAbout(!editAbout);
+                                       }}>
+                                       <EditOutlined />
+                                    </div>
+                                 </div>
+                              ) : (
+                                 about && (
+                                    <div className={cn('about__text')}>
+                                       <span>
+                                          <p>{about}</p>
+                                       </span>
+                                    </div>
+                                 )
+                              )}
                            </div>
                         </div>
                         <div className={cn('setting')}>

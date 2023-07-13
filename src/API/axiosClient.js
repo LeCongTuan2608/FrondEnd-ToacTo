@@ -3,7 +3,7 @@ import User from './User';
 
 // const url = 'https://web-social-2c4s.onrender.com/';
 // const url = 'http://localhost:4000/';
-const url = 'http://103.163.118.165/';
+const url = 'https://dogohoainhien.store/';
 const axiosClient = axios.create({
    baseURL: url,
    // headers: {
