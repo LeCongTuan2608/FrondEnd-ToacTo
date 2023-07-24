@@ -12,7 +12,6 @@
       "axios": "^1.4.0",
       "classnames": "^2.3.2",
       "dayjs": "^1.11.8",
-      "env-cmd": "^10.1.0",
       "form-data": "^4.0.0",
       "formik": "^2.2.9",
       "moment": "^2.29.4",
@@ -53,6 +52,7 @@
       ]
    },
    "devDependencies": {
+      "dotenv": "^16.3.1",
       "sass": "^1.58.3"
    }
 }
