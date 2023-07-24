@@ -237,7 +237,7 @@ function HeaderBar(props) {
                      </Dropdown>
                   </>
                ) : (
-                  <Dropdown menu={{ items }} trigger={['click']}>
+                  <Dropdown menu={{ items }} trigger={['click']} className={cn('setting-drop')}>
                      <Tooltip
                         style={{
                            marginTop: 7,

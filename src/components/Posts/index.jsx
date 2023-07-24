@@ -168,12 +168,12 @@ function Posts(props) {
    }
    return (
       <Layout
-         className={cn('posts-wrap')}
+         className={cn('posts-wrap', `${theme === 'light' ? 'theme-light' : 'theme-dark'}`)}
          style={
             theme === 'light' ? { background: 'white' } : { background: '#242526', color: 'white' }
          }>
          {modalOpen && <PostModal modalOpen={modalOpen} setModalOpen={setModalOpen} data={post} />}
-         <div className={cn('header-posts', `${theme === 'light' ? 'theme-light' : 'theme-dark'}`)}>
+         <div className={cn('header-posts')}>
             <Space style={{ width: '100%' }}>
                <div className={cn('img-avatar')}>
                   <img src={post.user?.avatar?.url} alt="" />
@@ -247,11 +247,7 @@ function Posts(props) {
             }}
          />
          <Footer
-            className={cn(
-               'footer-posts',
-               like.status && 'is-active',
-               `${theme === 'light' ? 'theme-light' : 'theme-dark'}`,
-            )}
+            className={cn('footer-posts', like.status && 'is-active')}
             style={theme === 'light' ? { background: 'white' } : { background: '#242526' }}>
             <Space className={cn('button-wrap')} onClick={handleLike}>
                <HeartOutlined />

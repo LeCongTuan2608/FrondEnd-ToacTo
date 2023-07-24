@@ -15,10 +15,12 @@ import ItemNotifi from './ItemNotifi';
 import Notification from 'API/Notification';
 import ItemNotifiSkeleton from './ItemNotifiSkeleton';
 import socket from 'socket';
+import { ThemeContext } from 'Context/ThemeContext';
 const cn = classNames.bind(styles);
 BoxNotification.propTypes = {};
 
 function BoxNotification(props) {
+   const { theme } = useContext(ThemeContext);
    const [open, setOpen] = useState(false);
    const [notifi, setNotifi] = useState([]);
    const [loading, setLoading] = useState(true);
@@ -154,7 +156,13 @@ function BoxNotification(props) {
          </Tooltip>
          {open && (
             <div className={cn('box-wrap')}>
-               <div onClick={handleCloseModal} className={cn('container')}>
+               <div
+                  onClick={handleCloseModal}
+                  className={cn('container')}
+                  style={{
+                     background: theme === 'dark' ? '#242526' : null,
+                     color: theme === 'dark' ? 'white' : null,
+                  }}>
                   <div className={cn('container-header')}>
                      <div className={cn('header-title')}>
                         <div>
@@ -174,6 +182,10 @@ function BoxNotification(props) {
                            selectedKeys={[current]}
                            mode="horizontal"
                            items={option}
+                           style={{
+                              background: theme === 'dark' ? '#242526' : null,
+                              color: theme === 'dark' ? 'white' : null,
+                           }}
                         />
                      </div>
                   </div>

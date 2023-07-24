@@ -23,9 +23,9 @@ function MainLayout(props) {
    const { theme } = useContext(ThemeContext);
    const navigate = useNavigate();
    const getChatBox = useSelector((state) => state?.chatBox?.chatBoxes);
-   const [token, setToken] = useState(localStorage.getItem('token'));
    const userName = localStorage.getItem('user_name');
    const ref = useRef(null);
+   const token = localStorage.getItem('token');
    const dispatch = useDispatch();
    useEffect(() => {
       if (token) {

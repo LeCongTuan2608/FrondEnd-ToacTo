@@ -128,12 +128,24 @@ function UserCard(props) {
                }}
                style={
                   follow && theme === 'light'
-                     ? { background: '#fff1f0' }
-                     : { background: '#e7f3ff' }
+                     ? { background: '#fff1f0', fontWeight: 500 }
+                     : {
+                          background: 'rgba(45, 136, 255, 0.2)',
+                          color: !follow ? '#2D88FF' : null,
+                          border: 'none',
+                          fontWeight: 500,
+                       }
                }>
                {!follow ? 'Follow' : 'Unfollow'}
             </Button>
-            <Button onClick={handleOpenChat} style={{ background: '#e7f3ff' }}>
+            <Button
+               onClick={handleOpenChat}
+               style={{
+                  background: 'rgba(45, 136, 255, 0.2)',
+                  color: '#2D88FF',
+                  border: 'none',
+                  fontWeight: 500,
+               }}>
                Chat
             </Button>
          </div>

@@ -52,13 +52,18 @@ function UsersItem(props) {
                   setBan((pre) => !pre);
                }}>
                <FileExcelOutlined />
-               Ban
+               {ban ? 'Unban' : 'Ban'}
             </div>
          ),
       },
    ];
    return (
-      <div className={cn('item')} style={{ background: ban ? '#ffdbdb' : null }}>
+      <div
+         className={cn('item')}
+         style={{
+            color: theme === 'dark' ? 'white' : null,
+            background: ban ? '#ffdbdb' : theme === 'dark' ? '#242526' : null,
+         }}>
          <div className={cn('first')}>
             <div>
                <img src={avatar_default} alt="" />

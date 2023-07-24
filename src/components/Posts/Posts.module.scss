@@ -3,7 +3,6 @@
 .posts-wrap {
    padding: 10px 0;
    border-radius: 8px;
-   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 .header-posts {
    padding: 5px 20px;
@@ -114,6 +113,7 @@
 }
 // ===============================================================
 .theme-light {
+   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
    & .button-wrap {
       &:hover {
          background: $gray100 !important;
@@ -126,6 +126,7 @@
    }
 }
 .theme-dark {
+   box-shadow: rgba(172, 172, 172, 0.16) 0px 1px 4px;
    & .button-wrap {
       color: $textWhite;
       &:hover {

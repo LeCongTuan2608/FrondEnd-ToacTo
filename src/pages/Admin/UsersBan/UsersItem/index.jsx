@@ -55,7 +55,12 @@ function UsersItem(props) {
       },
    ];
    return (
-      <div className={cn('item')}>
+      <div
+         className={cn('item')}
+         style={{
+            background: theme === 'dark' ? '#242526' : null,
+            color: theme === 'dark' ? 'white' : null,
+         }}>
          <div className={cn('first')}>
             <div>
                <img src={avatar_default} alt="" />
@@ -69,6 +74,7 @@ function UsersItem(props) {
             </span>
             <span>{item.user_name}</span>
             <div>
+               <span>Email: {item.email}</span>
                <span>Relationship: {item.relationship}</span>
                <span>Location: {item.location}</span>
             </div>

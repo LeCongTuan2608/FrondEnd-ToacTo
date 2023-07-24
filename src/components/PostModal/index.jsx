@@ -6,6 +6,7 @@ import classNames from 'classnames/bind';
 import styles from './PostModal.module.scss';
 import { useMediaQuery } from 'react-responsive';
 import Post from 'API/Post';
+import { ThemeContext } from 'Context/ThemeContext';
 const cn = classNames.bind(styles);
 PostModal.propTypes = {};
 const options = [
@@ -31,6 +32,7 @@ const getBase64 = (file) =>
    });
 function PostModal(props) {
    const { modalOpen, setModalOpen, data } = props;
+   const { theme } = useContext(ThemeContext);
    const [showSpan, setShowSpan] = useState(true);
    const [dis, setDis] = useState(true);
    const [loadings, setLoadings] = useState(false);
@@ -162,9 +164,16 @@ function PostModal(props) {
    };
    return (
       <Modal
-         className={cn('cus-modal')}
+         className={cn('cus-modal', `${theme === 'dark' && 'dark-modal'}`)}
          title={
-            <p style={{ textAlign: 'center', margin: 0, fontSize: 23 }}>
+            <p
+               style={{
+                  textAlign: 'center',
+                  margin: 0,
+                  fontSize: 23,
+                  background: theme === 'dark' ? 'rgb(36, 37, 38)' : null,
+                  color: theme === 'dark' ? 'white' : null,
+               }}>
                {data ? 'Update post' : 'Create new post'}
             </p>
          }
@@ -229,7 +238,10 @@ function PostModal(props) {
                onPreview={handlePreview}
                customRequest={dummyRequest}
                onChange={handleChange}>
-               <div>
+               <div
+                  style={{
+                     color: theme === 'dark' ? 'white' : null,
+                  }}>
                   <PlusOutlined />
                   <div
                      style={{
@@ -252,6 +264,9 @@ function PostModal(props) {
          <div>
             {data ? (
                <Button
+                  style={{
+                     color: theme === 'dark' ? 'white' : null,
+                  }}
                   type="primary"
                   block
                   disabled={dis}
@@ -261,6 +276,9 @@ function PostModal(props) {
                </Button>
             ) : (
                <Button
+                  style={{
+                     color: theme === 'dark' ? 'white' : null,
+                  }}
                   type="primary"
                   block
                   disabled={dis}

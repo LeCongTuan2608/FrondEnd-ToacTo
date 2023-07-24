@@ -58,7 +58,9 @@ function Admin(props) {
    }
    return (
       <Layout style={{ position: 'relative' }}>
-         <div className={cn('slider-bar')}>
+         <div
+            className={cn('slider-bar')}
+            style={{ background: theme === 'dark' ? 'rgb(0,12,23)' : null }}>
             <div className={cn('menu-wrap')}>
                <Menu
                   defaultOpenKeys={['posts_manager', 'users_manager', 'ban']}
@@ -70,7 +72,9 @@ function Admin(props) {
                />
             </div>
          </div>
-         <div className={cn('container')}>
+         <div
+            className={cn('container')}
+            style={{ background: theme === 'dark' ? 'rgb(24, 25, 26)' : null }}>
             <div className={cn('content')}>
                <Outlet />
             </div>

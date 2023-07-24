@@ -12,6 +12,7 @@ import User from 'API/User';
 import SkeletonUser from 'components/SkeletonUser';
 import Admin from 'API/Admin';
 import { FrownOutlined } from '@ant-design/icons';
+import { ThemeContext, ThemeProvider } from 'Context/ThemeContext';
 const { Search } = Input;
 
 const cn = classNames.bind(styles);
@@ -28,6 +29,7 @@ function SearchPage(props) {
    const [search, setSreach] = useState([]);
    const [select, setSelect] = useState(dataRadio[0].value);
    const [loading, setLoading] = useState(false);
+   const { theme } = useContext(ThemeContext);
    const [q, setQ] = useState('');
    const jwt = {
       type: localStorage.getItem('type'),
@@ -86,7 +88,7 @@ function SearchPage(props) {
             background: 'unset',
             height: search.length <= 8 ? 'calc(100vh - 64px)' : 'inherit',
          }}>
-         <div className={cn('search-wrap')}>
+         <div className={cn('search-wrap', theme === 'light' ? 'theme-light' : 'theme-dark')}>
             <div className={cn('container')}>
                <div>
                   <Search

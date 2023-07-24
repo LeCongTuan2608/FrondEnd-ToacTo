@@ -1,3 +1,10 @@
+@import '../../color/color';
+
+.theme-dark {
+   background-color: rgb(36, 37, 38) !important;
+   color: white !important;
+}
+
 .search-wrap {
    width: clamp(300px, 100%, 700px);
    margin: 20px auto;

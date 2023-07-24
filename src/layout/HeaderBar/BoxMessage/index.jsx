@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Avatar, Badge, Button, Dropdown, Modal, Space, Tooltip } from 'antd';
+import { Avatar, Badge, Button, Dropdown, Modal, Space, Tooltip, theme } from 'antd';
 import {
    AliwangwangOutlined,
    CheckOutlined,
@@ -16,12 +16,14 @@ import Conversation from 'API/Conversation';
 import socket from '../../../socket';
 import { ConversationContext } from 'Context/ConversationContext';
 import { useRef } from 'react';
+import { ThemeContext } from 'Context/ThemeContext';
 
 const cn = classNames.bind(styles);
 BoxMessage.propTypes = {};
 
 function BoxMessage(props) {
    const { children } = props;
+   const { theme } = useContext(ThemeContext);
    const [open, setOpen] = useState(false);
    const btnIconRef = useRef(null);
    const [userName] = useState(localStorage.getItem('user_name'));
@@ -105,7 +107,13 @@ function BoxMessage(props) {
          </Tooltip>
          {open && (
             <div className={cn('box-wrap')}>
-               <div onClick={handleCloseModal} className={cn('container')}>
+               <div
+                  onClick={handleCloseModal}
+                  className={cn('container')}
+                  style={{
+                     background: theme === 'dark' ? '#242526' : null,
+                     color: theme === 'dark' ? 'white' : null,
+                  }}>
                   <div className={cn('container-header')}>
                      <div className={cn('header-title')}>
                         <div>
