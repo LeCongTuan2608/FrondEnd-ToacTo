@@ -96,7 +96,7 @@ function MainLayout(props) {
    if (!token) {
       return <Navigate to="/login" replace />;
    }
-
+   console.log(process.env.REACT_APP_API);
    // console.log(getChatBox);
    return (
       <div style={{ height: 'auto', position: 'relative' }}>

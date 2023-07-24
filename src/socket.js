@@ -1,9 +1,6 @@
 import io from 'socket.io-client';
 
-export const host = 'http://localhost:4000';
-// export const host = 'https://dogohoainhien.store/';
-// export const host = 'https://web-social-2c4s.onrender.com';
-const socket = io(host, {
+const socket = io(process.env.REACT_APP_API, {
    autoConnect: false,
    // reconnection: false,
 });

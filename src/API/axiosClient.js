@@ -2,10 +2,10 @@ import axios from 'axios';
 import User from './User';
 
 // const url = 'https://web-social-2c4s.onrender.com/';
-const url = 'http://localhost:4000/';
+// const url = 'http://localhost:4000/';
 // const url = 'https://dogohoainhien.store/';
 const axiosClient = axios.create({
-   baseURL: url,
+   baseURL: process.env.REACT_APP_API,
    // headers: {
    //    'Content-Type': 'application/JSON',
    //    'Content-Type': 'multipart/form-data',
