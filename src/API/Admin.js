@@ -26,5 +26,9 @@ const Admin = {
       const url = `admin/ban-posts/${id}`;
       return axiosClient.get(url, config(jwt.type, jwt.token));
    },
+   deletePosts(jwt, id) {
+      const url = `admin/delete-posts/${id}`;
+      return axiosClient.delete(url, config(jwt.type, jwt.token));
+   },
 };
 export default Admin;

@@ -19,7 +19,7 @@ function Images(props) {
                : null
          }>
          {images.length === 1 ? (
-            <div style={{ position: 'relative' }}>
+            <div style={{ position: 'relative', maxHeight: 600 }}>
                <Image
                   preview={false}
                   key={images[0]?.id}

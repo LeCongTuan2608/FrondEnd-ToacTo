@@ -11,6 +11,7 @@ import img_avatar_default from '../../../images/img-user-default.jpg';
 import PostModal from '../../../components/PostModal';
 import Post from 'API/Post';
 import Admin from 'API/Admin';
+import User from 'API/User';
 const cn = classNames.bind(styles);
 
 Contents.propTypes = {};
@@ -73,7 +74,11 @@ function Contents(props) {
    };
    const handleDelete = async (_, id) => {
       try {
-         await Admin.deletePosts(jwt, id);
+         if (localStorage.getItem('role_id') === '1') {
+            await Admin.deletePosts(jwt, id);
+         } else {
+            await User.deletePosts(jwt, id);
+         }
          setPosts((pre) => pre.filter((item) => item.posts_id !== id));
       } catch (error) {
          console.log('error:', error);

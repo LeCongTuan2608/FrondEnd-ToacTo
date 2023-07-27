@@ -38,30 +38,9 @@ const Post = {
       const url = `feed-posts/posts/comment`;
       return axiosClient.post(url, data, config(jwt.type, jwt.token));
    },
-   //    // ========================== suggest ================================
-   //    getSuggest(params, jwt) {
-   //       const url = 'users/suggest';
-   //       return axiosClient.get(url, config(jwt.type, jwt.token, params));
-   //    },
-   //    // ========================== getFollower ================================
-   //    getFollower(params, jwt) {
-   //       const url = 'users/followers';
-   //       return axiosClient.get(url, config(jwt.type, jwt.token, params));
-   //    },
-   //    // ========================== getFollower ================================
-   //    getFollowing(params, jwt) {
-   //       const url = 'users/following';
-   //       return axiosClient.get(url, config(jwt.type, jwt.token, params));
-   //    },
-   //    // ========================== friends ================================
-   //    getFriends(params, jwt) {
-   //       const url = 'users/friends';
-   //       return axiosClient.get(url, config(jwt.type, jwt.token, params));
-   //    },
-   //    // ========================== follow ================================
-   //    handleFollow(params, jwt) {
-   //       const url = `users/follow/${params}`;
-   //       return axiosClient.get(url, config(jwt.type, jwt.token));
-   //    },
+   getVideo(jwt, params) {
+      const url = 'feed-posts/posts/video';
+      return axiosClient.get(url, config(jwt.type, jwt.token, params));
+   },
 };
 export default Post;

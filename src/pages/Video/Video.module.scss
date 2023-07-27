@@ -1,0 +1,48 @@
+.wrapper {
+   width: 100%;
+   height: calc(100vh - 55px);
+   background: black;
+}
+.container {
+   height: inherit;
+   width: inherit;
+}
+.video-wrap {
+   height: inherit;
+   width: inherit;
+   position: relative;
+}
+.btn {
+   position: absolute;
+   width: 50%;
+   top: 0%;
+   height: inherit;
+   & > span {
+      position: relative;
+      color: white;
+      padding: 1rem 1.2rem;
+      background: rgba(53, 53, 53, 0.598);
+      top: 50%;
+      transform: translate(-50%);
+      border-radius: 100rem;
+      cursor: pointer;
+      &:hover {
+         background: rgba(70, 70, 70, 0.598);
+      }
+      &:active {
+         background: rgba(94, 94, 94, 0.598);
+      }
+   }
+}
+.btn-pre {
+   left: 0%;
+}
+.btn-next {
+   right: 0%;
+}
+.btn-disable {
+   display: none;
+   & > span {
+      cursor: no-drop;
+   }
+}
