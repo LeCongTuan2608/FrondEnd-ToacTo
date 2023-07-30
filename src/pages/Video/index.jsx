@@ -12,6 +12,8 @@ Video.propTypes = {};
 
 function Video(props) {
    const [listVideo, setListVideo] = useState([]);
+   console.log('listVideo:', listVideo);
+
    const [current, setCurrent] = useState(0);
    const [params, setParams] = useState({ offset: 0, limit: 10 });
    const jwt = {
