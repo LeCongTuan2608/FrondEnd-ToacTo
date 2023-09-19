@@ -4,20 +4,43 @@
    align-items: center;
    justify-content: center;
    background: white;
+   position: relative;
+}
+.background > svg {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   box-sizing: border-box;
+   display: block;
+   background-color: #0e4166;
+   background-image: linear-gradient(to bottom, rgba(14, 65, 102, 0.86), #0e4166);
 }
 .login-form {
+   position: absolute;
    width: clamp(150px, 100%, 500px);
    height: auto;
-   margin: 0 20px;
    padding: 20px 15px;
    display: flex;
    flex-direction: column;
-   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+   box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px 3px, rgba(0, 0, 0, 0.22) 0px 4px 12px 3px;
    border-radius: 8px;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+}
+.form-header {
+   & label {
+      color: white;
+   }
 }
 .input-field {
    & > div {
       justify-content: space-between;
+      & label {
+         color: white !important;
+      }
    }
 }
 .input-link {
